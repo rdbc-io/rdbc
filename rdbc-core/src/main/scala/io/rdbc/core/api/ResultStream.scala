@@ -16,12 +16,14 @@
 
 package io.rdbc.core.api
 
+import io.rdbc.core.ImmutSeq
 import org.reactivestreams.Publisher
 
 import scala.concurrent.Future
 
 trait ResultStream {
   def rowsAffected: Future[Long] //TODO note that this future will never complete if publisher doesn't complete
+  def warnings: Future[ImmutSeq[Warning]]
   def metadata: RowMetadata
   def rows: Publisher[Row]
 }

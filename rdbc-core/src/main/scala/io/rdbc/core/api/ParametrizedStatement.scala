@@ -30,10 +30,17 @@ trait ParametrizedStatement {
     executeForStream().flatMap { resultStream =>
       val subscriber = new HeadSubscriber(None)
       resultStream.rows.subscribe(subscriber)
-      resultStream.rowsAffected.flatMap { rowsAffected =>
-        subscriber.rows.map { rows =>
-          new ResultSet(rowsAffected, resultStream.metadata, rows)
-        }
+      for {
+        rowsAffected <- resultStream.rowsAffected
+        warnings <- resultStream.warnings
+        rows <- subscriber.rows
+      } yield {
+        new ResultSet(
+          rowsAffected = rowsAffected,
+          warnings = warnings,
+          metadata = resultStream.metadata,
+          rows = rows
+        )
       }
     }
   }
