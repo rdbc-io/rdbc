@@ -1,18 +1,27 @@
 language: scala
 jdk:
-  - oraclejdk8
+- oraclejdk8
 scala:
-  - 2.11.8
-  - 2.12.0-RC1
-script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- 2.11.8
+- 2.12.0-RC1
 sudo: false
+install: ci/bootstrap.sh
+script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+after_success: bash <(curl -s https://codecov.io/bash)
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: sbt ++$TRAVIS_SCALA_VERSION publish
+  on:
+    tags: true
 cache:
   directories:
-    - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot/
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.sbt/boot/"
 before_cache:
-  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
-  - find $HOME/.sbt -name "*.lock" -delete
+- find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+- find $HOME/.sbt -name "*.lock" -delete
+env:
+  global:
+    #BINTRAY_API_KEY
+    secure: IqzcgbdXirRBh0EqS6Pe7a9gi0Ugh+h/WygVuw66d5LkwBjcOCGK75tG0+8OKM9z9c8y8ZKGxfgv5S8N+VTjRrtsMa2YPY6YA630+rX/mZiXpsaK3NXnfAaEfzURk1FuVJNbURw4aeq5Vhck+hvy5XWcsEyUBOqcEauYCTKmyO8S/TafLdon8jVS3KFFb4CpEO4P8BINRCce3HalVTCWiLuJSbusWBbXEPHv8iP8+tBqH057tGd1SUnjj1iat0J2dkKbbXLM7hQfpKQYhd2ubQjNEb1DnFE0jhdH851UIMnPfc+mw0BlZmK1j+XV634kJudR/VRtAAwTVsmkrKx6bSTw/AH9tKkRiaeIQdqZ2o/IR+WJnWMcXq2QhNPt8Tk2SFvzgJhfRnzDp9pl3qlP/lFZWkH8bmsmFyAfOkkCaqnm4fjgyG3JwQVyqKmg6e5dLm//Kbw9H0t3zKTfJ1zU7ppHVuixqtGxqwvMs1nusDHnvkCaCz3ECyxtJjMTrMOvOJ1pJe3uzHC+9ah4O2yy9XdM+wBFkzhEcQ0WkhBEuoebqrzRHEu9Ay4NduTQ4f0oI4HfM62dZhL0YslhHyyBsWBIXE/EWiTyTs6wGJ5d/U4HY9Y5hYw1htmEeaifazdHsbmNqRSJovr4Nqlm/yeTbbb+c6UnBcp2g4IMcIJ4D6M=
