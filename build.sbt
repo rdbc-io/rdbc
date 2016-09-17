@@ -13,18 +13,29 @@ lazy val commonSettings = Seq(
   bintrayOrganization := Some("rdbc")
 )
 
-lazy val rdbc = (project in file("."))
+lazy val rdbcRoot = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
     publishArtifact := false,
     bintrayReleaseOnPublish := false
   )
-  .aggregate(core)
+  .aggregate(rdbcScala, rdbcJava)
 
-lazy val core = (project in file("rdbc-core"))
+lazy val rdbcScala = (project in file("rdbc-scala"))
   .settings(commonSettings: _*)
   .settings(
-    name := "rdbc-core",
+    name := "rdbc-scala",
+    libraryDependencies ++= Vector(
+      Library.reactiveStreams
+    )
+  )
+
+lazy val rdbcJava = (project in file("rdbc-java"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "rdbc-java",
+    crossPaths := false,
+    crossScalaVersions := Vector(scalaVersion.value),
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
