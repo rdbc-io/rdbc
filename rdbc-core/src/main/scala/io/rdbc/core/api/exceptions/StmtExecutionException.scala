@@ -20,10 +20,6 @@ sealed abstract class StmtExecutionException(msg: String) extends RdbcException(
 
 object StmtExecutionException {
 
-  case class ConnectionBrokenException(msg: String) extends StmtExecutionException(msg)
-
-  case class IllegalSessionStateException(msg: String) extends StmtExecutionException(msg)
-
   case class UnauthorizedException(msg: String) extends StmtExecutionException(msg)
 
   case class InvalidQueryException(msg: String, errorPosition: Option[Int]) extends StmtExecutionException(msg)
