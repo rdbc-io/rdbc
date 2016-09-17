@@ -16,11 +16,4 @@
 
 package io.rdbc.core.api
 
-import io.rdbc.core._
-
-import scala.collection.immutable.Seq
-import scala.concurrent.{ExecutionContext, Future}
-
-class ResultSet(val rowsAffected: Long, val warnings: ImmutSeq[Warning], val metadata: RowMetadata, val rows: ImmutSeq[Row]) extends Traversable[Row] {
-  override def foreach[U](f: (Row) => U): Unit = rows.foreach(f)
-}
+case class Warning(msg: String, code: String)
