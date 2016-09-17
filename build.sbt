@@ -2,7 +2,6 @@ lazy val commonSettings = Seq(
   organization := "io.rdbc",
   version := "0.0.2",
   scalaVersion := "2.11.8",
-  crossScalaVersions := Vector(scalaVersion.value, "2.12.0-RC1"),
   scalacOptions ++= Vector(
     "-unchecked",
     "-deprecation",
