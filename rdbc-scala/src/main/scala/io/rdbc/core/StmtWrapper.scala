@@ -16,7 +16,6 @@
 
 package io.rdbc.core
 
-import io.rdbc.core.api.{ParametrizedStatement, Statement}
 import io.rdbc.core.sapi.{Bindable, ParametrizedStatement, Statement}
 
 class StmtWrapper[A](underlying: Statement)(parametrizedConv: ParametrizedStatement => A) extends Bindable[A] {

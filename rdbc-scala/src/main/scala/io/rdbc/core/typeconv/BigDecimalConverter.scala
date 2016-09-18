@@ -19,11 +19,25 @@ package io.rdbc.core.typeconv
 import io.rdbc.core.api.exceptions.ResultProcessingException.ConversionException
 import io.rdbc.core.sapi.TypeConverter
 
-object StringConverter extends TypeConverter[String] {
-  val cls = classOf[String]
+object BigDecimalConverter extends TypeConverter[BigDecimal] {
+  val cls = classOf[BigDecimal]
 
-  def fromAny(any: Any): String = any match {
-    case str: String => str
-    case _ => throw ConversionException(any, classOf[String])
+  override def fromAny(any: Any): BigDecimal = any match {
+    case bd: BigDecimal => bd
+    case d: Double => BigDecimal(d)
+    case f: Float => BigDecimal(f.toDouble)
+    case l: Long => BigDecimal(l)
+    case i: Int => BigDecimal(i)
+    case s: Short => BigDecimal(s)
+    case b: Byte => BigDecimal(b)
+
+    case str: String =>
+      try {
+        BigDecimal.exact(str)
+      } catch {
+        case _: NumberFormatException => throw ConversionException(any, classOf[BigDecimal])
+      }
+
+    case _ => throw ConversionException(any, classOf[Float])
   }
 }
