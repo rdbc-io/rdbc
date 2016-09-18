@@ -16,14 +16,23 @@
 
 package io.rdbc.core.typeconv
 
+import java.util.UUID
+
 import io.rdbc.core.api.exceptions.ResultProcessingException.ConversionException
 import io.rdbc.core.sapi.TypeConverter
 
-object StringConverter extends TypeConverter[String] {
-  val cls = classOf[String]
+object UuidConverter extends TypeConverter[UUID] {
+  val cls = classOf[UUID]
 
-  def fromAny(any: Any): String = any match {
-    case str: String => str
-    case _ => throw ConversionException(any, classOf[String])
+  override def fromAny(any: Any): UUID = any match {
+    case uuid: UUID => uuid
+    case str: String =>
+      try {
+        UUID.fromString(str)
+      } catch {
+        case _: IllegalArgumentException => throw ConversionException(any, classOf[UUID])
+      }
+
+    case _ => throw ConversionException(any, classOf[UUID])
   }
 }

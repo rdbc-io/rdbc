@@ -16,14 +16,17 @@
 
 package io.rdbc.core.typeconv
 
+import java.time.{Instant, ZonedDateTime}
+
 import io.rdbc.core.api.exceptions.ResultProcessingException.ConversionException
 import io.rdbc.core.sapi.TypeConverter
 
-object StringConverter extends TypeConverter[String] {
-  val cls = classOf[String]
+object InstantConverter extends TypeConverter[Instant] {
+  val cls = classOf[Instant]
 
-  def fromAny(any: Any): String = any match {
-    case str: String => str
-    case _ => throw ConversionException(any, classOf[String])
+  override def fromAny(any: Any): Instant = any match {
+    case i: Instant => i
+    case zdt: ZonedDateTime => zdt.toInstant
+    case _ => throw ConversionException(any, classOf[Instant])
   }
 }
