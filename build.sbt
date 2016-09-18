@@ -1,6 +1,6 @@
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
-  version := "0.0.4",
+  version := "0.0.5",
   scalaVersion := "2.11.8",
   scalacOptions ++= Vector(
     "-unchecked",
