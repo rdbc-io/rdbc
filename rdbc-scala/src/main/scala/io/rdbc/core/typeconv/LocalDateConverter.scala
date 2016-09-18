@@ -16,14 +16,17 @@
 
 package io.rdbc.core.typeconv
 
+import java.time.{Instant, LocalDate, LocalDateTime}
+
 import io.rdbc.core.api.exceptions.ResultProcessingException.ConversionException
 import io.rdbc.core.sapi.TypeConverter
 
-object StringConverter extends TypeConverter[String] {
-  val cls = classOf[String]
+object LocalDateConverter extends TypeConverter[LocalDate] {
+  val cls = classOf[LocalDate]
 
-  def fromAny(any: Any): String = any match {
-    case str: String => str
-    case _ => throw ConversionException(any, classOf[String])
+  override def fromAny(any: Any): LocalDate = any match {
+    case ld: LocalDate => ld
+    case ldt: LocalDateTime => ldt.toLocalDate
+    case _ => throw ConversionException(any, classOf[LocalDate])
   }
 }

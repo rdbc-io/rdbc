@@ -25,6 +25,8 @@ import scala.concurrent.duration.FiniteDuration
 
 class ParametrizedReturningInsert(stmt: ParametrizedStatement) {
 
+  import stmt.ec
+
   def execute()(implicit timeout: FiniteDuration): Future[Unit] = stmt.executeIgnoringResult()
 
   def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = stmt.executeForRowsAffected()

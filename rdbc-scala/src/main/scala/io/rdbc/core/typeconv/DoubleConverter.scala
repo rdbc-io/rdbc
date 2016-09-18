@@ -19,11 +19,11 @@ package io.rdbc.core.typeconv
 import io.rdbc.core.api.exceptions.ResultProcessingException.ConversionException
 import io.rdbc.core.sapi.TypeConverter
 
-object StringConverter extends TypeConverter[String] {
-  val cls = classOf[String]
+object DoubleConverter extends TypeConverter[Double] {
+  val cls = classOf[Double]
 
-  def fromAny(any: Any): String = any match {
-    case str: String => str
-    case _ => throw ConversionException(any, classOf[String])
+  override def fromAny(any: Any): Double = any match {
+    case jn: java.lang.Number => jn.doubleValue()
+    case _ => throw ConversionException(any, classOf[Double])
   }
 }
