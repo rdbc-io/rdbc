@@ -1,3 +1,6 @@
+import de.heikoseeberger.sbtheader.HeaderPattern
+import de.heikoseeberger.sbtheader.license.Apache2_0
+
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
   version := "0.0.5",
@@ -10,7 +13,10 @@ lazy val commonSettings = Seq(
     "-encoding", "UTF-8"
   ),
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-  bintrayOrganization := Some("rdbc")
+  bintrayOrganization := Some("rdbc"),
+  headers := Map(
+    "scala" -> Apache2_0("2016", "Krzysztof Pado")
+  )
 )
 
 lazy val rdbcRoot = (project in file("."))
@@ -19,24 +25,36 @@ lazy val rdbcRoot = (project in file("."))
     publishArtifact := false,
     bintrayReleaseOnPublish := false
   )
-  .aggregate(rdbcScala, rdbcJava)
+  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv)
 
-lazy val rdbcScala = (project in file("rdbc-scala"))
+lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   .settings(commonSettings: _*)
   .settings(
-    name := "rdbc-scala",
+    name := "rdbc-api-scala",
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
   )
 
-lazy val rdbcJava = (project in file("rdbc-java"))
+lazy val rdbcApiJava = (project in file("rdbc-api-java"))
   .settings(commonSettings: _*)
   .settings(
-    name := "rdbc-java",
+    name := "rdbc-api-java",
     crossPaths := false,
     crossScalaVersions := Vector(scalaVersion.value),
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
   )
+
+lazy val rdbcImplBase = (project in file("rdbc-implbase"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "rdbc-implbase"
+  ).dependsOn(rdbcApiScala)
+
+lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "rdbc-typeconv"
+  ).dependsOn(rdbcApiScala)
