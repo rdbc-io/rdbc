@@ -16,11 +16,6 @@
 
 package io.rdbc.core.api.exceptions
 
-sealed abstract class ParseException(msg: String) extends RdbcException(msg: String)
+import scala.concurrent.duration.FiniteDuration
 
-object ParseException {
-
-  case class SyntaxErrorException(msg: String, errorPosition: Option[Int]) extends ParseException(msg)
-
-  case class UncategorizedParseException(msg: String, detail: Option[String]) extends ParseException(msg)
-}
+case class TimeoutException(timeout: FiniteDuration) extends RdbcException(s"Timeout occurred after waiting for configured time of $timeout")

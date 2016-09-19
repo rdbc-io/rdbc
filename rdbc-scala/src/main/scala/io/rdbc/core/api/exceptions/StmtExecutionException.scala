@@ -40,7 +40,5 @@ object StmtExecutionException {
     def apply(msg: String): UncategorizedExecutionException = UncategorizedExecutionException(msg, None)
   }
 
-  case class ExecuteTimeoutException(msg: String) extends StmtExecutionException(msg)
-
   case class UncategorizedExecutionException(msg: String, detail: Option[String]) extends StmtExecutionException(msg)
 }
