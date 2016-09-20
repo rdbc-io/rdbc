@@ -21,10 +21,16 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ParametrizedStatement {
   def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream]
+
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet]
+
   def executeIgnoringResult()(implicit timeout: FiniteDuration): Future[Unit]
+
   def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long]
+
   def executeForFirstRow()(implicit timeout: FiniteDuration): Future[Option[Row]]
+
   def executeForValue[A](valExtractor: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]]
+
   def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[A]]
 }

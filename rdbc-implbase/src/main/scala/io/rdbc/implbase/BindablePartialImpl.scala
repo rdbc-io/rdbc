@@ -16,20 +16,16 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{Bindable, ParametrizedStatement, Statement}
+import io.rdbc.sapi.Bindable
 
-class StmtWrapper[A](underlying: Statement)(parametrizedConv: ParametrizedStatement => A)
-  extends BindablePartialImpl[A] {
+import scala.concurrent.Future
+import scala.util.Try
 
-  override def bind(params: (String, Any)*): A = {
-    parametrizedConv(underlying.bind(params: _*))
-  }
+trait BindablePartialImpl[T] extends Bindable[T] {
 
-  override def bindByIdx(params: Any*): A = {
-    parametrizedConv(underlying.bindByIdx(params: _*))
-  }
+  def bindF(params: (String, Any)*): Future[T] = Future.fromTry(Try(bind(params: _*)))
 
-  override def noParams: A = {
-    parametrizedConv(underlying.noParams)
-  }
+  def bindByIdxF(params: Any*): Future[T] = Future.fromTry(Try(bindByIdx(params: _*)))
+
+  def noParamsF: Future[T] = Future.fromTry(Try(noParams))
 }
