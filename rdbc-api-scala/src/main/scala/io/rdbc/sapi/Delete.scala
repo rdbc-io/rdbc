@@ -16,6 +16,5 @@
 
 package io.rdbc.sapi
 
+/** Represents a delete statement */
 trait Delete extends Bindable[ParametrizedDelete]
-
-

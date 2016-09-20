@@ -16,6 +16,5 @@
 
 package io.rdbc.sapi
 
+/** Represents an insert statement */
 trait Insert extends Bindable[ParametrizedInsert]
-
-
