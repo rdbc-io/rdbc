@@ -121,5 +121,5 @@ trait ParametrizedStatement {
     *
     * @param valExtractor function used to extract value from the returned row
     */
-  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[A]]
+  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]]
 }
