@@ -24,7 +24,5 @@ object ResultProcessingException {
 
   case class MissingColumnException(column: String) extends ResultProcessingException(s"Requested column '$column' is not present in the row")
 
-  case class NoSuitableConverterFoundException(any: Any) extends ResultProcessingException(s"No suitable converter was found for value '$any' of type ${any.getClass}")
-
   case class UnsupportedDbTypeException(dbTypeDesc: String) extends ResultProcessingException(s"Database native type '$dbTypeDesc' is not supported")
 }
