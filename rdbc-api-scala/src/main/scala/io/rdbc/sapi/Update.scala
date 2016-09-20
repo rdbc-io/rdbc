@@ -16,6 +16,5 @@
 
 package io.rdbc.sapi
 
+/** Represents an update statement */
 trait Update extends Bindable[ParametrizedUpdate]
-
-

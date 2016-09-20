@@ -19,11 +19,34 @@ package io.rdbc.sapi
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
+/** Represents a parametized insert statement.
+  *
+  * Parametrized statement is a statement that has all parameters provided and is ready to be executed.
+  *
+  * @define timeoutInfo
+  *  After the operation takes longer time than `timeout`, operation will be aborted. Note however, that it may not
+  *  be feasible to abort the operation immediately.
+  * @define exceptions
+  *  Returned future can fail with:
+  *  - [[io.rdbc.api.exceptions.StmtExecutionException.UnauthorizedException UnauthorizedException]] when client is not authorized to perform the action
+  *  - [[io.rdbc.api.exceptions.StmtExecutionException.InvalidQueryException InvalidQueryException]] when query is rejected by a database engine as invalid
+  *  - [[io.rdbc.api.exceptions.StmtExecutionException.InactiveTxException InactiveTxException]] when transaction is in progress but is in inactive state
+  *  - [[io.rdbc.api.exceptions.StmtExecutionException.ConstraintViolationException ConstraintViolationException]] when operation results in an integrity constraint violation
+  *  - [[io.rdbc.api.exceptions.StmtExecutionException.UncategorizedExecutionException UncategorizedExecutionException]] when a general statement execution error occurs
+  */
 trait ParametrizedInsert {
+
+  /** Executes an insert statement ignoring any resulting information.
+    *
+    * $timeoutInfo
+    * $exceptions
+    */
   def execute()(implicit timeout: FiniteDuration): Future[Unit]
 
+  /** Executes an insert statement returning a number of rows that were inserted.
+    *
+    * $timeoutInfo
+    * $exceptions
+    */
   def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long]
 }
-
-
-

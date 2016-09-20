@@ -24,6 +24,9 @@ import scala.util.Try
   * Methods of this trait allow to bind argument values to parameters either by name or index.
   *
   * @tparam T a type of a parametrized object returned after the binding
+  * @define bindExceptions
+  *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
+  *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
   */
 trait Bindable[T] {
 
@@ -35,9 +38,7 @@ trait Bindable[T] {
     * insert.map(_.bind("p1" -> "str", "p2" -> 10L)).foreach(_.execute())
     * }}}
     *
-    * Exceptions thrown:
-    *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+    * $bindExceptions
     */
   def bind(params: (String, Any)*): T
 
@@ -55,9 +56,7 @@ trait Bindable[T] {
     * } yield ()
     * }}}
     *
-    * Resulting future can fail with:
-    *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+    * $bindExceptions
     */
   def bindF(params: (String, Any)*): Future[T]
 
@@ -71,9 +70,7 @@ trait Bindable[T] {
     * insert.map(_.bind("str", 10L)).foreach(_.execute())
     * }}}
     *
-    * Exceptions thrown:
-    *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+    * $bindExceptions
     */
   def bindByIdx(params: Any*): T
 
@@ -93,9 +90,7 @@ trait Bindable[T] {
     * } yield ()
     * }}}
     *
-    * Resulting future can fail with:
-    *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+    * $bindExceptions
     */
   def bindByIdxF(params: Any*): Future[T]
 
