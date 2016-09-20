@@ -16,9 +16,10 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.Statement
+import io.rdbc.sapi.{ParametrizedReturningInsert, ReturningInsert, Statement}
 
 import scala.concurrent.ExecutionContext
 
 class ReturningInsertImpl(stmt: Statement)(implicit ec: ExecutionContext)
-  extends StmtWrapper[ParametrizedReturningInsertImpl](stmt)(new ParametrizedReturningInsertImpl(_))
+  extends StmtWrapper[ParametrizedReturningInsert](stmt)(new ParametrizedReturningInsertImpl(_))
+    with ReturningInsert
