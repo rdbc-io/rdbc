@@ -29,7 +29,7 @@ class ParametrizedSelectImpl(stmt: ParametrizedStatement) extends ParametrizedSe
 
   def executeForFirstRow()(implicit timeout: FiniteDuration): Future[Option[Row]] = stmt.executeForFirstRow()
 
-  def executeForSingle[A](f: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]] = stmt.executeForValue[A](f)
+  def executeForValue[A](f: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]] = stmt.executeForValue[A](f)
 
-  def executeForSingleOpt[A](f: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[A]] = stmt.executeForValueOpt[A](f)
+  def executeForValueOpt[A](f: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]] = stmt.executeForValueOpt[A](f)
 }

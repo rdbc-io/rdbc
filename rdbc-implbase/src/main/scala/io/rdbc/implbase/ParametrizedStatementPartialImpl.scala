@@ -63,10 +63,10 @@ trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   }
 
   def executeForValue[A](valExtractor: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]] = {
-    executeForValueOpt(row => Some(valExtractor(row)))
+    executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 
-  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[A]] = {
-    executeForFirstRow().map(maybeRow => maybeRow.flatMap(valExtractor))
+  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]] = {
+    executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 }
