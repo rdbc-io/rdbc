@@ -20,11 +20,7 @@ sealed abstract class ResultProcessingException(msg: String) extends RdbcExcepti
 
 object ResultProcessingException {
 
-  case class ConversionException(any: Any, targetType: Class[_]) extends ResultProcessingException(s"Value '$any' could not be converted to ${targetType.getCanonicalName}")
-
   case class MissingColumnException(column: String) extends ResultProcessingException(s"Requested column '$column' is not present in the row")
-
-  case class NoSuitableConverterFoundException(any: Any) extends ResultProcessingException(s"No suitable converter was found for value '$any' of type ${any.getClass}")
 
   case class UnsupportedDbTypeException(dbTypeDesc: String) extends ResultProcessingException(s"Database native type '$dbTypeDesc' is not supported")
 }

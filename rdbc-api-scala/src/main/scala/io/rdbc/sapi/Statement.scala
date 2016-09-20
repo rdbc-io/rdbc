@@ -20,8 +20,21 @@ import org.reactivestreams.Publisher
 
 import scala.concurrent.Future
 
+/** Represents a SQL statement of any type */
 trait Statement extends Bindable[ParametrizedStatement] {
+
+  /** A native vendor-specific SQL statement string */
   def nativeSql: String
 
+  /** Streams statement parameters to a database.
+    *
+    * This method can be used to repeatedly execute this statement with published parameters
+    * by leveraging Reactive Streams specification's `Publisher` with a backpressure. Each published element
+    * is a map containing all parameters required by this statement.
+    *
+    * Resulting future can fail with:
+    *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
+    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+    */
   def streamParams(paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]
 }

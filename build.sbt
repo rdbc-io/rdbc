@@ -3,7 +3,7 @@ import de.heikoseeberger.sbtheader.license.Apache2_0
 
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
-  version := "0.0.5",
+  version := "0.0.6",
   scalaVersion := "2.11.8",
   scalacOptions ++= Vector(
     "-unchecked",
@@ -11,6 +11,10 @@ lazy val commonSettings = Seq(
     "-language:_",
     "-target:jvm-1.8",
     "-encoding", "UTF-8"
+  ),
+  autoAPIMappings := true,
+  apiMappings ++= Map(
+    scalaInstance.value.libraryJar -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
   ),
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   bintrayOrganization := Some("rdbc"),
@@ -33,7 +37,8 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
     name := "rdbc-api-scala",
     libraryDependencies ++= Vector(
       Library.reactiveStreams
-    )
+    ),
+    apiURL := Some(url("https://rdbc.io/scala/api"))
   )
 
 lazy val rdbcApiJava = (project in file("rdbc-api-java"))

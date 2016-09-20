@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package io.rdbc.typeconv
+package io.rdbc
 
-import java.time.{LocalDate, LocalDateTime}
-
-import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi.TypeConverter
-
-object LocalDateTimeConverter extends TypeConverter[LocalDateTime] {
-  val cls = classOf[LocalDateTime]
-
-  override def fromAny(any: Any): LocalDateTime = any match {
-    case ldt: LocalDateTime => ldt
-    case ld: LocalDate => ld.atStartOfDay()
-    case _ => throw ConversionException(any, classOf[LocalDateTime])
-  }
-}
+/** Provides a Scala API for database connectivity.
+  *
+  * Main class is a [[io.rdbc.sapi.Connection Connection]] that can be
+  * obtained using a [[io.rdbc.sapi.ConnectionFactory ConnectionFactory]].
+  */
+package object sapi {}

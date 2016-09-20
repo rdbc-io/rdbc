@@ -16,8 +16,20 @@
 
 package io.rdbc.sapi
 
+/** Represents a converter of values returned by database to type desired by a client.
+  *
+  * @tparam T conversion's target type
+  */
 trait TypeConverter[T] {
+  //TODO can def cls be replaced by a class tag?
+
+  /** A conversion's target class */
   def cls: Class[T]
 
+  /** Attempts to convert any value to the target type
+    *
+    * Throws:
+    *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]] - when conversion to desired type is not possible
+    */
   def fromAny(any: Any): T
 }
