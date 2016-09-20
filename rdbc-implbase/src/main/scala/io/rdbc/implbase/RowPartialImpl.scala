@@ -19,7 +19,7 @@ package io.rdbc.implbase
 import java.time._
 import java.util.UUID
 
-import io.rdbc.api.exceptions.ResultProcessingException.NoSuitableConverterFoundException
+import io.rdbc.api.exceptions.NoSuitableConverterFoundException
 import io.rdbc.sapi.{Row, TypeConverterRegistry}
 
 trait RowPartialImpl extends Row {

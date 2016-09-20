@@ -22,6 +22,4 @@ object BindException {
 
   case class MissingParamValException(param: String) extends BindException(s"Value is missing for parameter '$param'")
 
-  case class NoSuitableConverterFoundException(paramName: String, paramValue: Any) extends BindException(s"No suitable converted has been found to convert parameter '$paramName' with value '$paramValue' of type ${paramValue.getClass}")
-
 }
