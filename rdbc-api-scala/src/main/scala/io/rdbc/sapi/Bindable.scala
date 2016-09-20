@@ -59,7 +59,7 @@ trait Bindable[T] {
     *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
     *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
     */
-  def bindF(params: (String, Any)*): Future[T] = Future.fromTry(Try(bind(params: _*)))
+  def bindF(params: (String, Any)*): Future[T]
 
   /** Binds each parameter by index.
     *
@@ -97,7 +97,7 @@ trait Bindable[T] {
     *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
     *  - [[io.rdbc.api.exceptions.BindException#NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
     */
-  def bindByIdxF(params: Any*): Future[T] = Future.fromTry(Try(bindByIdx(params: _*)))
+  def bindByIdxF(params: Any*): Future[T]
 
   /** Returns a parametrized version of the bindable object without providing any parameters.
     *
@@ -106,7 +106,7 @@ trait Bindable[T] {
     * val insert = conn.insert("insert into table(p1, p2) values ('str', 10)")
     * insert.map(_.noParams).foreach(_.execute())
     * }}}
-    * */
+    */
   def noParams: T
 
   /** Returns a parametrized version of the bindable object without providing any parameters and wraps a result in a future
@@ -123,5 +123,5 @@ trait Bindable[T] {
     * } yield ()
     * }}}
     */
-  def noParamsF: Future[T] = Future.fromTry(Try(noParams))
+  def noParamsF: Future[T]
 }

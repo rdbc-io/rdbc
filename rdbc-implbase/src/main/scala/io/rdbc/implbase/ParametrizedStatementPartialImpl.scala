@@ -24,8 +24,6 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   implicit def ec: ExecutionContext
 
-  def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream]
-
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
     executeForStream().flatMap { resultStream =>
       val subscriber = new HeadSubscriber(None)
