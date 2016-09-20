@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package io.rdbc.typeconv
+package io.rdbc.implbase
 
-import java.time.{LocalDate, LocalDateTime}
+import io.rdbc.sapi.Bindable
 
-import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi.TypeConverter
+import scala.concurrent.Future
+import scala.util.Try
 
-object LocalDateTimeConverter extends TypeConverter[LocalDateTime] {
-  val cls = classOf[LocalDateTime]
+trait BindablePartialImpl[T] extends Bindable[T] {
 
-  override def fromAny(any: Any): LocalDateTime = any match {
-    case ldt: LocalDateTime => ldt
-    case ld: LocalDate => ld.atStartOfDay()
-    case _ => throw ConversionException(any, classOf[LocalDateTime])
-  }
+  def bindF(params: (String, Any)*): Future[T] = Future.fromTry(Try(bind(params: _*)))
+
+  def bindByIdxF(params: Any*): Future[T] = Future.fromTry(Try(bindByIdx(params: _*)))
+
+  def noParamsF: Future[T] = Future.fromTry(Try(noParams))
 }

@@ -16,9 +16,17 @@
 
 package io.rdbc.sapi
 
+/**
+  * A registry holding a map of type converters.
+  *
+  * @param converters type converters. Map keys are conversion target classes.
+  */
 class TypeConverterRegistry(val converters: Map[Class[_], TypeConverter[_]])
 
+/** Factory of TypeConverterRegistry */
 object TypeConverterRegistry {
+
+  /** Returns a type converter registry from converters given. */
   def apply(converters: TypeConverter[_]*): TypeConverterRegistry = {
     val registry: Map[Class[_], TypeConverter[_]] = Map(
       converters.map(conv => conv.cls -> conv): _*

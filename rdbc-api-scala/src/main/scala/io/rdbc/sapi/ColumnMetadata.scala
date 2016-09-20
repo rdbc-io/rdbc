@@ -16,4 +16,10 @@
 
 package io.rdbc.sapi
 
-case class ColumnMetadata(name: String, dbTypeId: String, cls: Option[Class[_]])
+/** Represents metadata of a database column.
+  *
+  * @param name     column name
+  * @param dbTypeId database vendor identifier of a datatype declared for the column
+  * @param cls      JVM class that a database driver uses to represent values of the column
+  */
+case class ColumnMetadata(name: String, dbTypeId: String, cls: Option[Class[_]]) //TODO verify why cls is Option and describe it in the doc

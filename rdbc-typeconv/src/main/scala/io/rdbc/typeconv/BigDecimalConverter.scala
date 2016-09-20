@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ResultProcessingException.ConversionException
+import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter
 
 object BigDecimalConverter extends TypeConverter[BigDecimal] {

@@ -16,4 +16,5 @@
 
 package io.rdbc.sapi
 
+/** Represents a select statement */
 trait Select extends Bindable[ParametrizedSelect]

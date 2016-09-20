@@ -19,7 +19,7 @@ package io.rdbc.implbase
 import java.time._
 import java.util.UUID
 
-import io.rdbc.api.exceptions.ResultProcessingException.NoSuitableConverterFoundException
+import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.{Row, TypeConverterRegistry}
 
 trait RowPartialImpl extends Row {
@@ -38,7 +38,7 @@ trait RowPartialImpl extends Row {
       } else {
         typeConverterRegistry.converters.get(cls)
           .map(converter => converter.fromAny(raw).asInstanceOf[A])
-          .getOrElse(throw NoSuitableConverterFoundException(raw))
+          .getOrElse(throw ConversionException(raw, cls))
       }
     }
   }

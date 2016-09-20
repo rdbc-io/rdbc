@@ -24,8 +24,6 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   implicit def ec: ExecutionContext
 
-  def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream]
-
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
     executeForStream().flatMap { resultStream =>
       val subscriber = new HeadSubscriber(None)
@@ -65,10 +63,10 @@ trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   }
 
   def executeForValue[A](valExtractor: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]] = {
-    executeForValueOpt(row => Some(valExtractor(row)))
+    executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 
-  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[A]] = {
-    executeForFirstRow().map(maybeRow => maybeRow.flatMap(valExtractor))
+  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]] = {
+    executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 }
