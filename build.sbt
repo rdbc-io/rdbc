@@ -12,6 +12,10 @@ lazy val commonSettings = Seq(
     "-target:jvm-1.8",
     "-encoding", "UTF-8"
   ),
+  autoAPIMappings := true,
+  apiMappings ++= Map(
+    scalaInstance.value.libraryJar -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
+  ),
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   bintrayOrganization := Some("rdbc"),
   headers := Map(
