@@ -18,4 +18,9 @@ package io.rdbc.sapi
 
 import io.rdbc._
 
+/**
+  * Represents a row meta data.
+  *
+  * @param columns meta data for every row column
+  */
 case class RowMetadata(columns: ImmutIndexedSeq[ColumnMetadata])

@@ -37,7 +37,8 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
     name := "rdbc-api-scala",
     libraryDependencies ++= Vector(
       Library.reactiveStreams
-    )
+    ),
+    apiURL := Some(url("https://rdbc.io/scala/api"))
   )
 
 lazy val rdbcApiJava = (project in file("rdbc-api-java"))

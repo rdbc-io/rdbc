@@ -20,12 +20,26 @@ import scala.collection.immutable
 
 package object rdbc {
 
+  /** An alias for Scala's immutable sequence trait */
   type ImmutSeq[A] = immutable.Seq[A]
 
+  /** An immutable sequences factory */
   object ImmutSeq {
+
+    /** An empty immutable sequence
+      *
+      * @tparam A the type of the sequence elements
+      */
     def empty[A]: ImmutSeq[A] = immutable.Seq.empty[A]
+
+    /** Creates an immutable sequence with the specified elements.
+      *
+      * @tparam A the type of the sequence elements
+      * @param elems the elements of the created sequence
+      */
     def apply[A](elems: Seq[A]): ImmutSeq[A] = immutable.Seq(elems: _*)
   }
 
+  /** An alias for Scala's immutable indexed sequence trait */
   type ImmutIndexedSeq[A] = immutable.IndexedSeq[A]
 }

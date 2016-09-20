@@ -38,6 +38,7 @@ trait Bindable[T] {
     * insert.map(_.bind("p1" -> "str", "p2" -> 10L)).foreach(_.execute())
     * }}}
     *
+    * Throws:
     * $bindExceptions
     */
   def bind(params: (String, Any)*): T
@@ -56,6 +57,7 @@ trait Bindable[T] {
     * } yield ()
     * }}}
     *
+    * Resulting future can fail with:
     * $bindExceptions
     */
   def bindF(params: (String, Any)*): Future[T]
@@ -70,6 +72,7 @@ trait Bindable[T] {
     * insert.map(_.bind("str", 10L)).foreach(_.execute())
     * }}}
     *
+    * Throws:
     * $bindExceptions
     */
   def bindByIdx(params: Any*): T
@@ -90,6 +93,7 @@ trait Bindable[T] {
     * } yield ()
     * }}}
     *
+    * Resulting future can fail with:
     * $bindExceptions
     */
   def bindByIdxF(params: Any*): Future[T]
