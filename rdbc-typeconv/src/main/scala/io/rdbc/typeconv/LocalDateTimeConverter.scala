@@ -18,7 +18,7 @@ package io.rdbc.typeconv
 
 import java.time.{LocalDate, LocalDateTime}
 
-import io.rdbc.api.exceptions.ResultProcessingException.ConversionException
+import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter
 
 object LocalDateTimeConverter extends TypeConverter[LocalDateTime] {
