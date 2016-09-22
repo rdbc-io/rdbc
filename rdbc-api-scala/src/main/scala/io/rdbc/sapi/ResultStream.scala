@@ -31,11 +31,15 @@ trait ResultStream {
 
   /** A number of rows that were affected by the statement.
     *
+    * Clients can safely assume that a database is ready to accept new queries after this future completes.
+    *
     * $futureCompleteNote
     */
   def rowsAffected: Future[Long]
 
   /** A sequence of warnings that were emitted during processing the statement.
+    *
+    * Clients can safely assume that a database is ready to accept new queries after this future completes.
     *
     * $futureCompleteNote
     */
@@ -44,6 +48,16 @@ trait ResultStream {
   /** A meta data of columns of this result set */
   def metadata: RowMetadata
 
-  /** A reactive streams specification's `Publisher` giving access to the rows. */
+  /** A reactive streams specification's `Publisher` giving access to the rows.
+    *
+    * When this publisher signals that it is complete clients can safely assume that a database is ready to accept
+    * new queries. If subscription is cancelled though, clients have to wait for `commandCompletion` future to complete
+    * before issuing another queries.
+    */
   def rows: Publisher[Row]
+
+  /** Future that completes when database engine is done with the current command and is ready to receive a new query.
+    * $futureCompleteNote
+    */
+  def commandCompletion: Future[Unit]
 }
