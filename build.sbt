@@ -3,7 +3,7 @@ import de.heikoseeberger.sbtheader.license.Apache2_0
 
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
-  version := "0.0.6",
+  version := "0.0.7",
   scalaVersion := "2.11.8",
   scalacOptions ++= Vector(
     "-unchecked",
