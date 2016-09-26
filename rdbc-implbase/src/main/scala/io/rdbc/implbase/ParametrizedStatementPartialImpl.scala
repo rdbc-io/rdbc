@@ -44,12 +44,15 @@ trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   }
 
   def executeIgnoringResult()(implicit timeout: FiniteDuration): Future[Unit] = {
-    executeForRowsAffected().map(_ => ())
+    executeForStream().flatMap { source =>
+      source.rows.subscribe(new CancellingSubscriber[Row])
+      source.commandCompletion
+    }
   }
 
   def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = {
     executeForStream().flatMap { source =>
-      source.rows.subscribe(new CancellingSubscriber[Row])
+      source.rows.subscribe(new IgnoringSubscriber)
       source.rowsAffected
     }
   }
