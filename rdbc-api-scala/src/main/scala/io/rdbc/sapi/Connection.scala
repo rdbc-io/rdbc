@@ -186,4 +186,7 @@ trait Connection {
     * @todo describe exceptions
     */
   def streamIntoTable(sql: String, paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]
+
+  /** Returns a future that is complete when this connection is idle and ready for accepting queries. */
+  def watchForIdle: Future[this.type]
 }
