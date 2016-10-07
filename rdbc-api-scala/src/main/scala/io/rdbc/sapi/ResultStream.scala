@@ -55,9 +55,4 @@ trait ResultStream {
     * before issuing another queries.
     */
   def rows: Publisher[Row]
-
-  /** Future that completes when database engine is done with the current command and is ready to receive a new query.
-    * $futureCompleteNote
-    */
-  def commandCompletion: Future[Unit]
 }
