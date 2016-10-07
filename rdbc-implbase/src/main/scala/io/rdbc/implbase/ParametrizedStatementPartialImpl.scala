@@ -16,13 +16,14 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{ParametrizedStatement, ResultSet, ResultStream, Row}
+import io.rdbc.sapi._
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   implicit def ec: ExecutionContext
+  def connWatchForIdle: Future[Connection]
 
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
     executeForStream().flatMap { resultStream =>
@@ -46,7 +47,7 @@ trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   def executeIgnoringResult()(implicit timeout: FiniteDuration): Future[Unit] = {
     executeForStream().flatMap { source =>
       source.rows.subscribe(new CancellingSubscriber[Row])
-      source.commandCompletion
+      connWatchForIdle.map(_ => ())
     }
   }
 
