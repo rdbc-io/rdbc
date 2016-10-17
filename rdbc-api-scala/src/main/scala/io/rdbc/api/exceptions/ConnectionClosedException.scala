@@ -16,4 +16,9 @@
 
 package io.rdbc.api.exceptions
 
-case class ConnectionClosedException(msg: String) extends RdbcException(msg)
+object ConnectionClosedException {
+  def apply(msg: String): ConnectionClosedException = ConnectionClosedException(msg, None)
+  def apply(msg: String, cause: Throwable): ConnectionClosedException = ConnectionClosedException(msg, Some(cause))
+}
+
+case class ConnectionClosedException(msg: String, cause: Option[Throwable]) extends RdbcException(msg, cause)
