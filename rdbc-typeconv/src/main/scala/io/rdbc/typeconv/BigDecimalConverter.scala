@@ -38,6 +38,6 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
         case _: NumberFormatException => throw ConversionException(any, classOf[BigDecimal])
       }
 
-    case _ => throw ConversionException(any, classOf[Float])
+    case _ => throw ConversionException(any, classOf[BigDecimal])
   }
 }
