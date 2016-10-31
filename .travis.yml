@@ -8,7 +8,7 @@ sudo: false
 install: ci/bootstrap.sh
 #script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
 script: sbt ++$TRAVIS_SCALA_VERSION clean test
-after_success: bash <(curl -s https://codecov.io/bash)
+#after_success: bash <(curl -s https://codecov.io/bash)
 deploy:
   skip_cleanup: true
   provider: script
@@ -18,6 +18,7 @@ deploy:
 cache:
   directories:
   - "$HOME/.ivy2/cache"
+  - "$HOME/.coursier/cache"
   - "$HOME/.sbt/boot/"
 before_cache:
 - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
