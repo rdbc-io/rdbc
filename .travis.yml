@@ -3,9 +3,11 @@ jdk:
 - oraclejdk8
 scala:
 - 2.11.8
+- 2.12.0
 sudo: false
 install: ci/bootstrap.sh
-script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+#script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+script: sbt ++$TRAVIS_SCALA_VERSION clean test
 after_success: bash <(curl -s https://codecov.io/bash)
 deploy:
   skip_cleanup: true
