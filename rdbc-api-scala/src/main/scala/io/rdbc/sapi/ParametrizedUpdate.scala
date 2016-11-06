@@ -28,11 +28,11 @@ import scala.concurrent.duration.FiniteDuration
   *  be feasible to abort the operation immediately.
   * @define exceptions
   *  Returned future can fail with:
-  *  - [[io.rdbc.api.exceptions.StmtExecutionException.UnauthorizedException UnauthorizedException]] when client is not authorized to perform the action
-  *  - [[io.rdbc.api.exceptions.StmtExecutionException.InvalidQueryException InvalidQueryException]] when query is rejected by a database engine as invalid
-  *  - [[io.rdbc.api.exceptions.StmtExecutionException.InactiveTxException InactiveTxException]] when transaction is in progress but is in inactive state
-  *  - [[io.rdbc.api.exceptions.StmtExecutionException.ConstraintViolationException ConstraintViolationException]] when operation results in an integrity constraint violation
-  *  - [[io.rdbc.api.exceptions.StmtExecutionException.UncategorizedExecutionException UncategorizedExecutionException]] when a general statement execution error occurs
+  *  - [[io.rdbc.api.exceptions.UnauthorizedException UnauthorizedException]] when client is not authorized to perform the action
+  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]] when query is rejected by a database engine as invalid
+  *  - [[io.rdbc.api.exceptions.InactiveTxException InactiveTxException]] when transaction is in progress but is in inactive state
+  *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]] when operation results in an integrity constraint violation
+  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]] when a general statement execution error occurs
   */
 trait ParametrizedUpdate {
 

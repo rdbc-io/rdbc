@@ -24,6 +24,6 @@ object IntConverter extends TypeConverter[Int] {
 
   override def fromAny(any: Any): Int = any match {
     case jn: java.lang.Number => jn.intValue()
-    case _ => throw ConversionException(any, classOf[Int])
+    case _ => throw new ConversionException(any, classOf[Int])
   }
 }

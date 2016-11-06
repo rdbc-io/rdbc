@@ -25,7 +25,7 @@ import scala.util.Try
   *
   * @tparam T a type of a parametrized object returned after the binding
   * @define bindExceptions
-  *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
+  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]] when some parameter value was not provided
   *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
   */
 trait Bindable[T] {

@@ -18,8 +18,6 @@ package io.rdbc.api.exceptions
 
 import scala.concurrent.duration.FiniteDuration
 
-object TimeoutException {
-  def apply(timeout: FiniteDuration): TimeoutException = TimeoutException(s"Timeout occurred after waiting for configured time of $timeout")
+class TimeoutException(msg: String) extends RdbcException(msg) {
+  def this(timeout: FiniteDuration) = this(s"Timeout occurred after waiting for configured time of $timeout")
 }
-
-case class TimeoutException(msg: String) extends RdbcException(msg)

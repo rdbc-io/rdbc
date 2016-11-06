@@ -24,6 +24,6 @@ object LongConverter extends TypeConverter[Long] {
 
   override def fromAny(any: Any): Long = any match {
     case jn: java.lang.Number => jn.longValue()
-    case _ => throw ConversionException(any, classOf[Long])
+    case _ => throw new ConversionException(any, classOf[Long])
   }
 }

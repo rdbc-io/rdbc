@@ -24,6 +24,6 @@ object ShortConverter extends TypeConverter[Short] {
 
   override def fromAny(any: Any): Short = any match {
     case jn: java.lang.Number => jn.shortValue()
-    case _ => throw ConversionException(any, classOf[Short])
+    case _ => throw new ConversionException(any, classOf[Short])
   }
 }

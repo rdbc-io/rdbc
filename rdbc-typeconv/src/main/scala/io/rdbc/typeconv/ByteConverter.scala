@@ -24,6 +24,6 @@ object ByteConverter extends TypeConverter[Byte] {
 
   override def fromAny(any: Any): Byte = any match {
     case jn: java.lang.Number => jn.byteValue()
-    case _ => throw ConversionException(any, classOf[Byte])
+    case _ => throw new ConversionException(any, classOf[Byte])
   }
 }

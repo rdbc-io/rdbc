@@ -24,6 +24,6 @@ object FloatConverter extends TypeConverter[Float] {
 
   override def fromAny(any: Any): Float = any match {
     case jn: java.lang.Number => jn.floatValue()
-    case _ => throw ConversionException(any, classOf[Float])
+    case _ => throw new ConversionException(any, classOf[Float])
   }
 }
