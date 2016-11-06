@@ -27,6 +27,6 @@ object LocalTimeConverter extends TypeConverter[LocalTime] {
   override def fromAny(any: Any): LocalTime = any match {
     case lt: LocalTime => lt
     case ldt: LocalDateTime => ldt.toLocalTime
-    case _ => throw ConversionException(any, classOf[LocalTime])
+    case _ => throw new ConversionException(any, classOf[LocalTime])
   }
 }

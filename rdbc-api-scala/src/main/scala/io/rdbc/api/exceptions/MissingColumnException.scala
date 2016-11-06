@@ -16,15 +16,4 @@
 
 package io.rdbc.api.exceptions
 
-sealed abstract class ConnectException(msg: String) extends RdbcException(msg)
-
-object ConnectException {
-
-  case class AuthFailureException(msg: String) extends ConnectException(msg)
-
-  object UncategorizedConnectException {
-    def apply(msg: String): UncategorizedConnectException = UncategorizedConnectException(msg, None)
-  }
-
-  case class UncategorizedConnectException(msg: String, detail: Option[String]) extends ConnectException(msg)
-}
+class MissingColumnException(column: String) extends RdbcException(s"Requested column '$column' is not present in the row")

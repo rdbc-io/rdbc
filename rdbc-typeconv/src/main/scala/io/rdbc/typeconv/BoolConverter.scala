@@ -29,20 +29,20 @@ object BoolConverter extends TypeConverter[Boolean] {
       val long = jn.longValue()
       if (long == 1L) true
       else if (long == 0L) false
-      else throw ConversionException(jn, classOf[Boolean])
+      else throw new ConversionException(jn, classOf[Boolean])
 
     case char: Char => char2Bool(char)
 
     case str: String =>
       if (str.length == 1) char2Bool(str.head)
-      else throw ConversionException(str, classOf[Boolean])
+      else throw new ConversionException(str, classOf[Boolean])
 
-    case _ => throw ConversionException(any, classOf[Boolean])
+    case _ => throw new ConversionException(any, classOf[Boolean])
   }
 
   private def char2Bool(char: Char): Boolean = {
     if (char == '1' || char == 'T' || char == 'Y') true
     else if (char == '0' || char == 'F' || char == 'N') false
-    else throw ConversionException(char, classOf[Boolean])
+    else throw new ConversionException(char, classOf[Boolean])
   }
 }

@@ -16,9 +16,7 @@
 
 package io.rdbc.api.exceptions
 
-object IllegalSessionStateException {
-  def apply(msg: String): IllegalSessionStateException = IllegalSessionStateException(msg, None)
-  def apply(msg: String, cause: Throwable): IllegalSessionStateException = IllegalSessionStateException(msg, Some(cause))
+class IllegalSessionStateException(msg: String, cause: Option[Throwable]) extends RdbcException(msg, cause) {
+  def this(msg: String) = this(msg, None)
+  def this(msg: String, cause: RdbcException) = this(msg, Some(cause))
 }
-
-case class IllegalSessionStateException(msg: String, cause: Option[Throwable]) extends RdbcException(msg, cause)

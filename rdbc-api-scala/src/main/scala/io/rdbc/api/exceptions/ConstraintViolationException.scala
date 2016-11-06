@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package io.rdbc.typeconv
+package io.rdbc.api.exceptions
 
-import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi.TypeConverter
-
-object DoubleConverter extends TypeConverter[Double] {
-  val cls = classOf[Double]
-
-  override def fromAny(any: Any): Double = any match {
-    case jn: java.lang.Number => jn.doubleValue()
-    case _ => throw new ConversionException(any, classOf[Double])
-  }
+class ConstraintViolationException(schema: String, table: String, constraint: String, msg: String) extends RdbcException(msg) {
+  def this(schema: String, table: String, constraint: String) = this(schema, table, constraint, s"Constraint $constraint violation on table $schema.$table")
 }

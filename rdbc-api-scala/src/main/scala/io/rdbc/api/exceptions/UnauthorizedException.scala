@@ -16,11 +16,4 @@
 
 package io.rdbc.api.exceptions
 
-sealed abstract class ResultProcessingException(msg: String) extends RdbcException(msg)
-
-object ResultProcessingException {
-
-  case class MissingColumnException(column: String) extends ResultProcessingException(s"Requested column '$column' is not present in the row")
-
-  case class UnsupportedDbTypeException(dbTypeDesc: String) extends ResultProcessingException(s"Database native type '$dbTypeDesc' is not supported")
-}
+class UnauthorizedException(msg: String) extends RdbcException(msg)
