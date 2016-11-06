@@ -16,11 +16,4 @@
 
 package io.rdbc.api.exceptions
 
-sealed abstract class ParseException(msg: String) extends RdbcException(msg: String)
-
-object ParseException {
-
-  case class SyntaxErrorException(msg: String, errorPosition: Option[Int]) extends ParseException(msg)
-
-  case class UncategorizedParseException(msg: String, detail: Option[String]) extends ParseException(msg)
-}
+class UnsupportedDbTypeException(dbTypeDesc: String) extends RdbcException(s"Database native type '$dbTypeDesc' is not supported") //TODO this is not used

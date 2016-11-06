@@ -27,8 +27,8 @@ object CharConverter extends TypeConverter[Char] {
 
     case str: String =>
       if (str.length == 1) str.head
-      else throw ConversionException(str, classOf[Char])
+      else throw new ConversionException(str, classOf[Char])
 
-    case _ => throw ConversionException(any, classOf[Char])
+    case _ => throw new ConversionException(any, classOf[Char])
   }
 }

@@ -33,7 +33,7 @@ trait Statement extends Bindable[ParametrizedStatement] {
     * is a map containing all parameters required by this statement.
     *
     * Resulting future can fail with:
-    *  - [[io.rdbc.api.exceptions.BindException#MissingParamValException MissingParamValException]] when some parameter value was not provided
+    *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]] when some parameter value was not provided
     *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
     */
   def streamParams(paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]

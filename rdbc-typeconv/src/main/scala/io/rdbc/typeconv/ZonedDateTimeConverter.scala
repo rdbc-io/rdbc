@@ -27,6 +27,6 @@ object ZonedDateTimeConverter extends TypeConverter[ZonedDateTime] {
   override def fromAny(any: Any): ZonedDateTime = any match {
     case zdt: ZonedDateTime => zdt
     case i: Instant => ZonedDateTime.ofInstant(i, ZoneId.systemDefault())
-    case _ => throw ConversionException(any, classOf[ZonedDateTime])
+    case _ => throw new ConversionException(any, classOf[ZonedDateTime])
   }
 }

@@ -27,6 +27,6 @@ object InstantConverter extends TypeConverter[Instant] {
   override def fromAny(any: Any): Instant = any match {
     case i: Instant => i
     case zdt: ZonedDateTime => zdt.toInstant
-    case _ => throw ConversionException(any, classOf[Instant])
+    case _ => throw new ConversionException(any, classOf[Instant])
   }
 }

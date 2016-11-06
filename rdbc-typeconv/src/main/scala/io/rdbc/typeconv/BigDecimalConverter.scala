@@ -35,9 +35,9 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
       try {
         BigDecimal.exact(str)
       } catch {
-        case _: NumberFormatException => throw ConversionException(any, classOf[BigDecimal])
+        case _: NumberFormatException => throw new ConversionException(any, classOf[BigDecimal])
       }
 
-    case _ => throw ConversionException(any, classOf[BigDecimal])
+    case _ => throw new ConversionException(any, classOf[BigDecimal])
   }
 }

@@ -38,7 +38,7 @@ trait RowPartialImpl extends Row {
       } else {
         typeConverterRegistry.converters.get(cls)
           .map(converter => converter.fromAny(raw).asInstanceOf[A])
-          .getOrElse(throw ConversionException(raw, cls))
+          .getOrElse(throw new ConversionException(raw, cls))
       }
     }
   }
