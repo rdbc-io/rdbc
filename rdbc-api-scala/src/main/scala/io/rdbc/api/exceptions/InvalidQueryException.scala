@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-package io.rdbc.typeconv
+package io.rdbc.api.exceptions
 
-import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi.TypeConverter
-
-object DoubleConverter extends TypeConverter[Double] {
-  val cls = classOf[Double]
-
-  override def fromAny(any: Any): Double = any match {
-    case jn: java.lang.Number => jn.doubleValue()
-    case _ => throw new ConversionException(any, classOf[Double])
-  }
-}
+class InvalidQueryException(msg: String, errorPosition: Option[Int]) extends RdbcException(msg)

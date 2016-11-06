@@ -24,6 +24,6 @@ object StringConverter extends TypeConverter[String] {
 
   def fromAny(any: Any): String = any match {
     case str: String => str
-    case _ => throw ConversionException(any, classOf[String])
+    case _ => throw new ConversionException(any, classOf[String])
   }
 }

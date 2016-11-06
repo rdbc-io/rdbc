@@ -30,9 +30,9 @@ object UuidConverter extends TypeConverter[UUID] {
       try {
         UUID.fromString(str)
       } catch {
-        case _: IllegalArgumentException => throw ConversionException(any, classOf[UUID])
+        case _: IllegalArgumentException => throw new ConversionException(any, classOf[UUID])
       }
 
-    case _ => throw ConversionException(any, classOf[UUID])
+    case _ => throw new ConversionException(any, classOf[UUID])
   }
 }

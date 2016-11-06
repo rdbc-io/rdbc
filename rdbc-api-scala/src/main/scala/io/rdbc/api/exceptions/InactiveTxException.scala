@@ -16,10 +16,6 @@
 
 package io.rdbc.api.exceptions
 
-sealed abstract class BindException(msg: String) extends RdbcException(msg: String)
-
-object BindException {
-
-  case class MissingParamValException(param: String) extends BindException(s"Value is missing for parameter '$param'")
-
+class InactiveTxException(msg: String) extends RdbcException(msg) {
+  def this() = this("Current transaction is not active")
 }

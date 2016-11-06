@@ -16,7 +16,7 @@
 
 package io.rdbc.api.exceptions
 
-case class BeginTxException(msg: String, cause: Option[RdbcException]) extends RdbcException(msg, cause) {
+class BeginTxException(msg: String, cause: Option[RdbcException]) extends RdbcException(msg, cause) {
   def this(msg: String) =  this(msg, None)
   def this(msg: String, cause: RdbcException) =  this(msg, Some(cause))
 }
