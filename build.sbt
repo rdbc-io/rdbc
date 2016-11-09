@@ -48,6 +48,7 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
     name := "rdbc-api-java",
     crossPaths := false,
     crossScalaVersions := Vector(scalaVersion.value),
+    publishArtifact := (scalaVersion in ThisBuild).value == scalaVersion.value,
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
