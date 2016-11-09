@@ -41,7 +41,7 @@ trait Bindable[T] {
     * Throws:
     * $bindExceptions
     */
-  def bind(params: (String, Any)*): T
+  def bind(params: (String, Any)*): T //TODO think about using HList
 
   /** Binds each parameter by name and wraps a result in a Future.
     *
