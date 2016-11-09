@@ -2,7 +2,7 @@ import de.heikoseeberger.sbtheader.license.Apache2_0
 
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
-  version := "0.0.14",
+  version := "0.0.15",
   scalaVersion := "2.12.0",
   crossScalaVersions := Seq("2.11.8"),
   scalacOptions ++= Vector(
@@ -46,8 +46,7 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
   .settings(
     name := "rdbc-api-java",
     crossPaths := false,
-    crossScalaVersions := Vector(scalaVersion.value),
-    publishArtifact := (scalaVersion in ThisBuild).value == scalaVersion.value,
+    publishArtifact := scalaVersion.value.startsWith("2.12"),
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
