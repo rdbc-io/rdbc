@@ -23,6 +23,7 @@ import io.rdbc.sapi._
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
 class ParametrizedReturningInsertImpl(stmt: ParametrizedStatement)(implicit ec: ExecutionContext) extends ParametrizedReturningInsert {
 
@@ -34,16 +35,16 @@ class ParametrizedReturningInsertImpl(stmt: ParametrizedStatement)(implicit ec: 
 
   def executeForKeysSet()(implicit timeout: FiniteDuration): Future[ResultSet] = stmt.executeForSet()
 
-  def executeForKey[K](cls: Class[K])(implicit timeout: FiniteDuration): Future[K] = {
-    stmt.executeForValue[K](_.obj(0, cls)).flatMap {
+  def executeForKey[K: ClassTag](implicit timeout: FiniteDuration): Future[K] = {
+    stmt.executeForValue[K](_.col(0)).flatMap {
       case Some(key) => Future.successful(key)
       case None => Future.failed(NoKeysReturnedException)
     }
   }
 
-  def executeForIntKey()(implicit timeout: FiniteDuration): Future[Int] = executeForKey(classOf[Int])
+  def executeForIntKey()(implicit timeout: FiniteDuration): Future[Int] = executeForKey
 
-  def executeForLongKey()(implicit timeout: FiniteDuration): Future[Long] = executeForKey(classOf[Long])
+  def executeForLongKey()(implicit timeout: FiniteDuration): Future[Long] = executeForKey
 
-  def executeForUUIDKey()(implicit timeout: FiniteDuration): Future[UUID] = executeForKey(classOf[UUID])
+  def executeForUUIDKey()(implicit timeout: FiniteDuration): Future[UUID] = executeForKey
 }

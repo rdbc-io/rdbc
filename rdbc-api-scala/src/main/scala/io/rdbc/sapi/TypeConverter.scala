@@ -21,7 +21,6 @@ package io.rdbc.sapi
   * @tparam T conversion's target type
   */
 trait TypeConverter[T] {
-  //TODO can def cls be replaced by a class tag?
 
   /** A conversion's target class */
   def cls: Class[T]

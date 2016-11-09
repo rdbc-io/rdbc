@@ -19,6 +19,8 @@ package io.rdbc.sapi
 import java.time._
 import java.util.UUID
 
+import scala.reflect.ClassTag
+
 /** Represents a row of a result returned by a database engine.
   *
   * This class defines a set of methods that can be used to get values from the row either by a column name
@@ -44,7 +46,7 @@ trait Row {
     *
     * $exceptions
     */
-  def obj[A](idx: Int, cls: Class[A]): A //TODO can this be replaced by a class tag?
+  def col[A: ClassTag](idx: Int): A
 
   /** Returns an object of type `A` from column with `idx` index.
     *
@@ -52,7 +54,7 @@ trait Row {
     *
     * $exceptions
     */
-  def objOpt[A](idx: Int, cls: Class[A]): Option[A]
+  def colOpt[A: ClassTag](idx: Int): Option[A]
 
   /** Returns an object of type `A` from column with `name` name.
     *
@@ -60,7 +62,7 @@ trait Row {
     *
     * $exceptions
     */
-  def obj[A](name: String, cls: Class[A]): A
+  def col[A: ClassTag](name: String): A
 
   /** Returns an object of type `A` from column with `name` name.
     *
@@ -68,7 +70,7 @@ trait Row {
     *
     * $exceptions
     */
-  def objOpt[A](name: String, cls: Class[A]): Option[A]
+  def colOpt[A: ClassTag](name: String): Option[A]
 
   /** Returns a [[String]] from column with `name` name.
     *
