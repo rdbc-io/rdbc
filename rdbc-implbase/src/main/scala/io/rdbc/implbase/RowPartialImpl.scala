@@ -22,6 +22,8 @@ import java.util.UUID
 import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.{Row, TypeConverterRegistry}
 
+import scala.reflect.ClassTag
+
 trait RowPartialImpl extends Row {
 
   protected def typeConverterRegistry: TypeConverterRegistry
@@ -43,93 +45,93 @@ trait RowPartialImpl extends Row {
     }
   }
 
-  def obj[A](name: String, cls: Class[A]): A = {
+  def col[A: ClassTag](name: String): A = {
     val raw = notConverted(name)
-    convert(raw, cls)
+    convert(raw, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
   }
 
-  def obj[A](idx: Int, cls: Class[A]): A = {
+  def col[A: ClassTag](idx: Int): A = {
     val raw = notConverted(idx)
-    convert(raw, cls)
+    convert(raw, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
   }
 
-  def objOpt[A](idx: Int, cls: Class[A]): Option[A] = Option(obj[A](idx, cls))
+  def colOpt[A: ClassTag](idx: Int): Option[A] = Option(col[A](idx))
 
-  def objOpt[A](name: String, cls: Class[A]): Option[A] = Option(obj[A](name, cls))
+  def colOpt[A: ClassTag](name: String): Option[A] = Option(col[A](name))
 
-  def str(name: String): String = obj(name, classOf[String])
+  def str(name: String): String = col(name)
 
-  def strOpt(name: String): Option[String] = objOpt(name, classOf[String])
+  def strOpt(name: String): Option[String] = colOpt(name)
 
-  def bool(name: String): Boolean = obj(name, classOf[Boolean])
+  def bool(name: String): Boolean = col(name)
 
-  def boolOpt(name: String): Option[Boolean] = objOpt(name, classOf[Boolean])
+  def boolOpt(name: String): Option[Boolean] = colOpt(name)
 
-  def char(name: String): Char = obj(name, classOf[Char])
+  def char(name: String): Char = col(name)
 
-  def charOpt(name: String): Option[Char] = objOpt(name, classOf[Char])
+  def charOpt(name: String): Option[Char] = colOpt(name)
 
-  def short(name: String): Short = obj(name, classOf[Short])
+  def short(name: String): Short = col(name)
 
-  def shortOpt(name: String): Option[Short] = objOpt(name, classOf[Short])
+  def shortOpt(name: String): Option[Short] = colOpt(name)
 
-  def int(name: String): Int = obj(name, classOf[Int])
+  def int(name: String): Int = col(name)
 
-  def intOpt(name: String): Option[Int] = objOpt(name, classOf[Int])
+  def intOpt(name: String): Option[Int] = colOpt(name)
 
-  def int(idx: Int): Int = obj(idx, classOf[Int])
+  def int(idx: Int): Int = col(idx)
 
-  def intOpt(idx: Int): Option[Int] = objOpt(idx, classOf[Int])
+  def intOpt(idx: Int): Option[Int] = colOpt(idx)
 
-  def long(name: String): Long = obj(name, classOf[Long])
+  def long(name: String): Long = col(name)
 
-  def longOpt(name: String): Option[Long] = objOpt(name, classOf[Long])
+  def longOpt(name: String): Option[Long] = colOpt(name)
 
-  def long(idx: Int): Long = obj(idx, classOf[Long])
+  def long(idx: Int): Long = col(idx)
 
-  def longOpt(idx: Int): Option[Long] = objOpt(idx, classOf[Long])
+  def longOpt(idx: Int): Option[Long] = colOpt(idx)
 
-  def bigDecimal(name: String): BigDecimal = obj(name, classOf[BigDecimal])
+  def bigDecimal(name: String): BigDecimal = col(name)
 
-  def bigDecimalOpt(name: String): Option[BigDecimal] = objOpt(name, classOf[BigDecimal])
+  def bigDecimalOpt(name: String): Option[BigDecimal] = colOpt(name)
 
-  def double(name: String): Double = obj(name, classOf[Double])
+  def double(name: String): Double = col(name)
 
-  def doubleOpt(name: String): Option[Double] = objOpt(name, classOf[Double])
+  def doubleOpt(name: String): Option[Double] = colOpt(name)
 
-  def float(name: String): Float = obj(name, classOf[Float])
+  def float(name: String): Float = col(name)
 
-  def floatOpt(name: String): Option[Float] = objOpt(name, classOf[Float])
+  def floatOpt(name: String): Option[Float] = colOpt(name)
 
-  def instant(name: String): Instant = obj(name, classOf[Instant])
+  def instant(name: String): Instant = col(name)
 
-  def instantOpt(name: String): Option[Instant] = objOpt(name, classOf[Instant])
+  def instantOpt(name: String): Option[Instant] = colOpt(name)
 
-  def localDateTime(name: String): LocalDateTime = obj(name, classOf[LocalDateTime])
+  def localDateTime(name: String): LocalDateTime = col(name)
 
-  def localDateTimeOpt(name: String): Option[LocalDateTime] = objOpt(name, classOf[LocalDateTime])
+  def localDateTimeOpt(name: String): Option[LocalDateTime] = colOpt(name)
 
-  def zonedDateTime(name: String): ZonedDateTime = obj(name, classOf[ZonedDateTime])
+  def zonedDateTime(name: String): ZonedDateTime = col(name)
 
-  def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = objOpt(name, classOf[ZonedDateTime])
+  def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = colOpt(name)
 
-  def localDate(name: String): LocalDate = obj(name, classOf[LocalDate])
+  def localDate(name: String): LocalDate = col(name)
 
-  def localDateOpt(name: String): Option[LocalDate] = objOpt(name, classOf[LocalDate])
+  def localDateOpt(name: String): Option[LocalDate] = colOpt(name)
 
-  def localTime(name: String): LocalTime = obj(name, classOf[LocalTime])
+  def localTime(name: String): LocalTime = col(name)
 
-  def localTimeOpt(name: String): Option[LocalTime] = objOpt(name, classOf[LocalTime])
+  def localTimeOpt(name: String): Option[LocalTime] = colOpt(name)
 
-  def bytes(name: String): Array[Byte] = obj(name, classOf[Array[Byte]])
+  def bytes(name: String): Array[Byte] = col(name)
 
-  def bytesOpt(name: String): Option[Array[Byte]] = objOpt(name, classOf[Array[Byte]])
+  def bytesOpt(name: String): Option[Array[Byte]] = colOpt(name)
 
-  def uuid(name: String): UUID = obj(name, classOf[UUID])
+  def uuid(name: String): UUID = col(name)
 
-  def uuidOpt(name: String): Option[UUID] = objOpt(name, classOf[UUID])
+  def uuidOpt(name: String): Option[UUID] = colOpt(name)
 
-  def uuid(idx: Int): UUID = obj(idx, classOf[UUID])
+  def uuid(idx: Int): UUID = col(idx)
 
-  def uuidOpt(idx: Int): Option[UUID] = objOpt(idx, classOf[UUID])
+  def uuidOpt(idx: Int): Option[UUID] = colOpt(idx)
 }
