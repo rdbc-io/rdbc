@@ -59,79 +59,79 @@ trait RowPartialImpl extends Row {
 
   def colOpt[A: ClassTag](name: String): Option[A] = Option(col[A](name))
 
-  def str(name: String): String = col(name)
+  def str(name: String): String = col[String](name)
 
-  def strOpt(name: String): Option[String] = colOpt(name)
+  def strOpt(name: String): Option[String] = colOpt[String](name)
 
-  def bool(name: String): Boolean = col(name)
+  def bool(name: String): Boolean = col[Boolean](name)
 
-  def boolOpt(name: String): Option[Boolean] = colOpt(name)
+  def boolOpt(name: String): Option[Boolean] = colOpt[Boolean](name)
 
-  def char(name: String): Char = col(name)
+  def char(name: String): Char = col[Char](name)
 
-  def charOpt(name: String): Option[Char] = colOpt(name)
+  def charOpt(name: String): Option[Char] = colOpt[Char](name)
 
-  def short(name: String): Short = col(name)
+  def short(name: String): Short = col[Short](name)
 
-  def shortOpt(name: String): Option[Short] = colOpt(name)
+  def shortOpt(name: String): Option[Short] = colOpt[Short](name)
 
-  def int(name: String): Int = col(name)
+  def int(name: String): Int = col[Int](name)
 
-  def intOpt(name: String): Option[Int] = colOpt(name)
+  def intOpt(name: String): Option[Int] = colOpt[Int](name)
 
-  def int(idx: Int): Int = col(idx)
+  def int(idx: Int): Int = col[Int](idx)
 
-  def intOpt(idx: Int): Option[Int] = colOpt(idx)
+  def intOpt(idx: Int): Option[Int] = colOpt[Int](idx)
 
-  def long(name: String): Long = col(name)
+  def long(name: String): Long = col[Long](name)
 
-  def longOpt(name: String): Option[Long] = colOpt(name)
+  def longOpt(name: String): Option[Long] = colOpt[Long](name)
 
-  def long(idx: Int): Long = col(idx)
+  def long(idx: Int): Long = col[Long](idx)
 
-  def longOpt(idx: Int): Option[Long] = colOpt(idx)
+  def longOpt(idx: Int): Option[Long] = colOpt[Long](idx)
 
-  def bigDecimal(name: String): BigDecimal = col(name)
+  def bigDecimal(name: String): BigDecimal = col[BigDecimal](name)
 
-  def bigDecimalOpt(name: String): Option[BigDecimal] = colOpt(name)
+  def bigDecimalOpt(name: String): Option[BigDecimal] = colOpt[BigDecimal](name)
 
-  def double(name: String): Double = col(name)
+  def double(name: String): Double = col[Double](name)
 
-  def doubleOpt(name: String): Option[Double] = colOpt(name)
+  def doubleOpt(name: String): Option[Double] = colOpt[Double](name)
 
-  def float(name: String): Float = col(name)
+  def float(name: String): Float = col[Float](name)
 
-  def floatOpt(name: String): Option[Float] = colOpt(name)
+  def floatOpt(name: String): Option[Float] = colOpt[Float](name)
 
-  def instant(name: String): Instant = col(name)
+  def instant(name: String): Instant = col[Instant](name)
 
-  def instantOpt(name: String): Option[Instant] = colOpt(name)
+  def instantOpt(name: String): Option[Instant] = colOpt[Instant](name)
 
-  def localDateTime(name: String): LocalDateTime = col(name)
+  def localDateTime(name: String): LocalDateTime = col[LocalDateTime](name)
 
-  def localDateTimeOpt(name: String): Option[LocalDateTime] = colOpt(name)
+  def localDateTimeOpt(name: String): Option[LocalDateTime] = colOpt[LocalDateTime](name)
 
-  def zonedDateTime(name: String): ZonedDateTime = col(name)
+  def zonedDateTime(name: String): ZonedDateTime = col[ZonedDateTime](name)
 
-  def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = colOpt(name)
+  def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = colOpt[ZonedDateTime](name)
 
-  def localDate(name: String): LocalDate = col(name)
+  def localDate(name: String): LocalDate = col[LocalDate](name)
 
-  def localDateOpt(name: String): Option[LocalDate] = colOpt(name)
+  def localDateOpt(name: String): Option[LocalDate] = colOpt[LocalDate](name)
 
-  def localTime(name: String): LocalTime = col(name)
+  def localTime(name: String): LocalTime = col[LocalTime](name)
 
-  def localTimeOpt(name: String): Option[LocalTime] = colOpt(name)
+  def localTimeOpt(name: String): Option[LocalTime] = colOpt[LocalTime](name)
 
-  def bytes(name: String): Array[Byte] = col(name)
+  def bytes(name: String): Array[Byte] = col[Array[Byte]](name)
 
-  def bytesOpt(name: String): Option[Array[Byte]] = colOpt(name)
+  def bytesOpt(name: String): Option[Array[Byte]] = colOpt[Array[Byte]](name)
 
-  def uuid(name: String): UUID = col(name)
+  def uuid(name: String): UUID = col[UUID](name)
 
-  def uuidOpt(name: String): Option[UUID] = colOpt(name)
+  def uuidOpt(name: String): Option[UUID] = colOpt[UUID](name)
 
-  def uuid(idx: Int): UUID = col(idx)
+  def uuid(idx: Int): UUID = col[UUID](idx)
 
-  def uuidOpt(idx: Int): Option[UUID] = colOpt(idx)
+  def uuidOpt(idx: Int): Option[UUID] = colOpt[UUID](idx)
 }
