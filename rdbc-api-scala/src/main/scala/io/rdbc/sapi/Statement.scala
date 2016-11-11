@@ -37,4 +37,10 @@ trait Statement extends Bindable[ParametrizedStatement] {
     *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
     */
   def streamParams(paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]
+
+  /** Deallocates database resources related to this statement.
+    *
+    * This method is safe to call multiple times on the same instance.
+    */
+  def deallocate(): Future[Unit]
 }

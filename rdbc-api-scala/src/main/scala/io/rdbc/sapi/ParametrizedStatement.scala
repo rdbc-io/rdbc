@@ -122,4 +122,10 @@ trait ParametrizedStatement {
     * @param valExtractor function used to extract value from the returned row
     */
   def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]]
+
+  /** Deallocates database resources related to this statement.
+    *
+    * This method is safe to call multiple times on the same instance.
+    */
+  def deallocate(): Future[Unit]
 }
