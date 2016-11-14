@@ -186,23 +186,6 @@ trait Connection {
     */
   def statement(sql: String): Future[Statement]
 
-  /** Efficiently inserts values to a single database table.
-    *
-    * Many database engines provide an efficient way of inserting data to the single database table. This method is
-    * intended to leverage this special database engine's feature.
-    *
-    * `sql` provided by the client has to be an insert statement that does not depend on any subqueries and the only
-    * values that are inserted must be provided in the statement parameters.
-    *
-    * $statementParametrization
-    *
-    * Parameters are provided via a reactive streams specification `Publisher`. Each published element is a map containing
-    * all arguments that the insert statement requires.
-    *
-    * @todo describe exceptions
-    */
-  def streamIntoTable(sql: String, paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]
-
   /** Returns a future that is complete when this connection is idle and ready for accepting queries. */
   def watchForIdle: Future[this.type]
 }
