@@ -16,6 +16,6 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{Delete, ParametrizedDelete, Statement}
+import io.rdbc.sapi.{AnyStatement, Delete, ParametrizedDelete}
 
-class DeleteImpl(stmt: Statement) extends StmtWrapper[ParametrizedDelete](stmt)(new ParametrizedDeleteImpl(_)) with Delete
+class DeleteImpl(stmt: AnyStatement) extends StmtWrapper[ParametrizedDelete](stmt)(new ParametrizedDeleteImpl(_)) with Delete

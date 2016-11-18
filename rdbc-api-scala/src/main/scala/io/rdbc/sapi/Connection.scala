@@ -176,7 +176,7 @@ trait Connection {
     */
   def delete(sql: String): Future[Delete]
 
-  /** Returns a [[Statement]] instance bound to this connection that represents any SQL statement.
+  /** Returns an [[AnyStatement]] instance bound to this connection that represents any SQL statement.
     *
     * Clients are encouraged to use `select`, `insert`, `update`, `delete` methods in favor of this generic method.
     *
@@ -184,7 +184,7 @@ trait Connection {
     *
     * $statementExceptions
     */
-  def statement(sql: String): Future[Statement]
+  def statement(sql: String): Future[AnyStatement]
 
   /** Returns a future that is complete when this connection is idle and ready for accepting queries. */
   def watchForIdle: Future[this.type]

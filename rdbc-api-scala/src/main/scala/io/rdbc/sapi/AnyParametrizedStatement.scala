@@ -19,7 +19,7 @@ package io.rdbc.sapi
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
-/** Represents a parametized statement.
+/** Represents a parametrized statement of any type.
   *
   * Parametrized statement is a statement that has all parameters provided and is ready to be executed.
   *
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
   *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]] when operation results in an integrity constraint violation
   *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]] when a general statement execution error occurs //TODO should UncategorizedRdbcException throwing be even documented?
   */
-trait ParametrizedStatement {
+trait AnyParametrizedStatement {
 
   /** Executes this statement and returns a [[ResultStream]] instance that can be used to stream
     * rows from the database leveraging Reactive Streams specification's `Publisher`

@@ -19,7 +19,7 @@ package io.rdbc.sapi
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-/** Represents a parametized insert statement.
+/** Represents a parametrized insert statement.
   *
   * Parametrized statement is a statement that has all parameters provided and is ready to be executed.
   *

@@ -21,7 +21,7 @@ import io.rdbc.sapi._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
-trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
+trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
   implicit def ec: ExecutionContext
 
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
