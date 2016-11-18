@@ -23,7 +23,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   implicit def ec: ExecutionContext
-  def connWatchForIdle: Future[Connection]
 
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
     executeForStream().flatMap { resultStream =>
@@ -45,10 +44,7 @@ trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   }
 
   def executeIgnoringResult()(implicit timeout: FiniteDuration): Future[Unit] = {
-    executeForStream().flatMap { source =>
-      source.rows.subscribe(new CancellingSubscriber[Row])
-      connWatchForIdle.map(_ => ())
-    }
+    executeForRowsAffected().map(_ => ())
   }
 
   def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = {
