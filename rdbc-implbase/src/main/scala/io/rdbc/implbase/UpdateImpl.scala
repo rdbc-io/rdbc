@@ -16,6 +16,6 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{ParametrizedUpdate, Statement, Update}
+import io.rdbc.sapi.{AnyStatement, ParametrizedUpdate, Update}
 
-class UpdateImpl(stmt: Statement) extends StmtWrapper[ParametrizedUpdate](stmt)(new ParametrizedUpdateImpl(_)) with Update
+class UpdateImpl(stmt: AnyStatement) extends StmtWrapper[ParametrizedUpdate](stmt)(new ParametrizedUpdateImpl(_)) with Update

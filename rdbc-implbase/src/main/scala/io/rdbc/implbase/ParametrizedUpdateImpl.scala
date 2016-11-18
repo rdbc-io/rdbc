@@ -16,12 +16,12 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{ParametrizedStatement, ParametrizedUpdate}
+import io.rdbc.sapi.{AnyParametrizedStatement, ParametrizedUpdate}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-class ParametrizedUpdateImpl(stmt: ParametrizedStatement) extends ParametrizedUpdate {
+class ParametrizedUpdateImpl(stmt: AnyParametrizedStatement) extends ParametrizedUpdate {
 
   def execute()(implicit timeout: FiniteDuration): Future[Unit] = stmt.executeIgnoringResult()
 

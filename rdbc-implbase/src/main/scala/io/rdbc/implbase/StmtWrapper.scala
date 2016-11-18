@@ -16,9 +16,9 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{Bindable, ParametrizedStatement, Statement}
+import io.rdbc.sapi.{AnyParametrizedStatement, AnyStatement}
 
-class StmtWrapper[A](underlying: Statement)(parametrizedConv: ParametrizedStatement => A)
+class StmtWrapper[A](underlying: AnyStatement)(parametrizedConv: AnyParametrizedStatement => A)
   extends BindablePartialImpl[A] {
 
   override def bind(params: (String, Any)*): A = {

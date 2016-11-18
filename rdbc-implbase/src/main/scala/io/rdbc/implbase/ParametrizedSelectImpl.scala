@@ -21,7 +21,7 @@ import io.rdbc.sapi._
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-class ParametrizedSelectImpl(stmt: ParametrizedStatement) extends ParametrizedSelect {
+class ParametrizedSelectImpl(stmt: AnyParametrizedStatement) extends ParametrizedSelect {
 
   def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream] = stmt.executeForStream()
 
