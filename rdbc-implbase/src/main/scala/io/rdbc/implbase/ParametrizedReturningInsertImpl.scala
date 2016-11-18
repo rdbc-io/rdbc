@@ -25,7 +25,7 @@ import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
-class ParametrizedReturningInsertImpl(stmt: ParametrizedStatement)(implicit ec: ExecutionContext) extends ParametrizedReturningInsert {
+class ParametrizedReturningInsertImpl(stmt: AnyParametrizedStatement)(implicit ec: ExecutionContext) extends ParametrizedReturningInsert {
 
   def execute()(implicit timeout: FiniteDuration): Future[Unit] = stmt.executeIgnoringResult()
 

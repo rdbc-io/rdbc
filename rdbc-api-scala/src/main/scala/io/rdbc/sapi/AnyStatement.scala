@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package io.rdbc.implbase
+package io.rdbc.sapi
 
-import io.rdbc.sapi.{AnyStatement, Insert, ParametrizedInsert}
-
-class InsertImpl(stmt: AnyStatement) extends StmtWrapper[ParametrizedInsert](stmt)(new ParametrizedInsertImpl(_)) with Insert
+/** Represents a SQL statement of any type */
+trait AnyStatement extends Statement[AnyParametrizedStatement]

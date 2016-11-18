@@ -20,9 +20,12 @@ import org.reactivestreams.Publisher
 
 import scala.concurrent.Future
 
-/** Represents a SQL statement of any type */
-trait Statement extends Bindable[ParametrizedStatement] {
-
+/**
+  * Represent a SQL statement
+  *
+  * @tparam P a type which this statement returns when bound to parameters
+  */
+trait Statement[P] extends Bindable[P] {
   /** A native vendor-specific SQL statement string */
   def nativeSql: String
 
