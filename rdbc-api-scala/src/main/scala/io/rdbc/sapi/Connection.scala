@@ -108,9 +108,11 @@ trait Connection {
 
   /** Checks whether the connection is still usable.
     *
+    * If checking takes longer than `timeout`, connection is considered unusable.
+    *
     * @return Future of `true` iff connection is usable, `false` otherwise
     */
-  def validate(): Future[Boolean]
+  def validate()(implicit timeout: FiniteDuration): Future[Boolean]
 
   /** Returns a [[Select]] instance bound to this connection that represents a SQL select statement.
     *
