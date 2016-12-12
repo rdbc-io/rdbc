@@ -32,4 +32,11 @@ trait ConnectionFactory {
     * Future can fail with subclasses of [[io.rdbc.api.exceptions.ConnectException]]. //TODO describe subclasses
     */
   def connection(): Future[Connection]
+
+  /** Shuts down this connection factory.
+    *
+    * Returned future never fails - it completes on finished shutdown attempt.
+    * After the factory is shut down it is illegal to request new connections from it.
+    */
+  def shutdown(): Future[Unit]
 }
