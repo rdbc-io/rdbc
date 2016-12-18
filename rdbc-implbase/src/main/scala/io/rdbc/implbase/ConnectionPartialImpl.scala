@@ -32,4 +32,31 @@ trait ConnectionPartialImpl extends Connection {
 
   def update(sql: String): Future[Update] = statement(sql).map(new UpdateImpl(_))
 
+  def delete(sqlWithParams: SqlAndParams): Future[ParametrizedDelete] = {
+    parametrizedStmt(delete)(sqlWithParams)
+  }
+
+  def insert(sqlWithParams: SqlAndParams): Future[ParametrizedInsert] = {
+    parametrizedStmt(insert)(sqlWithParams)
+  }
+
+  def select(sqlWithParams: SqlAndParams): Future[ParametrizedSelect] = {
+    parametrizedStmt(select)(sqlWithParams)
+  }
+
+  def update(sqlWithParams: SqlAndParams): Future[ParametrizedUpdate] = {
+    parametrizedStmt(update)(sqlWithParams)
+  }
+
+  def returningInsert(sqlWithParams: SqlAndParams): Future[ParametrizedReturningInsert] = {
+    parametrizedStmt(returningInsert)(sqlWithParams)
+  }
+
+  def statement(sqlWithParams: SqlAndParams): Future[AnyParametrizedStatement] = {
+    parametrizedStmt(statement)(sqlWithParams)
+  }
+
+  protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])(sqlWithParams: SqlAndParams): Future[T] = {
+    bindable(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params))
+  }
 }
