@@ -57,6 +57,6 @@ trait ConnectionPartialImpl extends Connection {
   }
 
   protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])(sqlWithParams: SqlAndParams): Future[T] = {
-    bindable(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params))
+    bindable(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params: _*))
   }
 }
