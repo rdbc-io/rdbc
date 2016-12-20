@@ -31,7 +31,7 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
     case i: Int => BigDecimal(i)
     case s: Short => BigDecimal(s)
     case b: Byte => BigDecimal(b)
-    case sapi.Numeric.Val(bd) => bd
+    case sapi.SqlNumeric.Val(bd) => bd
 
     case str: String =>
       try {

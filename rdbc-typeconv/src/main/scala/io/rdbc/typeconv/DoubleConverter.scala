@@ -25,10 +25,10 @@ object DoubleConverter extends TypeConverter[Double] {
 
   override def fromAny(any: Any): Double = any match {
     case jn: java.lang.Number => jn.doubleValue()
-    case sapi.Numeric.Val(bd) => bd.doubleValue()
-    case sapi.Numeric.NaN => Double.NaN
-    case sapi.Numeric.PosInfinity => Double.PositiveInfinity
-    case sapi.Numeric.NegInfinity => Double.NegativeInfinity
+    case sapi.SqlNumeric.Val(bd) => bd.doubleValue()
+    case sapi.SqlNumeric.NaN => Double.NaN
+    case sapi.SqlNumeric.PosInfinity => Double.PositiveInfinity
+    case sapi.SqlNumeric.NegInfinity => Double.NegativeInfinity
     case _ => throw new ConversionException(any, classOf[Double])
   }
 }

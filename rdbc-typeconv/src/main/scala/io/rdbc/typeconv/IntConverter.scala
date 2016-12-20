@@ -25,7 +25,7 @@ object IntConverter extends TypeConverter[Int] {
 
   override def fromAny(any: Any): Int = any match {
     case jn: java.lang.Number => jn.intValue()
-    case sapi.Numeric.Val(bd) => bd.intValue()
+    case sapi.SqlNumeric.Val(bd) => bd.intValue()
     case _ => throw new ConversionException(any, classOf[Int])
   }
 }
