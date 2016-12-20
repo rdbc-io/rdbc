@@ -20,7 +20,7 @@ import java.time._
 import java.util.UUID
 
 import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi.{Row, TypeConverterRegistry}
+import io.rdbc.sapi.{Row, SqlNumeric, TypeConverterRegistry}
 
 import scala.reflect.ClassTag
 
@@ -94,6 +94,10 @@ trait RowPartialImpl extends Row {
   def bigDecimal(name: String): BigDecimal = col[BigDecimal](name)
 
   def bigDecimalOpt(name: String): Option[BigDecimal] = colOpt[BigDecimal](name)
+
+  def numeric(name: String): SqlNumeric = col[SqlNumeric](name)
+
+  def numericOpt(name: String): Option[SqlNumeric] = colOpt[SqlNumeric](name)
 
   def double(name: String): Double = col[Double](name)
 
