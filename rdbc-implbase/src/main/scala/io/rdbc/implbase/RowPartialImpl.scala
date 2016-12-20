@@ -115,10 +115,6 @@ trait RowPartialImpl extends Row {
 
   def localDateTimeOpt(name: String): Option[LocalDateTime] = colOpt[LocalDateTime](name)
 
-  def zonedDateTime(name: String): ZonedDateTime = col[ZonedDateTime](name)
-
-  def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = colOpt[ZonedDateTime](name)
-
   def localDate(name: String): LocalDate = col[LocalDate](name)
 
   def localDateOpt(name: String): Option[LocalDate] = colOpt[LocalDate](name)
