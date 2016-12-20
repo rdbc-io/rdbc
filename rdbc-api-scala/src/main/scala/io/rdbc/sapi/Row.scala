@@ -352,26 +352,6 @@ trait Row {
     */
   def localDateTimeOpt(name: String): Option[LocalDateTime]
 
-  /** Returns a [[ZonedDateTime]] from column with `name` name.
-    *
-    * If a database value represents a time instant, [[ZonedDateTime]] at default system time zone will be returned.
-    *
-    * $nullSafetyNote
-    *
-    * $exceptions
-    */
-  def zonedDateTime(name: String): ZonedDateTime
-
-  /** Returns a [[ZonedDateTime]] from column with `name` name.
-    *
-    * If a database value represents a time instant, [[ZonedDateTime]] at default system time zone will be returned.
-    *
-    * $returningNone
-    *
-    * $exceptions
-    */
-  def zonedDateTimeOpt(name: String): Option[ZonedDateTime]
-
   /** Returns a [[LocalDate]] from column with `name` name.
     *
     * SQL types that represent a date with a time are convertible to [[LocalDate]] - a time part is truncated.

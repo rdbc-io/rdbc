@@ -36,8 +36,7 @@ package object typeconv {
       LongConverter,
       ShortConverter,
       StringConverter,
-      UuidConverter,
-      ZonedDateTimeConverter
+      UuidConverter
     )
   }
 
