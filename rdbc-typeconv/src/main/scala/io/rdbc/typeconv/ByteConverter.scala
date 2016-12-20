@@ -25,7 +25,7 @@ object ByteConverter extends TypeConverter[Byte] {
 
   override def fromAny(any: Any): Byte = any match {
     case jn: java.lang.Number => jn.byteValue()
-    case sapi.Numeric.Val(bd) => bd.byteValue()
+    case sapi.SqlNumeric.Val(bd) => bd.byteValue()
     case _ => throw new ConversionException(any, classOf[Byte])
   }
 }

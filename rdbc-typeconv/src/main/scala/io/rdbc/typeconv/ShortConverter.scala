@@ -25,7 +25,7 @@ object ShortConverter extends TypeConverter[Short] {
 
   override def fromAny(any: Any): Short = any match {
     case jn: java.lang.Number => jn.shortValue()
-    case sapi.Numeric.Val(bd) => bd.shortValue()
+    case sapi.SqlNumeric.Val(bd) => bd.shortValue()
     case _ => throw new ConversionException(any, classOf[Short])
   }
 }

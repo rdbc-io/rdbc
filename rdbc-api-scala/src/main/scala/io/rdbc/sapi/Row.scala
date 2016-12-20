@@ -250,25 +250,25 @@ trait Row {
     */
   def bigDecimalOpt(name: String): Option[BigDecimal]
 
-  /** Returns a [[Numeric]] from column with `name` name.
+  /** Returns a [[SqlNumeric]] from column with `name` name.
     *
-    * All numeric types can be converted to [[Numeric]].
+    * All numeric types can be converted to [[SqlNumeric]].
     *
     * $nullSafetyNote
     *
     * $exceptions
     */
-  def numeric(name: String): Numeric
+  def numeric(name: String): SqlNumeric
 
-  /** Returns a [[Numeric]] from column with `name` name.
+  /** Returns a [[SqlNumeric]] from column with `name` name.
     *
-    * All numeric types can be converted to [[Numeric]].
+    * All numeric types can be converted to [[SqlNumeric]].
     *
     * $returningNone
     *
     * $exceptions
     */
-  def numericOpt(name: String): Option[Numeric]
+  def numericOpt(name: String): Option[SqlNumeric]
 
   /** Returns a [[Double]] from column with `name` name.
     *

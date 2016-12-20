@@ -25,7 +25,7 @@ object LongConverter extends TypeConverter[Long] {
 
   override def fromAny(any: Any): Long = any match {
     case jn: java.lang.Number => jn.longValue()
-    case sapi.Numeric.Val(bd) => bd.longValue()
+    case sapi.SqlNumeric.Val(bd) => bd.longValue()
     case _ => throw new ConversionException(any, classOf[Long])
   }
 }

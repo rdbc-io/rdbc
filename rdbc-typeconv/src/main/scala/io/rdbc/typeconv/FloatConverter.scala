@@ -25,10 +25,10 @@ object FloatConverter extends TypeConverter[Float] {
 
   override def fromAny(any: Any): Float = any match {
     case jn: java.lang.Number => jn.floatValue()
-    case sapi.Numeric.Val(bd) => bd.floatValue()
-    case sapi.Numeric.NaN => Float.NaN
-    case sapi.Numeric.PosInfinity => Float.PositiveInfinity
-    case sapi.Numeric.NegInfinity => Float.NegativeInfinity
+    case sapi.SqlNumeric.Val(bd) => bd.floatValue()
+    case sapi.SqlNumeric.NaN => Float.NaN
+    case sapi.SqlNumeric.PosInfinity => Float.PositiveInfinity
+    case sapi.SqlNumeric.NegInfinity => Float.NegativeInfinity
     case _ => throw new ConversionException(any, classOf[Float])
   }
 }
