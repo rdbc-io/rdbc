@@ -17,6 +17,7 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
 
 object ShortConverter extends TypeConverter[Short] {
@@ -24,6 +25,7 @@ object ShortConverter extends TypeConverter[Short] {
 
   override def fromAny(any: Any): Short = any match {
     case jn: java.lang.Number => jn.shortValue()
+    case sapi.Numeric.Val(bd) => bd.shortValue()
     case _ => throw new ConversionException(any, classOf[Short])
   }
 }

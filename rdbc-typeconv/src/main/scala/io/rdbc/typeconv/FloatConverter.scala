@@ -17,6 +17,7 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
 
 object FloatConverter extends TypeConverter[Float] {
@@ -24,6 +25,10 @@ object FloatConverter extends TypeConverter[Float] {
 
   override def fromAny(any: Any): Float = any match {
     case jn: java.lang.Number => jn.floatValue()
+    case sapi.Numeric.Val(bd) => bd.floatValue()
+    case sapi.Numeric.NaN => Float.NaN
+    case sapi.Numeric.PosInfinity => Float.PositiveInfinity
+    case sapi.Numeric.NegInfinity => Float.NegativeInfinity
     case _ => throw new ConversionException(any, classOf[Float])
   }
 }

@@ -17,6 +17,7 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
 
 object IntConverter extends TypeConverter[Int] {
@@ -24,6 +25,7 @@ object IntConverter extends TypeConverter[Int] {
 
   override def fromAny(any: Any): Int = any match {
     case jn: java.lang.Number => jn.intValue()
+    case sapi.Numeric.Val(bd) => bd.intValue()
     case _ => throw new ConversionException(any, classOf[Int])
   }
 }
