@@ -17,6 +17,7 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
 
 object BigDecimalConverter extends TypeConverter[BigDecimal] {
@@ -30,6 +31,7 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
     case i: Int => BigDecimal(i)
     case s: Short => BigDecimal(s)
     case b: Byte => BigDecimal(b)
+    case sapi.Numeric.Val(bd) => bd
 
     case str: String =>
       try {

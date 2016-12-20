@@ -230,7 +230,8 @@ trait Row {
 
   /** Returns a [[BigDecimal]] from column with `name` name.
     *
-    * All numeric types can be converted to [[BigDecimal]]
+    * All numeric types can be converted to [[BigDecimal]], not however that NaN value is not representable
+    * by a [[BigDecimal]]. If you expect values to be NaN use `numeric` method instead.
     *
     * $nullSafetyNote
     *
@@ -240,13 +241,34 @@ trait Row {
 
   /** Returns a [[BigDecimal]] from column with `name` name.
     *
-    * All numeric types can be converted to [[BigDecimal]]
+    * All numeric types can be converted to [[BigDecimal]], not however that NaN value is not representable
+    * by a [[BigDecimal]]. If you expect values to be NaN use `numeric` method instead.
     *
     * $returningNone
     *
     * $exceptions
     */
   def bigDecimalOpt(name: String): Option[BigDecimal]
+
+  /** Returns a [[Numeric]] from column with `name` name.
+    *
+    * All numeric types can be converted to [[Numeric]].
+    *
+    * $nullSafetyNote
+    *
+    * $exceptions
+    */
+  def numeric(name: String): Numeric
+
+  /** Returns a [[Numeric]] from column with `name` name.
+    *
+    * All numeric types can be converted to [[Numeric]].
+    *
+    * $returningNone
+    *
+    * $exceptions
+    */
+  def numericOpt(name: String): Option[Numeric]
 
   /** Returns a [[Double]] from column with `name` name.
     *
@@ -452,4 +474,5 @@ trait Row {
     */
   def uuidOpt(idx: Int): Option[UUID]
   //TODO support arrays?
+  //TODO support streaming LOBs
 }

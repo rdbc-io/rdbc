@@ -17,6 +17,7 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
 
 object ByteConverter extends TypeConverter[Byte] {
@@ -24,6 +25,7 @@ object ByteConverter extends TypeConverter[Byte] {
 
   override def fromAny(any: Any): Byte = any match {
     case jn: java.lang.Number => jn.byteValue()
+    case sapi.Numeric.Val(bd) => bd.byteValue()
     case _ => throw new ConversionException(any, classOf[Byte])
   }
 }
