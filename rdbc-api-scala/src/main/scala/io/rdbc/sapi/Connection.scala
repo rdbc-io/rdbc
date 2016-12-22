@@ -108,12 +108,24 @@ trait Connection {
 
   /** Releases the connection and underlying resources.
     *
+    * Only idle connections can be released using this method. To forcibly release the connection use [[forceRelease]]
+    * method.
+    *
     * After calling this method no future operations on the instance are allowed.
     *
     * Returned future can fail with:
     *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]] - when general error occurs
     */
   def release(): Future[Unit]
+
+  /** Releases the connection and underlying resources regardless of whether the connection is currently in use or not.
+    *
+    * After calling this method no future operations on the instance are allowed.
+    *
+    * Returned future can fail with:
+    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]] - when general error occurs
+    */
+  def forceRelease(): Future[Unit]
 
   /** Checks whether the connection is still usable.
     *
