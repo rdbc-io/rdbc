@@ -25,7 +25,7 @@ import scala.concurrent.Future
 trait ConnectionFactory {
 
   /** Returns a type converter registry that will be configured for connections produced by this factory */
-  def typeConverterRegistry: TypeConverterRegistry
+  def typeConverters: TypeConverterRegistry
 
   /** Returns a future of a [[Connection]].
     *

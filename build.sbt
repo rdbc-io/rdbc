@@ -40,7 +40,7 @@ lazy val rdbcRoot = (project in file("."))
     publishArtifact := false,
     bintrayReleaseOnPublish := false
   )
-  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv)
+  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil)
 
 lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   .settings(commonSettings: _*)
@@ -75,3 +75,14 @@ lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
   .settings(
     name := "rdbc-typeconv"
   ).dependsOn(rdbcApiScala)
+
+
+lazy val rdbcUtil = (project in file("rdbc-util"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "rdbc-util",
+    libraryDependencies ++= Vector(
+      Library.sourcecode,
+      Library.scalaLogging
+    )
+  )
