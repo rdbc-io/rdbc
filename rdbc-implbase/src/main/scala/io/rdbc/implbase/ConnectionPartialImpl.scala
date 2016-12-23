@@ -22,7 +22,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ConnectionPartialImpl extends Connection {
 
-  implicit def ec: ExecutionContext
+  implicit protected def ec: ExecutionContext
 
   def delete(sql: String): Future[Delete] = statement(sql).map(new DeleteImpl(_))
 
