@@ -21,7 +21,11 @@ package io.rdbc.sapi
   *
   * @param converters type converters. Map keys are conversion target classes.
   */
-class TypeConverterRegistry(val converters: Map[Class[_], TypeConverter[_]])
+class TypeConverterRegistry(converters: Map[Class[_], TypeConverter[_]]) {
+  def getByClass[T](cls: Class[T]): Option[TypeConverter[T]] = {
+    converters.get(cls).asInstanceOf[Option[TypeConverter[T]]]
+  }
+}
 
 /** Factory of TypeConverterRegistry */
 object TypeConverterRegistry {
