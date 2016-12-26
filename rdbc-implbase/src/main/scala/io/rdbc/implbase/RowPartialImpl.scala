@@ -26,7 +26,7 @@ import scala.reflect.ClassTag
 
 trait RowPartialImpl extends Row {
 
-  protected def typeConverterRegistry: TypeConverterRegistry
+  protected def typeConverters: TypeConverterRegistry
 
   protected def notConverted(name: String): Any
 
@@ -38,8 +38,8 @@ trait RowPartialImpl extends Row {
       if (cls.isInstance(raw)) {
         raw.asInstanceOf[A]
       } else {
-        typeConverterRegistry.converters.get(cls)
-          .map(converter => converter.fromAny(raw).asInstanceOf[A])
+        typeConverters.getByClass(cls)
+          .map(converter => converter.fromAny(raw))
           .getOrElse(throw new ConversionException(raw, cls))
       }
     }
