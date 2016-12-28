@@ -28,31 +28,31 @@ trait RowPartialImpl extends Row {
 
   protected def typeConverters: TypeConverterRegistry
 
-  protected def notConverted(name: String): Any
+  protected def any(name: String): Any
 
-  protected def notConverted(idx: Int): Any
+  protected def any(idx: Int): Any
 
-  protected def convert[A](raw: Any, cls: Class[A]): A = {
-    if (raw == null) null.asInstanceOf[A]
+  protected def convertType[A](any: Any, cls: Class[A]): A = {
+    if (any == null) null.asInstanceOf[A]
     else {
-      if (cls.isInstance(raw)) {
-        raw.asInstanceOf[A]
+      if (cls.isInstance(any)) {
+        any.asInstanceOf[A]
       } else {
         typeConverters.getByClass(cls)
-          .map(converter => converter.fromAny(raw))
-          .getOrElse(throw new ConversionException(raw, cls))
+          .map(converter => converter.fromAny(any))
+          .getOrElse(throw new ConversionException(any, cls))
       }
     }
   }
 
   def col[A: ClassTag](name: String): A = {
-    val raw = notConverted(name)
-    convert(raw, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
+    val notTyped = any(name)
+    convertType(notTyped, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
   }
 
   def col[A: ClassTag](idx: Int): A = {
-    val raw = notConverted(idx)
-    convert(raw, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
+    val notTyped = any(idx)
+    convertType(notTyped, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
   }
 
   def colOpt[A: ClassTag](idx: Int): Option[A] = Option(col[A](idx))
