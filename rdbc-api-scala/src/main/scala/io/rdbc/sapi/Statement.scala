@@ -26,8 +26,6 @@ import scala.concurrent.Future
   * @tparam P a type which this statement returns when bound to parameters
   */
 trait Statement[P] extends Bindable[P] {
-  /** A native vendor-specific SQL statement string */
-  def nativeSql: String
 
   /** Streams statement parameters to a database.
     *
