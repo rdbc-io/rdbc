@@ -22,7 +22,7 @@ import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
-  implicit def ec: ExecutionContext
+  implicit protected def ec: ExecutionContext
 
   def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
     executeForStream().flatMap { resultStream =>

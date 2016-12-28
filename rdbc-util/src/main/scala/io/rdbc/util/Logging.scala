@@ -21,7 +21,7 @@ import java.util.concurrent.Executors
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Random, Try}
+import scala.util.Random
 import scala.util.control.NonFatal
 
 
