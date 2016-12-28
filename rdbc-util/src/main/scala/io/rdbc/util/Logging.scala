@@ -21,8 +21,9 @@ import java.util.concurrent.Executors
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Random
+import scala.util.{Random, Try}
 import scala.util.control.NonFatal
+
 
 object Logging {
   @volatile private lazy val rnd = new Random()
@@ -38,9 +39,8 @@ trait Logging extends StrictLogging {
     if (logger.underlying.isTraceEnabled) {
       val reqId = newReqId()
       val resultFuture = doTrace(reqId, body)
-      resultFuture.transform { futureValue =>
+      resultFuture.andThen { case futureValue =>
         logger.trace(s"[$reqId] Future returned by ${enclosing.value} completed with value '$futureValue'")
-        futureValue
       }(tracingEc)
     } else {
       body
