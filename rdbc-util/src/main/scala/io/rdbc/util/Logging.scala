@@ -38,10 +38,10 @@ trait Logging extends StrictLogging {
     if (logger.underlying.isTraceEnabled) {
       val reqId = newReqId()
       val resultFuture = doTrace(reqId, body)
-      resultFuture.onComplete { futureValue =>
+      resultFuture.transform { futureValue =>
         logger.trace(s"[$reqId] Future returned by ${enclosing.value} completed with value '$futureValue'")
+        futureValue
       }(tracingEc)
-      resultFuture
     } else {
       body
     }
