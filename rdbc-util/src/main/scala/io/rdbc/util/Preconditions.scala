@@ -19,13 +19,13 @@ package io.rdbc.util
 object Preconditions {
 
   def notNull(args: sourcecode.Text[_]*): Unit = {
-    args.foreach { param =>
+    args.foreach { param =>  //TODO this has major performance hit
       if (param == null) throw new NullPointerException(s"Parameter '${param.source}' cannot be null")
     }
   }
 
   def argsNotNull()(implicit args: sourcecode.Args): Unit = {
-    notNull(args.value.flatten: _*)
+    notNull(args.value.flatten: _*) //TODO this has major performance hit
   }
 
   def check[A](arg: sourcecode.Text[A], requirement: Boolean, msg: String): Unit = {

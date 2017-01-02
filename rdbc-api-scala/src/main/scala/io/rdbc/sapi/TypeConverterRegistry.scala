@@ -16,6 +16,8 @@
 
 package io.rdbc.sapi
 
+import io.rdbc.ImmutSeq
+
 /**
   * A registry holding a map of type converters.
   *
@@ -36,5 +38,9 @@ object TypeConverterRegistry {
       converters.map(conv => conv.cls -> conv): _*
     )
     new TypeConverterRegistry(registry)
+  }
+
+  def apply(converters: ImmutSeq[TypeConverter[_]]): TypeConverterRegistry = {
+    apply(converters: _*)
   }
 }

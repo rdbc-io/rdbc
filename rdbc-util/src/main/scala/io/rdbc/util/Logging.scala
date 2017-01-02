@@ -48,12 +48,15 @@ trait Logging extends StrictLogging {
   }
 
   protected def traced[A](body: => A)(implicit enclosing: sourcecode.Enclosing, args: sourcecode.Args): A = {
-    doTrace(newReqId(), body)
+    if (logger.underlying.isTraceEnabled) {
+      doTrace(newReqId(), body)
+    } else {
+      body
+    }
   }
 
   private def doTrace[A](reqId: String, body: => A)(
                          implicit enclosing: sourcecode.Enclosing, args: sourcecode.Args): A = {
-    if (logger.underlying.isTraceEnabled) {
       try {
         logger.trace(s"[$reqId] Entering ${enclosing.value}${formatArgs(args)}")
         val result = body
@@ -64,9 +67,6 @@ trait Logging extends StrictLogging {
           logger.trace(s"[$reqId] Exiting ${enclosing.value} with exception '$ex'")
           throw ex
       }
-    } else {
-      body
-    }
   }
 
   private def newReqId(): String = {
