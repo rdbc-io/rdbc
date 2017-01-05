@@ -16,7 +16,7 @@
 
 package io.rdbc.sapi
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /** Provides access to a database [[Connection]].
   *
@@ -24,11 +24,25 @@ import scala.concurrent.Future
   */
 trait ConnectionFactory {
 
+  /** Execution context used to execute code asynchronously. */
+  implicit protected def ec: ExecutionContext
+
   /** Returns a future of a [[Connection]].
     *
     * Future can fail with subclasses of [[io.rdbc.api.exceptions.ConnectException]]. //TODO describe subclasses
     */
   def connection(): Future[Connection]
+
+  /** Executes a function (which can be passed as a code block) in a context of a connection
+    * obtained via [[connection()]], and releases the connection afterwards.
+    */
+  def withConnection[A](body: Connection => Future[A]): Future[A] = {
+    connection().flatMap { conn =>
+      body(conn).andThen { case _ =>
+        conn.release()
+      }
+    }
+  }
 
   /** Shuts down this connection factory.
     *
