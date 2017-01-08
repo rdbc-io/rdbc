@@ -31,14 +31,43 @@ trait ConnectionFactory {
     */
   def connection(): Future[Connection]
 
-  /** Executes a function (which can be passed as a code block) in a context of a connection
-    * obtained via [[connection()]], and releases the connection afterwards.
+  /** Executes a function in a context of a connection.
+    *
+    * Executes a function (which can be passed as a code block) in a context of
+    * a connection obtained via [[connection()]], and releases
+    * the connection afterwards.
     */
   def withConnection[A](body: Connection => Future[A]): Future[A] = {
     connection().flatMap { conn =>
       body(conn).andThen { case _ =>
         conn.release()
       }
+    }
+  }
+
+  /** Executes a function in a context of a transaction.
+    *
+    * Executes a function (which can be passed as a code block) in a context
+    * of a connection obtained via [[connection()]]. Before the function is
+    * executed, transaction is started. After the function finishes, transaction
+    * is committed in case of a success and rolled back in case of a
+    * failure - after that, the connection is released.
+    *
+    * Because managing transaction state requires invoking functions that
+    * require specifying a timeout, this function requires an implicit timeout
+    * instance.
+    */
+  def withTransaction[A](body: Connection => Future[A])
+                        (implicit timeout: Timeout): Future[A] = {
+    withConnection { conn =>
+      conn.beginTx()
+        .flatMap(_ => body(conn))
+        .flatMap { res =>
+          conn.commitTx().map(_ => res)
+        }
+        .recoverWith { case ex =>
+          conn.rollbackTx().flatMap(_ => Future.failed(ex))
+        }
     }
   }
 
