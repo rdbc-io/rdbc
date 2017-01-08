@@ -17,9 +17,10 @@
 package io.rdbc.sapi
 
 /**
-  * Represents a warning emitted by a database engine during statement processing.
+  * Represents a warning emitted by a database engine during statement
+  * processing.
   *
   * @param msg  database vendor specific warning message
   * @param code database vendor specific warning code
   */
-case class Warning(msg: String, code: String)
+final case class Warning(msg: String, code: String)

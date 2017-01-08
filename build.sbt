@@ -4,13 +4,26 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
   scalaVersion := "2.12.1",
-  crossScalaVersions := Seq("2.11.8"),
+  crossScalaVersions := Vector("2.11.8"),
   scalacOptions ++= Vector(
     "-unchecked",
     "-deprecation",
     "-language:_",
     "-target:jvm-1.8",
-    "-encoding", "UTF-8"
+    "-encoding", "UTF-8",
+    "-Yno-adapted-args",
+    "-Ywarn-dead-code",
+    "-Ywarn-numeric-widen",
+    "-Ywarn-value-discard",
+    "-Xfuture",
+    "-Ywarn-unused"
+  ),
+  scalacOptions in(Compile, doc) := Vector(
+    "-groups",
+    "-implicits",
+    "-doc-root-content", (resourceDirectory.in(Compile).value / "rootdoc.txt").getAbsolutePath,
+    "-doc-footer", "Copyright 2016-2017 Krzysztof Pado",
+    "-doc-version", version.value
   ),
   autoAPIMappings := true,
   apiMappings ++= Map(
@@ -48,6 +61,9 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
     name := "rdbc-api-scala",
     libraryDependencies ++= Vector(
       Library.reactiveStreams
+    ),
+    scalacOptions in(Compile, doc) ++= Vector(
+      "-doc-title", "rdbc API"
     ),
     apiURL := Some(url("https://rdbc.io/scala/api"))
   )

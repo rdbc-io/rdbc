@@ -16,15 +16,14 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{AnyParametrizedStatement, ParametrizedUpdate}
+import io.rdbc.sapi.{AnyParametrizedStatement, ParametrizedUpdate, Timeout}
 
 import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
 
 class ParametrizedUpdateImpl(stmt: AnyParametrizedStatement) extends ParametrizedUpdate {
 
-  def execute()(implicit timeout: FiniteDuration): Future[Unit] = stmt.executeIgnoringResult()
+  def execute()(implicit timeout: Timeout): Future[Unit] = stmt.executeIgnoringResult()
 
-  def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = stmt.executeForRowsAffected()
+  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long] = stmt.executeForRowsAffected()
 
 }

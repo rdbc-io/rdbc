@@ -21,4 +21,7 @@ package io.rdbc
   * Main class is a [[io.rdbc.sapi.Connection Connection]] that can be
   * obtained using a [[io.rdbc.sapi.ConnectionFactory ConnectionFactory]].
   */
-package object sapi {}
+package object sapi
+  extends InterpolatorsTrait
+    with SqlParamImplicits
+    with Timeout.ImplicitsTrait

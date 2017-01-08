@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-package io.rdbc.api.exceptions
+package io.rdbc.implbase
 
-class MissingParamValException(param: String)
-  extends RdbcException(s"Value is missing for parameter '$param'")
+import io.rdbc.sapi.{AnyParametrizedStatement, DdlStatement, Timeout}
+
+import scala.concurrent.Future
+
+class DdlImpl(stmt: AnyParametrizedStatement) extends DdlStatement {
+  def execute()(implicit timeout: Timeout): Future[Unit] = {
+    stmt.executeIgnoringResult()
+  }
+}

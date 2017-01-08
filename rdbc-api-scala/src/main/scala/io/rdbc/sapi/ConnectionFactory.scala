@@ -28,8 +28,6 @@ trait ConnectionFactory {
   implicit protected def ec: ExecutionContext
 
   /** Returns a future of a [[Connection]].
-    *
-    * Future can fail with subclasses of [[io.rdbc.api.exceptions.ConnectException]]. //TODO describe subclasses
     */
   def connection(): Future[Connection]
 

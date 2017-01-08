@@ -16,6 +16,7 @@
 
 package io.rdbc.api.exceptions
 
-class InactiveTxException(msg: String) extends RdbcException(msg) {
+class InactiveTxException(msg: String)
+  extends RdbcException(msg) {
   def this() = this("Current transaction is not active")
 }

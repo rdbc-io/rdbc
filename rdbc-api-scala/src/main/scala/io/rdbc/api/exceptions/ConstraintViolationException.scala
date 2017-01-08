@@ -16,6 +16,15 @@
 
 package io.rdbc.api.exceptions
 
-class ConstraintViolationException(schema: String, table: String, constraint: String, msg: String) extends RdbcException(msg) {
-  def this(schema: String, table: String, constraint: String) = this(schema, table, constraint, s"Constraint $constraint violation on table $schema.$table")
+class ConstraintViolationException(schema: String,
+                                   table: String,
+                                   constraint: String,
+                                   msg: String)
+  extends RdbcException(msg) {
+
+  def this(schema: String, table: String, constraint: String) = {
+    this(schema, table, constraint,
+      s"Constraint $constraint violation on table $schema.$table"
+    )
+  }
 }

@@ -41,13 +41,13 @@ trait ParametrizedUpdate {
     * $timeoutInfo
     * $exceptions
     */
-  def execute()(implicit timeout: FiniteDuration): Future[Unit]
+  def execute()(implicit timeout: Timeout): Future[Unit]
 
   /** Executes this update statement returning a number of rows that were deleted.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long]
+  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long]
 
 }

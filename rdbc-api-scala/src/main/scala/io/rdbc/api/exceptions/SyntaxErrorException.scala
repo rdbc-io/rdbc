@@ -16,4 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-class SyntaxErrorException(msg: String, errorPosition: Option[Int]) extends RdbcException(msg)
+class SyntaxErrorException(msg: String, errorPosition: Option[Int])
+  extends RdbcException(msg + errorPosition.fold("")(pos => s" at position $pos"))

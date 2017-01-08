@@ -16,4 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-class InvalidQueryException(msg: String, errorPosition: Option[Int]) extends RdbcException(msg)
+class InvalidQueryException(msg: String, errorPosition: Option[Int])
+  extends RdbcException(msg)
