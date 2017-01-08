@@ -24,6 +24,8 @@ import io.rdbc.ImmutSeq
   * @param converters type converters. Map keys are conversion target classes.
   */
 class TypeConverterRegistry(converters: Map[Class[_], TypeConverter[_]]) {
+
+  /** Gets a converter by a given class. */
   def getByClass[T](cls: Class[T]): Option[TypeConverter[T]] = {
     converters.get(cls).asInstanceOf[Option[TypeConverter[T]]]
   }
@@ -40,6 +42,7 @@ object TypeConverterRegistry {
     new TypeConverterRegistry(registry)
   }
 
+  /** Returns a type converter registry from converters given. */
   def apply(converters: ImmutSeq[TypeConverter[_]]): TypeConverterRegistry = {
     apply(converters: _*)
   }

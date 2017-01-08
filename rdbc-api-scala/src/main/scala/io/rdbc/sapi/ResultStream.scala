@@ -24,14 +24,16 @@ import scala.concurrent.Future
 /** Represents a statement result that allows rows streaming.
   *
   * @define futureCompleteNote
-  * Note that resulting future may not complete until a `rows` Publisher is complete. To complete this future,
-  * clients must either read the rows stream until it is complete or cancel the subscription.
+  * Note that resulting future may not complete until a `rows` Publisher is
+  * complete. To complete this future, clients must either read the rows stream
+  * until it is complete or cancel the subscription.
   */
 trait ResultStream {
 
   /** A number of rows that were affected by the statement.
     *
-    * Clients can safely assume that a database is ready to accept new queries after this future completes.
+    * Clients can safely assume that a database is ready to accept new queries
+    * after this future completes.
     *
     * $futureCompleteNote
     */
@@ -39,7 +41,8 @@ trait ResultStream {
 
   /** A sequence of warnings that were emitted during processing the statement.
     *
-    * Clients can safely assume that a database is ready to accept new queries after this future completes.
+    * Clients can safely assume that a database is ready to accept new
+    * queries after this future completes.
     *
     * $futureCompleteNote
     */
@@ -50,9 +53,10 @@ trait ResultStream {
 
   /** A reactive streams specification's `Publisher` giving access to the rows.
     *
-    * When this publisher signals that it is complete clients can safely assume that a database is ready to accept
-    * new queries. If subscription is cancelled though, clients have to wait for `commandCompletion` future to complete
-    * before issuing another queries.
+    * When this publisher signals that it is complete clients can safely assume
+    * that a database is ready to accept new queries. If subscription is
+    * cancelled, however, clients have to wait for [[Connection.watchForIdle]]
+    * future to complete before issuing another query.
     */
   def rows: Publisher[Row]
 }

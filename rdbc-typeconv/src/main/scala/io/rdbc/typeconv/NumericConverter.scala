@@ -39,8 +39,8 @@ object NumericConverter extends TypeConverter[SqlNumeric] {
 
     case l: Long => SqlNumeric.Val(BigDecimal(l))
     case i: Int => SqlNumeric.Val(BigDecimal(i))
-    case s: Short => SqlNumeric.Val(BigDecimal(s))
-    case b: Byte => SqlNumeric.Val(BigDecimal(b))
+    case s: Short => SqlNumeric.Val(BigDecimal(s.toInt))
+    case b: Byte => SqlNumeric.Val(BigDecimal(b.toInt))
 
     case str: String =>
       try {

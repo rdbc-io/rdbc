@@ -17,113 +17,160 @@
 package io.rdbc.sapi
 
 import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
 
 /** Represents a database connection (session).
   *
-  * Instances of implementations of this trait can be obtained using a [[ConnectionFactory]]. When clients are done
-  * with the connection, they are required to call a `release` method co clean up resources such as open sockets.
+  * Instances of implementations of this trait can be obtained using a
+  * [[ConnectionFactory]]. When clients are done with the connection, they are
+  * required to call a `release` method co clean up resources such as open sockets.
   *
-  * Invoking any method of this trait when any previous operation has not completed yet is not allowed. Operation is
-  * considered complete when a resulting [[scala.concurrent.Future Future]] completes.
+  * Invoking any method of this trait when any previous operation has not
+  * completed yet is not allowed. Operation is considered complete when a resulting
+  * [[scala.concurrent.Future Future]] completes.
   *
-  * Transaction management has to be done using `beginTx`, `commitTx` and `rollbackTx` methods. Using SQL statements to
-  * manage transaction state is not allowed.
+  * Transaction management has to be done using `beginTx`, `commitTx` and
+  * `rollbackTx` methods. Using SQL statements to manage transaction state is
+  * not allowed.
   *
-  * SQL statements passed as this class method arguments can be parametrized using a following syntax:
-  * Parameters are named. Parameter is comprised of an alphanumeric name prefixed with a colon. One parameter can
-  * occur multiple times in one statement. Examples of valid statements are listed below:
-  *  - `select * from users where login = :login`
-  *  - `select * from users where login = :query or given_name = :query`
+  * [[SqlWithParams]] instances passed to `Connection`'s methods can be created
+  * using `sql` string interpolator, for example:
+  * {{{
+  *   import io.rdbc.sapi._
   *
+  *   val conn: Connection = ???
+  *   val login = "jdoe"
+  *   conn.select(sql"select * from users where login = $login").executeForStream()
+  * }}}
+  *
+  * Alternatively, when bare Strings are used as SQL statements, parameters
+  * are specified by name. Parameter name is an alphanumeric string starting
+  * with a letter, prefixed with a colon. Example:
+  *
+  * {{{
+  *   import io.rdbc.sapi._
+  *
+  *   val conn: Connection = ???
+  *   val login = "jdoe"
+  *   for {
+  *    select       <- conn.select(sql"select * from users where login = :login")
+  *    parametrized <- select.bindF("login" -> login)
+  *   } yield parametrized.executeForStream()
+  * }}}
+  *
+  * @groupname tx Transaction management
+  * @groupprio tx 10
+  * @groupname stmtInter Statement producers (string interpolation)
+  * @groupprio stmtInter 20
+  * @groupname stmtBare Statement producers (bare strings)
+  * @groupprio stmtBare 30
   * @define timeoutInfo
-  *  After the operation takes longer time than `timeout`, operation will be aborted. Note however, that it may not
-  *  be feasible to abort the operation immediately.
+  *  After the operation takes longer time than `timeout`, operation will be
+  *  aborted. Note however, that it may not be feasible to abort the operation
+  *  immediately.
   * @define statementExceptions
   *  Returned future can fail with:
-  *  - [[io.rdbc.api.exceptions.SyntaxErrorException SyntaxErrorException]] - when statement is not syntactically correct
-  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]] - when general error occurs
+  *  - [[io.rdbc.api.exceptions.SyntaxErrorException SyntaxErrorException]]
+  *  when statement is not syntactically correct
+  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
+  *  when general error occurs
   * @define timeoutException
-  *  - [[io.rdbc.api.exceptions.TimeoutException TimeoutException]] - when maximum operation time has been exceeded
+  *  - [[io.rdbc.api.exceptions.TimeoutException TimeoutException]]
+  *  when maximum operation time has been exceeded
   * @define bindExceptions
-  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]] when some parameter value was not provided
-  *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+  *  when some parameter value was not provided
+  *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+  *  when some parameter value's type is not convertible to a database type
   * @define statementParametrization
   *  For syntax of statement parametrization see a [[Connection]] documentation.
   * @define returningInsert
-  *  Returns a [[ReturningInsert]] instance bound to this connection that represents a SQL insert statement that
-  *  can return keys generated by the database engine.
+  *  Returns a [[ReturningInsert]] instance bound to this connection that
+  *  represents a SQL insert statement that can return keys generated by the
+  *  database engine.
   *
-  *  It is not defined whether the method returns exceptionally if SQL provided is a valid statement,
-  *  but not an insert statement.
+  *  It is not defined whether the method returns exceptionally if SQL provided
+  *  is a valid statement, but not an insert statement.
   * @define interpolatorExample
-  *  [[SqlAndParams]] parameter instance is meant to be constructed using `sql` string interpolator, for example:
+  *  [[SqlWithParams]] parameter instance is meant to be constructed using `sql`
+  *  string interpolator, for example:
   *  {{{
-  *  import io.rdbc.sapi.Interpolators._
-  *  val x = 1
-  *  val y = 10
-  *  val stmt = conn.select(sql"select * from table where colx > $x and coly < $y")
+  *      import io.rdbc.sapi.Interpolators._
+  *      val x = 1
+  *      val y = 10
+  *      val stmt = conn.select(sql"select * from table where colx > $x and coly < $y")
   *  }}}
   */
 trait Connection {
 
   /** Begins a database transaction.
     *
-    * Using this method is a preferred way of starting a transaction, using SQL statements to manage transaction
-    * state may lead to undefined behavior.
+    * Using this method is a preferred way of starting a transaction, using SQL
+    * statements to manage transaction state may lead to undefined behavior.
     *
     * $timeoutInfo
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.BeginTxException BeginTxException]] - when general error occurs
+    *  - [[io.rdbc.api.exceptions.BeginTxException BeginTxException]]
+    * when general error occurs
     * $timeoutException
+    *
+    * @group tx
     */
-  def beginTx()(implicit timeout: FiniteDuration): Future[Unit]
+  def beginTx()(implicit timeout: Timeout): Future[Unit]
 
   /** Commits a database transaction.
     *
-    * Using this method is a preferred way of committing a transaction, using SQL statements to manage transaction
-    * state may lead to undefined behavior.
+    * Using this method is a preferred way of committing a transaction, using
+    * SQL statements to manage transaction state may lead to undefined behavior.
     *
     * $timeoutInfo
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.BeginTxException CommmitTxException]] - when general error occurs
+    *  - [[io.rdbc.api.exceptions.BeginTxException CommmitTxException]]
+    * when general error occurs
     * $timeoutException
+    *
+    * @group tx
     */
-  def commitTx()(implicit timeout: FiniteDuration): Future[Unit]
+  def commitTx()(implicit timeout: Timeout): Future[Unit]
 
   /** Rolls back a database transaction.
     *
-    * Using this method is a preferred way of rolling back a transaction, using SQL statements to manage transaction
-    * state may lead to undefined behavior.
+    * Using this method is a preferred way of rolling back a transaction, using
+    * SQL statements to manage transaction state may lead to undefined behavior.
     *
     * $timeoutInfo
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.BeginTxException RollbackTxException]] - when general error occurs
+    *  - [[io.rdbc.api.exceptions.BeginTxException RollbackTxException]]
+    * when general error occurs
     * $timeoutException
+    *
+    * @group tx
     */
-  def rollbackTx()(implicit timeout: FiniteDuration): Future[Unit]
+  def rollbackTx()(implicit timeout: Timeout): Future[Unit]
 
   /** Releases the connection and underlying resources.
     *
-    * Only idle connections can be released using this method. To forcibly release the connection use [[forceRelease]]
-    * method.
+    * Only idle connections can be released using this method. To forcibly
+    * release the connection use [[forceRelease]] method.
     *
     * After calling this method no future operations on the instance are allowed.
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]] - when general error occurs
+    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]]
+    * when general error occurs
     */
   def release(): Future[Unit]
 
-  /** Releases the connection and underlying resources regardless of whether the connection is currently in use or not.
+  /** Releases the connection and underlying resources regardless of whether
+    * the connection is currently in use or not.
     *
     * After calling this method no future operations on the instance are allowed.
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]] - when general error occurs
+    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]]
+    * when general error occurs
     */
   def forceRelease(): Future[Unit]
 
@@ -133,21 +180,24 @@ trait Connection {
     *
     * @return Future of `true` iff connection is usable, `false` otherwise
     */
-  def validate()(implicit timeout: FiniteDuration): Future[Boolean]
+  def validate()(implicit timeout: Timeout): Future[Boolean]
 
-  /** Returns a [[Select]] instance bound to this connection that represents a SQL select statement.
+  /** Returns a [[Select]] instance bound to this connection that represents
+    * a SQL select statement.
     *
-    * It is not defined whether the method returns exceptionally if SQL provided is a valid statement,
-    * but not a select statement.
+    * It is not defined whether the method returns exceptionally if SQL provided
+    * is a valid statement but not a select statement.
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def select(sql: String): Future[Select]
 
-  /** Returns a [[ParametrizedSelect]] instance bound to this connection that represents a parametrized SQL select
-    * statement.
+  /** Returns a [[ParametrizedSelect]] instance bound to this connection that
+    * represents a parametrized SQL select statement.
     *
     * It's a shortcut for calling `select` and then `bind`.
     *
@@ -155,44 +205,54 @@ trait Connection {
     *
     * $statementExceptions
     * $bindExceptions
-    */
-  def select(sqlWithParams: SqlAndParams): Future[ParametrizedSelect]
-
-  /** Returns an [[Update]] instance bound to this connection that represents a SQL update statement.
     *
-    * It is not defined whether the method returns exceptionally if SQL provided is a valid statement,
-    * but not an update statement.
+    * @group stmtInter
+    */
+  def select(sqlWithParams: SqlWithParams): Future[ParametrizedSelect]
+
+  /** Returns an [[Update]] instance bound to this connection that represents
+    * a SQL update statement.
+    *
+    * It is not defined whether the method returns exceptionally if SQL provided
+    * is a valid statement, but not an update statement.
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def update(sql: String): Future[Update]
 
-  /** Returns a [[ParametrizedUpdate]] instance bound to this connection that represents a parametrized SQL update
-    * statement.
+  /** Returns a [[ParametrizedUpdate]] instance bound to this connection that
+    * represents a parametrized SQL update statement.
     *
     * It's a shortcut for calling `update` and then `bind`.
     * $interpolatorExample
     *
     * $statementExceptions
     * $bindExceptions
-    */
-  def update(sqlWithParams: SqlAndParams): Future[ParametrizedUpdate]
-
-  /** Returns an [[Insert]] instance bound to this connection that represents a SQL insert statement.
     *
-    * It is not defined whether the method returns exceptionally if SQL provided is a valid statement,
-    * but not an insert statement.
+    * @group stmtInter
+    */
+  def update(sqlWithParams: SqlWithParams): Future[ParametrizedUpdate]
+
+  /** Returns an [[Insert]] instance bound to this connection that represents
+    * a SQL insert statement.
+    *
+    * It is not defined whether the method returns exceptionally if SQL provided
+    * is a valid statement, but not an insert statement.
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def insert(sql: String): Future[Insert]
 
-  /** Returns a [[ParametrizedInsert]] instance bound to this connection that represents a parametrized SQL insert
-    * statement.
+  /** Returns a [[ParametrizedInsert]] instance bound to this connection that
+    * represents a parametrized SQL insert statement.
     *
     * It's a shortcut for calling `insert` and then `bind`.
     *
@@ -200,19 +260,24 @@ trait Connection {
     *
     * $statementExceptions
     * $bindExceptions
+    *
+    * @group stmtInter
     */
-  def insert(sqlWithParams: SqlAndParams): Future[ParametrizedInsert]
+  def insert(sqlWithParams: SqlWithParams): Future[ParametrizedInsert]
 
   /** $returningInsert
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def returningInsert(sql: String): Future[ReturningInsert]
 
-  /** Returns a [[ParametrizedReturningInsert]] instance bound to this connection that represents a parametrized SQL
-    * insert statement can return keys generated by the database engine
+  /** Returns a [[ParametrizedReturningInsert]] instance bound to this
+    * connection that represents a parametrized SQL insert statement can return
+    * keys generated by the database engine.
     *
     * It's a shortcut for calling `returningInsert` and then `bind`.
     *
@@ -220,34 +285,60 @@ trait Connection {
     *
     * $statementExceptions
     * $bindExceptions
+    *
+    * @group stmtInter
     */
-  def returningInsert(sqlWithParams: SqlAndParams): Future[ParametrizedReturningInsert]
+  def returningInsert(sqlWithParams: SqlWithParams): Future[ParametrizedReturningInsert]
 
   /** $returningInsert
     *
-    * `keyColumns` parameter is used to list column names that database engine generates keys for. Only keys from these
-    * columns will be returned to the client. This method is a more efficient version of `returningInsert(sql: String)`
+    * `keyColumns` parameter is used to list column names that database engine
+    * generates keys for. Only keys from these columns will be returned to the
+    * client. This method is a more efficient version of `returningInsert(sql: String)`
     * method that returns all keys generated by the database engine.
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def returningInsert(sql: String, keyColumns: String*): Future[ReturningInsert]
 
-  /** Returns a [[Delete]] instance bound to this connection that represents a SQL delete statement.
+  /** Returns a [[ParametrizedReturningInsert]] instance bound to this connection
+    * that represents a parametrized SQL insert statement can return keys
+    * generated by the database engine.
     *
-    * It is not defined whether the method returns exceptionally if SQL provided is a valid statement,
-    * but not a delete statement.
+    * `keyColumns` parameter is used to list column names that database engine
+    * generates keys for. Only keys from these columns will be returned to the
+    * client. This method is a more efficient version of `returningInsert(sqlWithParams: String)`
+    * method that returns all keys generated by the database engine.
+    *
+    * $interpolatorExample
+    *
+    * $statementExceptions
+    * $bindExceptions
+    *
+    * @group stmtInter
+    */
+  def returningInsert(sqlWithParams: SqlWithParams, keyColumns: String*): Future[ParametrizedReturningInsert]
+
+  /** Returns a [[Delete]] instance bound to this connection that represents
+    * a SQL delete statement.
+    *
+    * It is not defined whether the method returns exceptionally if SQL provided
+    * is a valid statement, but not a delete statement.
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def delete(sql: String): Future[Delete]
 
-  /** Returns a [[ParametrizedDelete]] instance bound to this connection that represents a parametrized SQL delete
-    * statement.
+  /** Returns a [[ParametrizedDelete]] instance bound to this connection that
+    * represents a parametrized SQL delete statement.
     *
     * It's a shortcut for calling `delete` and then `bind`.
     *
@@ -255,23 +346,30 @@ trait Connection {
     *
     * $statementExceptions
     * $bindExceptions
-    */
-  def delete(sqlWithParams: SqlAndParams): Future[ParametrizedDelete]
-
-  /** Returns an [[AnyStatement]] instance bound to this connection that represents any SQL statement.
     *
-    * Clients are encouraged to use `select`, `insert`, `update`, `delete` methods in favor of this generic method.
+    * @group stmtInter
+    */
+  def delete(sqlWithParams: SqlWithParams): Future[ParametrizedDelete]
+
+  /** Returns an [[AnyStatement]] instance bound to this connection that
+    * represents any SQL statement.
+    *
+    * Clients are encouraged to use `select`, `insert`, `update`, `delete`
+    * methods in favor of this generic method.
     *
     * $statementParametrization
     *
     * $statementExceptions
+    *
+    * @group stmtBare
     */
   def statement(sql: String): Future[AnyStatement]
 
-  /** Returns a [[AnyParametrizedStatement]] instance bound to this connection that represents any parametrized SQL
-    * statement.
+  /** Returns a [[AnyParametrizedStatement]] instance bound to this connection
+    * that represents any parametrized SQL statement.
     *
-    * Clients are encouraged to use `select`, `insert`, `update`, `delete` methods in favor of this generic method.
+    * Clients are encouraged to use `select`, `insert`, `update`, `delete`
+    * methods in favor of this generic method.
     *
     * It's a shortcut for calling `statement` and then `bind`.
     *
@@ -279,9 +377,21 @@ trait Connection {
     *
     * $statementExceptions
     * $bindExceptions
+    *
+    * @group stmtInter
     */
-  def statement(sqlWithParams: SqlAndParams): Future[AnyParametrizedStatement]
+  def statement(sqlWithParams: SqlWithParams): Future[AnyParametrizedStatement]
 
-  /** Returns a future that is complete when this connection is idle and ready for accepting queries. */
+  /** Returns a [[DdlStatement]] instance bound to this connection
+    * that represents a DDL statement
+    *
+    * $statementExceptions
+    *
+    * @group stmtBare
+    */
+  def ddl(sql: String): Future[DdlStatement]
+
+  /** Returns a future that is complete when this connection is idle and ready
+    * for accepting queries. */
   def watchForIdle: Future[this.type]
 }

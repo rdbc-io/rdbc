@@ -16,4 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-class UnauthorizedException(msg: String) extends RdbcException(msg)
+class UnauthorizedException(msg: String)
+  extends RdbcException(msg)

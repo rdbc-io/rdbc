@@ -18,13 +18,12 @@ package io.rdbc.implbase
 
 import io.rdbc.sapi._
 
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
   implicit protected def ec: ExecutionContext
 
-  def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = {
+  def executeForSet()(implicit timeout: Timeout): Future[ResultSet] = {
     executeForStream().flatMap { resultStream =>
       val subscriber = new HeadSubscriber(None)
       resultStream.rows.subscribe(subscriber)
@@ -43,18 +42,18 @@ trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
     }
   }
 
-  def executeIgnoringResult()(implicit timeout: FiniteDuration): Future[Unit] = {
+  def executeIgnoringResult()(implicit timeout: Timeout): Future[Unit] = {
     executeForRowsAffected().map(_ => ())
   }
 
-  def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = {
+  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long] = {
     executeForStream().flatMap { source =>
       source.rows.subscribe(new IgnoringSubscriber)
       source.rowsAffected
     }
   }
 
-  def executeForFirstRow()(implicit timeout: FiniteDuration): Future[Option[Row]] = {
+  def executeForFirstRow()(implicit timeout: Timeout): Future[Option[Row]] = {
     executeForStream().flatMap { resultStream =>
       val subscriber = new HeadSubscriber(Some(1L))
       resultStream.rows.subscribe(subscriber)
@@ -62,11 +61,11 @@ trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
     }
   }
 
-  def executeForValue[A](valExtractor: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]] = {
+  def executeForValue[A](valExtractor: Row => A)(implicit timeout: Timeout): Future[Option[A]] = {
     executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 
-  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]] = {
+  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: Timeout): Future[Option[Option[A]]] = {
     executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 }

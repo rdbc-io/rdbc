@@ -20,8 +20,10 @@ import io.rdbc._
 
 /** Represents a set of rows returned by a database engine.
   *
-  * @param rowsAffected a number of rows that were affected by the statement that this result set is for
-  * @param warnings     a sequence of warnings that were emitted by the database during processing the statement that this result set is for
+  * @param rowsAffected a number of rows that were affected by the statement
+  *                     that this result set is for
+  * @param warnings     a sequence of warnings that were emitted by the database
+  *                     during processing the statement that this result set is for
   * @param metadata     a meta data of columns of this result set
   * @param rows         a sequence of rows returned by a database
   */

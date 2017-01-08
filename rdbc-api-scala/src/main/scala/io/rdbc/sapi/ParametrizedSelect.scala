@@ -21,56 +21,66 @@ import scala.concurrent.duration.FiniteDuration
 
 /** Represents a parametized select statement.
   *
-  * Parametrized statement is a statement that has all parameters provided and is ready to be executed.
+  * Parametrized statement is a statement that has all parameters provided
+  * and is ready to be executed.
   *
   * @define timeoutInfo
-  *  After the operation takes longer time than `timeout`, operation will be aborted. Note however, that it may not
-  *  be feasible to abort the operation immediately.
+  *  After the operation takes longer time than `timeout`, operation will be
+  *  aborted. Note however, that it may not be feasible to abort the operation
+  *  immediately.
   * @define exceptions
   *  Returned future can fail with:
-  *  - [[io.rdbc.api.exceptions.UnauthorizedException UnauthorizedException]] when client is not authorized to perform the action
-  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]] when query is rejected by a database engine as invalid
-  *  - [[io.rdbc.api.exceptions.InactiveTxException InactiveTxException]] when transaction is in progress but is in inactive state
-  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]] when a general statement execution error occurs
+  *  - [[io.rdbc.api.exceptions.UnauthorizedException UnauthorizedException]]
+  *  when client is not authorized to perform the action
+  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]]
+  *  when query is rejected by a database engine as invalid
+  *  - [[io.rdbc.api.exceptions.InactiveTxException InactiveTxException]]
+  *  when transaction is in progress but is in inactive state
+  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
+  *  when a general statement execution error occurs
   */
 trait ParametrizedSelect {
 
-  /** Executes this select statement and returns a [[ResultStream]] instance that can be used to stream
-    * rows from the database leveraging Reactive Streams specification's `Publisher`
-    * with backpressure.
+  /** Executes this select statement and returns a [[ResultStream]] instance
+    * that can be used to stream rows from the database leveraging Reactive
+    * Streams specification's `Publisher` with backpressure.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream]
+  def executeForStream()(implicit timeout: Timeout): Future[ResultStream]
 
   /** Executes this select statement and returns a [[ResultSet]] instance.
     *
-    * After execution all resulting rows will be pulled from a database and buffered in the resulting object.
-    * If expected result set is very big this may cause out of memory errors.
+    * After execution all resulting rows will be pulled from a database and
+    * buffered in the resulting object. If expected result set is very big this
+    * may cause out of memory errors.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet]
+  def executeForSet()(implicit timeout: Timeout): Future[ResultSet]
 
-  /** Executes this select statement and returns the first row returned by a database engine.
+  /** Executes this select statement and returns the first row returned by
+    * a database engine.
     *
     * If no rows are found, [[scala.None None]] will be returned.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForFirstRow()(implicit timeout: FiniteDuration): Future[Option[Row]]
+  def executeForFirstRow()(implicit timeout: Timeout): Future[Option[Row]]
 
-  /** Executes this select statement and returns a single column value from the first row returned by a database engine.
+  /** Executes this select statement and returns a single column value from the
+    * first row returned by a database engine.
     *
     * If no rows are found, [[scala.None None]] will be returned.
     *
-    * If extracted value has SQL `null` value, a [[scala.Some Some]] instance containing a `null` value will be returned.
+    * If extracted value has SQL `null` value, a [[scala.Some Some]] instance
+    * containing a `null` value will be returned.
     *
-    * This method is not intended to be used for returning values from columns that can have a SQL `null` value. Use
-    * `executeForValueOpt` for such columns.
+    * This method is not intended to be used for returning values from columns
+    * that can have a SQL `null` value. Use `executeForValueOpt` for such columns.
     *
     * Example:
     * {{{
@@ -85,13 +95,17 @@ trait ParametrizedSelect {
     *
     * @param valExtractor function used to extract value from the returned row
     */
-  def executeForValue[A](valExtractor: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]]
+  def executeForValue[A](valExtractor: Row => A)
+                        (implicit timeout: Timeout): Future[Option[A]]
 
-  /** Executes this select statement and returns a single column value from the first row returned by a database engine.
+  /** Executes this select statement and returns a single column value from the
+    * first row returned by a database engine.
     *
     * If no rows are found, [[scala.None None]] will be returned.
     *
-    * If row was found but extracted value has SQL `null` value, a [[scala.Some Some]] instance will be returned containing a [[scala.None None]].
+    * If row was found but extracted value has SQL `null` value,
+    * a [[scala.Some Some]] instance will be returned containing
+    * a [[scala.None None]].
     *
     * Example:
     * {{{
@@ -106,5 +120,6 @@ trait ParametrizedSelect {
     *
     * @param valExtractor function used to extract value from the returned row
     */
-  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]]
+  def executeForValueOpt[A](valExtractor: Row => Option[A])
+                           (implicit timeout: Timeout): Future[Option[Option[A]]]
 }

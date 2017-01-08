@@ -17,16 +17,25 @@
 package io.rdbc.sapi
 
 import scala.concurrent.Future
-import scala.util.Try
 
 /** A trait for objects (typically statements) that can be parametrized.
   *
-  * Methods of this trait allow to bind argument values to parameters either by name or index.
+  * Methods of this trait allow to bind argument values to parameters
+  * either by name or index. Classes extending this trait can be used
+  * as an alternative to `sql` string interpolator - [[SqlInterpolator]].
+  *
+  * @groupname primary Primary methods
+  * @groupprio primary 0
+  *
+  * @groupname fut Future utils
+  * @groupprio fut 10
   *
   * @tparam T a type of a parametrized object returned after the binding
   * @define bindExceptions
-  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]] when some parameter value was not provided
-  *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+  *  when some parameter value was not provided
+  *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+  *  when some parameter value's type is not convertible to a database type
   */
 trait Bindable[T] {
 
@@ -40,12 +49,15 @@ trait Bindable[T] {
     *
     * Throws:
     * $bindExceptions
+    *
+    * @group primary
     */
-  def bind(params: (String, Any)*): T //TODO think about using HList
+  def bind(params: (String, Any)*): T
 
   /** Binds each parameter by name and wraps a result in a Future.
     *
-    * This is not an asynchronous operation, it's only an utility method that wraps `bind` result with a [[scala.concurrent.Future Future]]
+    * This is not an asynchronous operation, it's only an utility method
+    * that wraps `bind` result with a [[scala.concurrent.Future Future]]
     * to allow chaining bind operations with asynchronous operations.
     *
     * Example:
@@ -59,12 +71,15 @@ trait Bindable[T] {
     *
     * Resulting future can fail with:
     * $bindExceptions
+    *
+    * @group fut
     */
   def bindF(params: (String, Any)*): Future[T]
 
   /** Binds each parameter by index.
     *
-    * Parameters are ordered, each value in `params` sequence will be bound to the corresponding parameter.
+    * Parameters are ordered, each value in `params` sequence will be bound
+    * to the corresponding parameter.
     *
     * Example:
     * {{{
@@ -74,14 +89,18 @@ trait Bindable[T] {
     *
     * Throws:
     * $bindExceptions
+    *
+    * @group primary
     */
   def bindByIdx(params: Any*): T
 
   /** Binds each parameter by index and wraps a result in a Future.
     *
-    * Parameters are ordered, each value in `params` sequence will be bound to the corresponding parameter.
+    * Parameters are ordered, each value in `params` sequence will be bound
+    * to the corresponding parameter.
     *
-    * This is not an asynchronous operation, it's only an utility method that wraps `bindByIdx` result with a [[scala.concurrent.Future Future]]
+    * This is not an asynchronous operation, it's only an utility method
+    * that wraps `bindByIdx` result with a [[scala.concurrent.Future Future]]
     * to allow chaining bind operations with asynchronous operations.
     *
     * Example:
@@ -95,22 +114,29 @@ trait Bindable[T] {
     *
     * Resulting future can fail with:
     * $bindExceptions
+    *
+    * @group fut
     */
   def bindByIdxF(params: Any*): Future[T]
 
-  /** Returns a parametrized version of the bindable object without providing any parameters.
+  /** Returns a parametrized version of the bindable object without
+    * providing any parameters.
     *
     * Example:
     * {{{
     * val insert = conn.insert("insert into table(p1, p2) values ('str', 10)")
     * insert.map(_.noParams).foreach(_.execute())
     * }}}
+    *
+    * @group primary
     */
   def noParams: T
 
-  /** Returns a parametrized version of the bindable object without providing any parameters and wraps a result in a future
+  /** Returns a parametrized version of the bindable object without providing
+    * any parameters and wraps a result in a future
     *
-    * This is not an asynchronous operation, it's only an utility method that wraps `noParams` result with a [[scala.concurrent.Future Future]]
+    * This is not an asynchronous operation, it's only an utility method
+    * that wraps `noParams` result with a [[scala.concurrent.Future Future]]
     * to allow chaining bind operations with asynchronous operations.
     *
     * Example:
@@ -121,6 +147,8 @@ trait Bindable[T] {
     *   _ <- bound.execute()
     * } yield ()
     * }}}
+    *
+    * @group fut
     */
   def noParamsF: Future[T]
 }

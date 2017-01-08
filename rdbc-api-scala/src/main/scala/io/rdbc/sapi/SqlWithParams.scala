@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-package io.rdbc.api.exceptions
+package io.rdbc.sapi
 
-class MissingParamValException(param: String)
-  extends RdbcException(s"Value is missing for parameter '$param'")
+import io.rdbc.ImmutIndexedSeq
+
+/** Represent a sql statement along with parameters.
+  * Instances of this class are supposed to be constructed using `sql`
+  * string interpolator like this:
+  * {{{
+  *   import io.rdbc.sapi._
+  *   val id = 0
+  *   val s: SqlWithParams = sql"select * from test where id = $id"
+  * }}}
+  */
+case class SqlWithParams(sql: String, params: ImmutIndexedSeq[Any])

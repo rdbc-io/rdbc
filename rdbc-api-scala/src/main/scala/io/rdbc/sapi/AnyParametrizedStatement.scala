@@ -16,58 +16,63 @@
 
 package io.rdbc.sapi
 
-import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /** Represents a parametrized statement of any type.
   *
-  * Parametrized statement is a statement that has all parameters provided and is ready to be executed.
+  * Parametrized statement is a statement that has all parameters
+  * provided and is ready to be executed.
   *
   * @define timeoutInfo
-  *  After the operation takes longer time than `timeout`, operation will be aborted. Note however, that it may not
-  *  be feasible to abort the operation immediately.
+  *  After the operation takes longer time than `timeout`, operation
+  *  will be aborted. Note however, that it may not be feasible
+  *  to abort the operation immediately.
   * @define exceptions
   *  Returned future can fail with:
-  *  - [[io.rdbc.api.exceptions.UnauthorizedException UnauthorizedException]] when client is not authorized to perform the action
-  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]] when query is rejected by a database engine as invalid
-  *  - [[io.rdbc.api.exceptions.InactiveTxException InactiveTxException]] when transaction is in progress but is in inactive state
-  *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]] when operation results in an integrity constraint violation
-  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]] when a general statement execution error occurs //TODO should UncategorizedRdbcException throwing be even documented?
+  *  - [[io.rdbc.api.exceptions.UnauthorizedException UnauthorizedException]]
+  *  when client is not authorized to perform the action
+  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]]
+  *  when query is rejected by a database engine as invalid
+  *  - [[io.rdbc.api.exceptions.InactiveTxException InactiveTxException]]
+  *  when transaction is in progress but is in inactive state
+  *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]]
+  *  when operation results in an integrity constraint violation
   */
 trait AnyParametrizedStatement {
 
-  /** Executes this statement and returns a [[ResultStream]] instance that can be used to stream
-    * rows from the database leveraging Reactive Streams specification's `Publisher`
-    * with backpressure.
+  /** Executes this statement and returns a [[ResultStream]] instance
+    * that can be used to stream rows from the database leveraging
+    * Reactive Streams specification's [[org.reactivestreams.Publisher]] with backpressure.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream]
+  def executeForStream()(implicit timeout: Timeout): Future[ResultStream]
 
   /** Executes this statement and returns a [[ResultSet]] instance.
     *
-    * After execution all resulting rows will be pulled from a database and buffered in the resulting object.
-    * If expected result set is very big this may cause out of memory errors.
+    * After execution all resulting rows will be pulled from a database
+    * and buffered in the resulting object.  If expected result set is
+    * very big this may cause out of memory errors.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet]
+  def executeForSet()(implicit timeout: Timeout): Future[ResultSet]
 
   /** Executes this statement ignoring any resulting information.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeIgnoringResult()(implicit timeout: FiniteDuration): Future[Unit]
+  def executeIgnoringResult()(implicit timeout: Timeout): Future[Unit]
 
   /** Executes this statement returning a number of rows that were affected.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long]
+  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long]
 
   /** Executes this statement and returns the first row returned by a database engine.
     *
@@ -76,23 +81,25 @@ trait AnyParametrizedStatement {
     * $timeoutInfo
     * $exceptions
     */
-  def executeForFirstRow()(implicit timeout: FiniteDuration): Future[Option[Row]]
+  def executeForFirstRow()(implicit timeout: Timeout): Future[Option[Row]]
 
-  /** Executes this statement and returns a single column value from the first row returned by a database engine.
+  /** Executes this statement and returns a single column value from the
+    * first row returned by a database engine.
     *
     * If no rows are found, [[scala.None None]] will be returned.
     *
-    * If extracted value has SQL `null` value, a [[scala.Some Some]] instance containing a `null` value will be returned.
+    * If extracted value has SQL `null` value, a [[scala.Some Some]] instance
+    * containing a `null` value will be returned.
     *
-    * This method is not intended to be used for returning values from columns that can have a SQL `null` value. Use
-    * `executeForValueOpt` for such columns.
+    * This method is not intended to be used for returning values from columns
+    * that can have a SQL `null` value. Use  `executeForValueOpt` for such columns.
     *
     * Example:
     * {{{
     * for {
-    *   select <- conn.statement("select name from users where id = :id")
-    *   parametrized <- statement.bindF(id -> 1)
-    *   name <- parametrized.executeForValue(_.str("name"))
+    *   val id = 10
+    *   select <- conn.statement(sql"select name from users where id = $id")
+    *   name <- select.executeForValue(_.str("name"))
     * } yield name
     * }}}
     * $timeoutInfo
@@ -100,19 +107,22 @@ trait AnyParametrizedStatement {
     *
     * @param valExtractor function used to extract value from the returned row
     */
-  def executeForValue[A](valExtractor: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]]
+  def executeForValue[A](valExtractor: Row => A)
+                        (implicit timeout: Timeout): Future[Option[A]]
 
-  /** Executes this statement and returns a single column value from the first row returned by a database engine.
+  /** Executes this statement and returns a single column value from the first
+    * row returned by a database engine.
     *
     * If no rows are found, [[scala.None None]] will be returned.
     *
-    * If row was found but extracted value has SQL `null` value, a [[scala.Some Some]] instance will be returned containing a [[scala.None None]].
+    * If row was found but extracted value has SQL `null` value, a [[scala.Some Some]]
+    * instance will be returned containing a [[scala.None None]].
     *
     * Example:
     * {{{
+    * val id = 10
     * for {
-    *   select <- conn.select("select name from users where id = :id")
-    *   parametrized <- select.bindF(id -> 1)
+    *   select <- conn.select(sql"select name from users where id = $id")
     *   name <- parametrized.executeForValueOpt(_.str("name"))
     * } yield name
     * }}}
@@ -121,7 +131,8 @@ trait AnyParametrizedStatement {
     *
     * @param valExtractor function used to extract value from the returned row
     */
-  def executeForValueOpt[A](valExtractor: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]]
+  def executeForValueOpt[A](valExtractor: Row => Option[A])
+                           (implicit timeout: Timeout): Future[Option[Option[A]]]
 
   /** Deallocates database resources related to this statement.
     *

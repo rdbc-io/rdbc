@@ -23,13 +23,13 @@ import scala.concurrent.duration.FiniteDuration
 
 class ParametrizedSelectImpl(stmt: AnyParametrizedStatement) extends ParametrizedSelect {
 
-  def executeForStream()(implicit timeout: FiniteDuration): Future[ResultStream] = stmt.executeForStream()
+  def executeForStream()(implicit timeout: Timeout): Future[ResultStream] = stmt.executeForStream()
 
-  def executeForSet()(implicit timeout: FiniteDuration): Future[ResultSet] = stmt.executeForSet()
+  def executeForSet()(implicit timeout: Timeout): Future[ResultSet] = stmt.executeForSet()
 
-  def executeForFirstRow()(implicit timeout: FiniteDuration): Future[Option[Row]] = stmt.executeForFirstRow()
+  def executeForFirstRow()(implicit timeout: Timeout): Future[Option[Row]] = stmt.executeForFirstRow()
 
-  def executeForValue[A](f: Row => A)(implicit timeout: FiniteDuration): Future[Option[A]] = stmt.executeForValue[A](f)
+  def executeForValue[A](f: Row => A)(implicit timeout: Timeout): Future[Option[A]] = stmt.executeForValue[A](f)
 
-  def executeForValueOpt[A](f: Row => Option[A])(implicit timeout: FiniteDuration): Future[Option[Option[A]]] = stmt.executeForValueOpt[A](f)
+  def executeForValueOpt[A](f: Row => Option[A])(implicit timeout: Timeout): Future[Option[Option[A]]] = stmt.executeForValueOpt[A](f)
 }

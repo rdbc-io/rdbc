@@ -29,13 +29,16 @@ trait Statement[P] extends Bindable[P] {
 
   /** Streams statement parameters to a database.
     *
-    * This method can be used to repeatedly execute this statement with published parameters
-    * by leveraging Reactive Streams specification's `Publisher` with a backpressure. Each published element
-    * is a map containing all parameters required by this statement.
+    * This method can be used to repeatedly execute this statement with
+    * published parameters by leveraging Reactive Streams specification's
+    * `Publisher` with a backpressure. Each published element is a map
+    * containing all parameters required by this statement.
     *
     * Resulting future can fail with:
-    *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]] when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]] when some parameter value's type is not convertible to a database type
+    *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+    * when some parameter value was not provided
+    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+    * when some parameter value's type is not convertible to a database type
     */
   def streamParams(paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]
 

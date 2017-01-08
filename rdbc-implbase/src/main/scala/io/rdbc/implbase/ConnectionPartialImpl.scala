@@ -32,31 +32,42 @@ trait ConnectionPartialImpl extends Connection {
 
   def update(sql: String): Future[Update] = statement(sql).map(new UpdateImpl(_))
 
-  def delete(sqlWithParams: SqlAndParams): Future[ParametrizedDelete] = {
+  def delete(sqlWithParams: SqlWithParams): Future[ParametrizedDelete] = {
     parametrizedStmt(delete)(sqlWithParams)
   }
 
-  def insert(sqlWithParams: SqlAndParams): Future[ParametrizedInsert] = {
+  def insert(sqlWithParams: SqlWithParams): Future[ParametrizedInsert] = {
     parametrizedStmt(insert)(sqlWithParams)
   }
 
-  def select(sqlWithParams: SqlAndParams): Future[ParametrizedSelect] = {
+  def select(sqlWithParams: SqlWithParams): Future[ParametrizedSelect] = {
     parametrizedStmt(select)(sqlWithParams)
   }
 
-  def update(sqlWithParams: SqlAndParams): Future[ParametrizedUpdate] = {
+  def update(sqlWithParams: SqlWithParams): Future[ParametrizedUpdate] = {
     parametrizedStmt(update)(sqlWithParams)
   }
 
-  def returningInsert(sqlWithParams: SqlAndParams): Future[ParametrizedReturningInsert] = {
+  def returningInsert(sqlWithParams: SqlWithParams): Future[ParametrizedReturningInsert] = {
     parametrizedStmt(returningInsert)(sqlWithParams)
   }
 
-  def statement(sqlWithParams: SqlAndParams): Future[AnyParametrizedStatement] = {
+  def returningInsert(sqlWithParams: SqlWithParams,
+                      keyColumns: String*): Future[ParametrizedReturningInsert] = {
+    parametrizedStmt {
+      sql => returningInsert(sql, keyColumns: _*)
+    }(sqlWithParams)
+  }
+
+  def statement(sqlWithParams: SqlWithParams): Future[AnyParametrizedStatement] = {
     parametrizedStmt(statement)(sqlWithParams)
   }
 
-  protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])(sqlWithParams: SqlAndParams): Future[T] = {
+  def ddl(sql: String): Future[DdlStatement] = {
+    statement(sql).flatMap(_.noParamsF).map(new DdlImpl(_))
+  }
+
+  protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])(sqlWithParams: SqlWithParams): Future[T] = {
     bindable(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params: _*))
   }
 }

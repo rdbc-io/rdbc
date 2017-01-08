@@ -29,8 +29,8 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
     case f: Float => BigDecimal(f.toDouble)
     case l: Long => BigDecimal(l)
     case i: Int => BigDecimal(i)
-    case s: Short => BigDecimal(s)
-    case b: Byte => BigDecimal(b)
+    case s: Short => BigDecimal(s.toInt)
+    case b: Byte => BigDecimal(b.toInt)
     case sapi.SqlNumeric.Val(bd) => bd
 
     case str: String =>

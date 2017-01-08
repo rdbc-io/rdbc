@@ -16,13 +16,12 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{ParametrizedDelete, AnyParametrizedStatement}
+import io.rdbc.sapi.{AnyParametrizedStatement, ParametrizedDelete, Timeout}
 
 import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
 
 class ParametrizedDeleteImpl(stmt: AnyParametrizedStatement) extends ParametrizedDelete {
-  def execute()(implicit timeout: FiniteDuration): Future[Unit] = stmt.executeIgnoringResult()
+  def execute()(implicit timeout: Timeout): Future[Unit] = stmt.executeIgnoringResult()
 
-  def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = stmt.executeForRowsAffected()
+  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long] = stmt.executeForRowsAffected()
 }

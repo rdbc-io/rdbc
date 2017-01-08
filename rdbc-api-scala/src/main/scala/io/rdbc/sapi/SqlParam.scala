@@ -18,7 +18,7 @@ package io.rdbc.sapi
 
 import scala.reflect.ClassTag
 
-object SqlParam {
+private[sapi] trait SqlParamImplicits {
   implicit class Opt2OptParam[A: ClassTag](opt: Option[A]) {
 
     /** Converts this option to nullable SQL parameter. */
@@ -29,15 +29,20 @@ object SqlParam {
   }
 }
 
+object SqlParam extends SqlParamImplicits
+
 /** A statement parameter that can represent null (empty) values.
   *
-  * This trait is analogous to standard [[Option]], but keeps type information for empty values. In some cases
-  * database engine cannot infer null parameter type - instances of this trait can be used then.
+  * This trait is analogous to standard [[Option]], but keeps type information
+  * for empty values. In some cases database engine cannot infer null parameter
+  * type - instances of this trait can be used then.
   *
-  * An implicit conversion is provided from [[Option]] to instances of this trait.
+  * An implicit conversion is provided from [[Option]] to instances of this
+  * trait - see [[Opt2OptParam]].
   *
-  * This trait does not provide any operations. It is recommended to use [[Option]] instances and at the final stage
-  * convert them to instances of this trait when passed as statement parameters.
+  * This trait does not provide any operations. It is recommended to use
+  * [[Option]] instances and at the final stage convert them to instances of
+  * this trait when passed as statement parameters.
   */
 sealed trait SqlParam[A]
 

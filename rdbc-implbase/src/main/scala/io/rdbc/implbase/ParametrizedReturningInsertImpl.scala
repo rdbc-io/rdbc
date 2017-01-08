@@ -21,30 +21,29 @@ import java.util.UUID
 import io.rdbc.api.exceptions.NoKeysReturnedException
 import io.rdbc.sapi._
 
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
 class ParametrizedReturningInsertImpl(stmt: AnyParametrizedStatement)(implicit ec: ExecutionContext) extends ParametrizedReturningInsert {
 
-  def execute()(implicit timeout: FiniteDuration): Future[Unit] = stmt.executeIgnoringResult()
+  def execute()(implicit timeout: Timeout): Future[Unit] = stmt.executeIgnoringResult()
 
-  def executeForRowsAffected()(implicit timeout: FiniteDuration): Future[Long] = stmt.executeForRowsAffected()
+  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long] = stmt.executeForRowsAffected()
 
-  def executeForKeysStream()(implicit timeout: FiniteDuration): Future[ResultStream] = stmt.executeForStream()
+  def executeForKeysStream()(implicit timeout: Timeout): Future[ResultStream] = stmt.executeForStream()
 
-  def executeForKeysSet()(implicit timeout: FiniteDuration): Future[ResultSet] = stmt.executeForSet()
+  def executeForKeysSet()(implicit timeout: Timeout): Future[ResultSet] = stmt.executeForSet()
 
-  def executeForKey[K: ClassTag](implicit timeout: FiniteDuration): Future[K] = {
+  def executeForKey[K: ClassTag](implicit timeout: Timeout): Future[K] = {
     stmt.executeForValue[K](_.col(0)).flatMap {
       case Some(key) => Future.successful(key)
       case None => Future.failed(NoKeysReturnedException)
     }
   }
 
-  def executeForIntKey()(implicit timeout: FiniteDuration): Future[Int] = executeForKey
+  def executeForIntKey()(implicit timeout: Timeout): Future[Int] = executeForKey
 
-  def executeForLongKey()(implicit timeout: FiniteDuration): Future[Long] = executeForKey
+  def executeForLongKey()(implicit timeout: Timeout): Future[Long] = executeForKey
 
-  def executeForUUIDKey()(implicit timeout: FiniteDuration): Future[UUID] = executeForKey
+  def executeForUUIDKey()(implicit timeout: Timeout): Future[UUID] = executeForKey
 }

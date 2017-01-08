@@ -17,12 +17,8 @@
 package io.rdbc.sapi
 
 import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
 
-/** Represents a parametrized insert statement.
-  *
-  * Parametrized statement is a statement that has all parameters provided and
-  * is ready to be executed.
+/** Represents a DDL statement.
   *
   * @define timeoutInfo
   *  After the operation takes longer time than `timeout`, operation will be
@@ -41,7 +37,7 @@ import scala.concurrent.duration.FiniteDuration
   *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
   *  when a general error occurs
   */
-trait ParametrizedInsert {
+trait DdlStatement {
 
   /** Executes an insert statement ignoring any resulting information.
     *
@@ -49,11 +45,4 @@ trait ParametrizedInsert {
     * $exceptions
     */
   def execute()(implicit timeout: Timeout): Future[Unit]
-
-  /** Executes an insert statement returning a number of rows that were inserted.
-    *
-    * $timeoutInfo
-    * $exceptions
-    */
-  def executeForRowsAffected()(implicit timeout: Timeout): Future[Long]
 }

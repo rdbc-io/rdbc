@@ -16,4 +16,6 @@
 
 package io.rdbc.api.exceptions
 
-class UnsupportedDbTypeException(dbTypeDesc: String) extends RdbcException(s"Database native type '$dbTypeDesc' is not supported") //TODO this is not used
+class UnsupportedDbTypeException(dbTypeDesc: String)
+  extends RdbcException(s"Database native type '$dbTypeDesc' is not supported")
+
