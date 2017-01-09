@@ -16,5 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-object NoKeysReturnedException extends
+class NoKeysReturnedException extends
   RdbcException("No generated keys were returned")

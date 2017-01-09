@@ -37,7 +37,7 @@ class ParametrizedReturningInsertImpl(stmt: AnyParametrizedStatement)(implicit e
   def executeForKey[K: ClassTag](implicit timeout: Timeout): Future[K] = {
     stmt.executeForValue[K](_.col(0)).flatMap {
       case Some(key) => Future.successful(key)
-      case None => Future.failed(NoKeysReturnedException)
+      case None => Future.failed(new NoKeysReturnedException)
     }
   }
 
