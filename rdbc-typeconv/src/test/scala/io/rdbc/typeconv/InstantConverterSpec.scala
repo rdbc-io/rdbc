@@ -18,7 +18,7 @@ package io.rdbc.typeconv
 
 import java.time.{Instant, LocalDateTime}
 
-import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi.exceptions.ConversionException
 
 class InstantConverterSpec
   extends RdbcTypeconvSpec {

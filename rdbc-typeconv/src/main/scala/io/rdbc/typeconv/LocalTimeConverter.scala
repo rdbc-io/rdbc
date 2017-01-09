@@ -18,8 +18,8 @@ package io.rdbc.typeconv
 
 import java.time.{LocalDateTime, LocalTime}
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.exceptions.ConversionException
 
 object LocalTimeConverter extends TypeConverter[LocalTime] {
   val cls = classOf[LocalTime]

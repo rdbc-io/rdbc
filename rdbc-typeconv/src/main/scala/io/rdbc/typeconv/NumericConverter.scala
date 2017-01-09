@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi.exceptions.ConversionException
 import io.rdbc.sapi.{SqlNumeric, TypeConverter}
 
 object NumericConverter extends TypeConverter[SqlNumeric] {

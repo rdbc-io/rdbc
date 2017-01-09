@@ -19,8 +19,8 @@ package io.rdbc.tck
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Source}
-import io.rdbc.api.exceptions.InvalidQueryException
 import io.rdbc.sapi._
+import io.rdbc.sapi.exceptions.InvalidQueryException
 import io.rdbc.tck.util.Subscribers
 
 import scala.concurrent.Future

@@ -11,4 +11,5 @@ object Library {
   val scalatest = "org.scalatest" %% "scalatest" % scalatestVersion
   val reactiveStreamsTck = "org.reactivestreams" % "reactive-streams-tck" % "1.0.1"
   val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.6"
+  val java8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0"
 }

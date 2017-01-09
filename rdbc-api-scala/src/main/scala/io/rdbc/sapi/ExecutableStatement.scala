@@ -30,13 +30,13 @@ import scala.reflect.ClassTag
   *  to abort the operation immediately.
   * @define exceptions
   *  Returned future can fail with:
-  *  - [[io.rdbc.api.exceptions.UnauthorizedException UnauthorizedException]]
+  *  - [[io.rdbc.sapi.exceptions.UnauthorizedException UnauthorizedException]]
   *  when client is not authorized to perform the action
-  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]]
+  *  - [[io.rdbc.sapi.exceptions.InvalidQueryException InvalidQueryException]]
   *  when query is rejected by a database engine as invalid
-  *  - [[io.rdbc.api.exceptions.InactiveTxException InactiveTxException]]
+  *  - [[io.rdbc.sapi.exceptions.InactiveTxException InactiveTxException]]
   *  when transaction is in progress but is in inactive state
-  *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]]
+  *  - [[io.rdbc.sapi.exceptions.ConstraintViolationException ConstraintViolationException]]
   *  when operation results in an integrity constraint violation
   */
 trait ExecutableStatement {
@@ -113,9 +113,9 @@ trait ExecutableStatement {
     *
     * $timeoutInfo
     * $exceptions
-    *  - [[io.rdbc.api.exceptions.NoKeysReturnedException NoKeysReturnedException]]
+    *  - [[io.rdbc.sapi.exceptions.NoKeysReturnedException NoKeysReturnedException]]
     *  when no keys were returned by the database engine
-    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+    *  - [[io.rdbc.sapi.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
     *  when no suitable converter was found to transform key value to desired class instance
     *
     * @tparam K type of the returned key

@@ -16,8 +16,8 @@
 
 package io.rdbc.tck
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi._
+import io.rdbc.sapi.exceptions.ConversionException
 
 trait ForValueSpec
   extends RdbcSpec

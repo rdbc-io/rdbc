@@ -1,3 +1,4 @@
 ignore:
   - "rdbc-tck"
-  - "rdbc-api-scala/src/main/scala/io/rdbc/api/exceptions"
+  - "rdbc-api-scala/src/main/scala/io/rdbc/sapi/exceptions"
+  - "rdbc-api-java/src/main/scala/io/rdbc/japi/exceptions"

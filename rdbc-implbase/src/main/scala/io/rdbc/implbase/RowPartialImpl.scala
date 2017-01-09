@@ -19,7 +19,7 @@ package io.rdbc.implbase
 import java.time._
 import java.util.UUID
 
-import io.rdbc.api.exceptions.ConversionException
+import io.rdbc.sapi.exceptions.ConversionException
 import io.rdbc.sapi.{Row, SqlNumeric, TypeConverterRegistry}
 
 import scala.reflect.ClassTag

@@ -62,15 +62,15 @@ import scala.reflect.ClassTag
   *
   * @define exceptionsNamed
   *  Throws:
-  *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]]
+  *  - [[io.rdbc.sapi.exceptions.ConversionException ConversionException]]
   *  when database value could not be converted to the desired type
-  *   - [[io.rdbc.api.exceptions.MissingColumnException MissingColumnException]]
+  *   - [[io.rdbc.sapi.exceptions.MissingColumnException MissingColumnException]]
   *  when requested column is not present in the row
   *  @define exceptionsIdx
   *  Throws:
-  *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]]
+  *  - [[io.rdbc.sapi.exceptions.ConversionException ConversionException]]
   *  when database value could not be converted to the desired type
-  *   - [[io.rdbc.api.exceptions.ColumnIndexOutOfBoundsException ColumnIndexOutOfBoundsException]]
+  *   - [[io.rdbc.sapi.exceptions.ColumnIndexOutOfBoundsException ColumnIndexOutOfBoundsException]]
   *  when requested column index is out of range
   * @define nullSafetyNote
   *  For SQL `null` values, [[io.rdbc.api.exceptions.ConversionException ConversionException]] is thrown.

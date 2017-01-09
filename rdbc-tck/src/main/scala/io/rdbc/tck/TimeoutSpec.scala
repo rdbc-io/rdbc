@@ -16,8 +16,8 @@
 
 package io.rdbc.tck
 
-import io.rdbc.api.exceptions.TimeoutException
 import io.rdbc.sapi._
+import io.rdbc.sapi.exceptions.TimeoutException
 import io.rdbc.tck.util.Subscribers
 
 import scala.concurrent.Future

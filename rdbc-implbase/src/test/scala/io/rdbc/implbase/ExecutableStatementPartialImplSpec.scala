@@ -20,7 +20,7 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.ImmutSeq
-import io.rdbc.api.exceptions.{ColumnIndexOutOfBoundsException, NoKeysReturnedException}
+import io.rdbc.sapi.exceptions.{ColumnIndexOutOfBoundsException, NoKeysReturnedException}
 import io.rdbc.sapi.{Row, RowMetadata, RowPublisher, Timeout, Warning}
 import org.reactivestreams.Subscriber
 import org.scalamock.scalatest.MockFactory

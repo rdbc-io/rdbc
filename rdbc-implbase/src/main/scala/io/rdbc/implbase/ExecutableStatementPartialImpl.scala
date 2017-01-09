@@ -16,8 +16,8 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.api.exceptions.{ColumnIndexOutOfBoundsException, NoKeysReturnedException}
 import io.rdbc.sapi._
+import io.rdbc.sapi.exceptions.{ColumnIndexOutOfBoundsException, NoKeysReturnedException}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag

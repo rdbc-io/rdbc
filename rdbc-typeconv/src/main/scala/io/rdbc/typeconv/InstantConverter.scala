@@ -18,8 +18,8 @@ package io.rdbc.typeconv
 
 import java.time.Instant
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.exceptions.ConversionException
 
 object InstantConverter extends TypeConverter[Instant] {
   val cls = classOf[Instant]
