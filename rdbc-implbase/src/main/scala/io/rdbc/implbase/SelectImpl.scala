@@ -18,4 +18,6 @@ package io.rdbc.implbase
 
 import io.rdbc.sapi.{AnyStatement, ParametrizedSelect, Select}
 
-class SelectImpl(stmt: AnyStatement) extends StmtWrapper[ParametrizedSelect](stmt)(new ParametrizedSelectImpl(_)) with Select
+class SelectImpl(stmt: AnyStatement)
+  extends StmtWrapper[ParametrizedSelect](stmt)(new ParametrizedSelectImpl(_))
+    with Select
