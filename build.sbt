@@ -84,7 +84,7 @@ lazy val rdbcImplBase = (project in file("rdbc-implbase"))
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-implbase"
-  ).dependsOn(rdbcApiScala)
+  ).dependsOn(rdbcApiScala, rdbcUtil)
 
 lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
   .settings(commonSettings: _*)

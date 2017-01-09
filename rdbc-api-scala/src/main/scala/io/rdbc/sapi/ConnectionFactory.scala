@@ -24,9 +24,6 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 trait ConnectionFactory {
 
-  /** Execution context used to execute code asynchronously. */
-  implicit protected def ec: ExecutionContext
-
   /** Returns a future of a [[Connection]].
     */
   def connection(): Future[Connection]
@@ -37,13 +34,7 @@ trait ConnectionFactory {
     * a connection obtained via [[connection()]], and releases
     * the connection afterwards.
     */
-  def withConnection[A](body: Connection => Future[A]): Future[A] = {
-    connection().flatMap { conn =>
-      body(conn).andThen { case _ =>
-        conn.release()
-      }
-    }
-  }
+  def withConnection[A](body: Connection => Future[A]): Future[A]
 
   /** Executes a function in a context of a transaction.
     *
@@ -58,18 +49,7 @@ trait ConnectionFactory {
     * instance.
     */
   def withTransaction[A](body: Connection => Future[A])
-                        (implicit timeout: Timeout): Future[A] = {
-    withConnection { conn =>
-      conn.beginTx()
-        .flatMap(_ => body(conn))
-        .flatMap { res =>
-          conn.commitTx().map(_ => res)
-        }
-        .recoverWith { case ex =>
-          conn.rollbackTx().flatMap(_ => Future.failed(ex))
-        }
-    }
-  }
+                        (implicit timeout: Timeout): Future[A]
 
   /** Shuts down this connection factory.
     *
