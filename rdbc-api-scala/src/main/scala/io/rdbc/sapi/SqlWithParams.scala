@@ -24,7 +24,7 @@ import io.rdbc.ImmutIndexedSeq
   * {{{
   *   import io.rdbc.sapi._
   *   val id = 0
-  *   val s: SqlWithParams = sql"select * from test where id = $id"
+  *   val s: SqlWithParams = sql"select * from test where id = $$id"
   * }}}
   */
 case class SqlWithParams(sql: String, params: ImmutIndexedSeq[Any])

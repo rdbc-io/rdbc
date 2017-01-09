@@ -39,7 +39,7 @@ import scala.concurrent.Future
   *
   *   val conn: Connection = ???
   *   val login = "jdoe"
-  *   conn.select(sql"select * from users where login = $login").executeForStream()
+  *   conn.select(sql"select * from users where login = $$login").executeForStream()
   * }}}
   *
   * Alternatively, when bare Strings are used as SQL statements, parameters
@@ -97,7 +97,7 @@ import scala.concurrent.Future
   *      import io.rdbc.sapi.Interpolators._
   *      val x = 1
   *      val y = 10
-  *      val stmt = conn.select(sql"select * from table where colx > $x and coly < $y")
+  *      val stmt = conn.select(sql"select * from table where colx > $$x and coly < $$y")
   *  }}}
   */
 trait Connection {
