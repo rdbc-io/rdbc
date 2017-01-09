@@ -33,15 +33,15 @@ object SqlParam extends SqlParamImplicits
 
 /** A statement parameter that can represent null (empty) values.
   *
-  * This trait is analogous to standard [[Option]], but keeps type information
+  * This trait is analogous to standard [[scala.Option Option]], but keeps type information
   * for empty values. In some cases database engine cannot infer null parameter
   * type - instances of this trait can be used then.
   *
-  * An implicit conversion is provided from [[Option]] to instances of this
+  * An implicit conversion is provided from [[scala.Option Option]] to instances of this
   * trait - see [[Opt2OptParam]].
   *
   * This trait does not provide any operations. It is recommended to use
-  * [[Option]] instances and at the final stage convert them to instances of
+  * [[scala.Option Option]] instances and at the final stage convert them to instances of
   * this trait when passed as statement parameters.
   */
 sealed trait SqlParam[A]

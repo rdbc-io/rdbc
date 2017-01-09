@@ -30,7 +30,7 @@ final case class Timeout(value: Duration) extends AnyVal
 object Timeout {
 
   private[sapi] trait ImplicitsTrait {
-    /** [[Duration]] to [[Timeout]] converter */
+    /** [[scala.concurrent.duration.Duration Duration]] to [[Timeout]] converter */
     implicit class Duration2Timeout(underlying: Duration) {
       def timeout: Timeout = Timeout(underlying)
     }

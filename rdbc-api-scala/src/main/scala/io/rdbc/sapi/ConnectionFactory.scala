@@ -16,7 +16,7 @@
 
 package io.rdbc.sapi
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /** Provides access to a database [[Connection]].
   *
@@ -31,7 +31,7 @@ trait ConnectionFactory {
   /** Executes a function in a context of a connection.
     *
     * Executes a function (which can be passed as a code block) in a context of
-    * a connection obtained via [[connection()]], and releases
+    * a connection obtained via [[connection]] method, and releases
     * the connection afterwards.
     */
   def withConnection[A](body: Connection => Future[A]): Future[A]
@@ -39,7 +39,7 @@ trait ConnectionFactory {
   /** Executes a function in a context of a transaction.
     *
     * Executes a function (which can be passed as a code block) in a context
-    * of a connection obtained via [[connection()]]. Before the function is
+    * of a connection obtained via [[connection]] method. Before the function is
     * executed, transaction is started. After the function finishes, transaction
     * is committed in case of a success and rolled back in case of a
     * failure - after that, the connection is released.
