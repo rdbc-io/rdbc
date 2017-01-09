@@ -24,50 +24,51 @@ trait ConnectionPartialImpl extends Connection {
 
   implicit protected def ec: ExecutionContext
 
-  def delete(sql: String): Future[Delete] = statement(sql).map(new DeleteImpl(_))
+  override def delete(sql: String): Future[Delete] = statement(sql).map(new DeleteImpl(_))
 
-  def insert(sql: String): Future[Insert] = statement(sql).map(new InsertImpl(_))
+  override def insert(sql: String): Future[Insert] = statement(sql).map(new InsertImpl(_))
 
-  def select(sql: String): Future[Select] = statement(sql).map(new SelectImpl(_))
+  override def select(sql: String): Future[Select] = statement(sql).map(new SelectImpl(_))
 
-  def update(sql: String): Future[Update] = statement(sql).map(new UpdateImpl(_))
+  override def update(sql: String): Future[Update] = statement(sql).map(new UpdateImpl(_))
 
-  def delete(sqlWithParams: SqlWithParams): Future[ParametrizedDelete] = {
+  override def delete(sqlWithParams: SqlWithParams): Future[ParametrizedDelete] = {
     parametrizedStmt(delete)(sqlWithParams)
   }
 
-  def insert(sqlWithParams: SqlWithParams): Future[ParametrizedInsert] = {
+  override def insert(sqlWithParams: SqlWithParams): Future[ParametrizedInsert] = {
     parametrizedStmt(insert)(sqlWithParams)
   }
 
-  def select(sqlWithParams: SqlWithParams): Future[ParametrizedSelect] = {
+  override def select(sqlWithParams: SqlWithParams): Future[ParametrizedSelect] = {
     parametrizedStmt(select)(sqlWithParams)
   }
 
-  def update(sqlWithParams: SqlWithParams): Future[ParametrizedUpdate] = {
+  override def update(sqlWithParams: SqlWithParams): Future[ParametrizedUpdate] = {
     parametrizedStmt(update)(sqlWithParams)
   }
 
-  def returningInsert(sqlWithParams: SqlWithParams): Future[ParametrizedReturningInsert] = {
+  override def returningInsert(sqlWithParams: SqlWithParams): Future[ParametrizedReturningInsert] = {
     parametrizedStmt(returningInsert)(sqlWithParams)
   }
 
-  def returningInsert(sqlWithParams: SqlWithParams,
+  override def returningInsert(sqlWithParams: SqlWithParams,
                       keyColumns: String*): Future[ParametrizedReturningInsert] = {
     parametrizedStmt {
       sql => returningInsert(sql, keyColumns: _*)
     }(sqlWithParams)
   }
 
-  def statement(sqlWithParams: SqlWithParams): Future[AnyParametrizedStatement] = {
+  override def statement(sqlWithParams: SqlWithParams): Future[AnyParametrizedStatement] = {
     parametrizedStmt(statement)(sqlWithParams)
   }
 
-  def ddl(sql: String): Future[DdlStatement] = {
+  override def ddl(sql: String): Future[DdlStatement] = {
     statement(sql).flatMap(_.noParamsF).map(new DdlImpl(_))
   }
 
-  protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])(sqlWithParams: SqlWithParams): Future[T] = {
+  protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])
+                                   (sqlWithParams: SqlWithParams): Future[T] = {
     bindable(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params: _*))
   }
 }

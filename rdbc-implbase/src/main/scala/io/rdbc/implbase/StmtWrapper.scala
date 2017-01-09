@@ -21,15 +21,15 @@ import io.rdbc.sapi.{AnyParametrizedStatement, AnyStatement}
 class StmtWrapper[A](underlying: AnyStatement)(parametrizedConv: AnyParametrizedStatement => A)
   extends BindablePartialImpl[A] {
 
-  override def bind(params: (String, Any)*): A = {
+  def bind(params: (String, Any)*): A = {
     parametrizedConv(underlying.bind(params: _*))
   }
 
-  override def bindByIdx(params: Any*): A = {
+  def bindByIdx(params: Any*): A = {
     parametrizedConv(underlying.bindByIdx(params: _*))
   }
 
-  override def noParams: A = {
+  def noParams: A = {
     parametrizedConv(underlying.noParams)
   }
 }

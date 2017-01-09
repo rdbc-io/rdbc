@@ -23,9 +23,15 @@ import scala.util.Try
 
 trait BindablePartialImpl[T] extends Bindable[T] {
 
-  def bindF(params: (String, Any)*): Future[T] = Future.fromTry(Try(bind(params: _*)))
+  override def bindF(params: (String, Any)*): Future[T] = {
+    Future.fromTry(Try(bind(params: _*)))
+  }
 
-  def bindByIdxF(params: Any*): Future[T] = Future.fromTry(Try(bindByIdx(params: _*)))
+  override def bindByIdxF(params: Any*): Future[T] = {
+    Future.fromTry(Try(bindByIdx(params: _*)))
+  }
 
-  def noParamsF: Future[T] = Future.fromTry(Try(noParams))
+  override def noParamsF: Future[T] = {
+    Future.fromTry(Try(noParams))
+  }
 }
