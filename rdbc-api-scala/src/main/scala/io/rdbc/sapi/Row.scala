@@ -125,7 +125,7 @@ trait Row {
     */
   def colOpt[A: ClassTag](name: String): Option[A]
 
-  /** Returns a [[String]] from column with a given name.
+  /** Returns a `String` from column with a given name.
     *
     * $nullSafetyNote
     *
@@ -135,7 +135,7 @@ trait Row {
     */
   def str(name: String): String
 
-  /** Returns a [[String]] from column with a given name.
+  /** Returns a `String` from column with a given name.
     *
     * $returningNone
     *
@@ -145,7 +145,7 @@ trait Row {
     */
   def strOpt(name: String): Option[String]
 
-  /** Returns a [[String]] from column with a given index.
+  /** Returns a `String` from column with a given index.
     *
     * $nullSafetyNote
     *
@@ -155,7 +155,7 @@ trait Row {
     */
   def str(idx: Int): String
 
-  /** Returns a [[String]] from column with a given index.
+  /** Returns a `String` from column with a given index.
     *
     * $returningNone
     *
@@ -215,7 +215,7 @@ trait Row {
 
   /** Returns a character from column with a given name.
     *
-    * Varchar types with a single character are convertible to a [[Char]].
+    * Varchar types with a single character are convertible to a `Char`.
     *
     * $nullSafetyNote
     *
@@ -227,7 +227,7 @@ trait Row {
 
   /** Returns a character from column with a given name.
     *
-    * Varchar types with a single character are convertible to a [[Char]].
+    * Varchar types with a single character are convertible to a `Char`.
     *
     * $returningNone
     *
@@ -239,7 +239,7 @@ trait Row {
 
   /** Returns a character from column with a given index.
     *
-    * Varchar types with a single character are convertible to a [[Char]].
+    * Varchar types with a single character are convertible to a `Char`.
     *
     * $nullSafetyNote
     *
@@ -251,7 +251,7 @@ trait Row {
 
   /** Returns a character from column with a given index.
     *
-    * Varchar types with a single character are convertible to a [[Char]].
+    * Varchar types with a single character are convertible to a `Char`.
     *
     * $returningNone
     *
@@ -261,9 +261,9 @@ trait Row {
     */
   def charOpt(idx: Int): Option[Char]
 
-  /** Returns a [[Short]] from column with a given name.
+  /** Returns a `Short` from column with a given name.
     *
-    * All numeric types can be converted to [[Short]], but some conversions may
+    * All numeric types can be converted to `Short`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -274,9 +274,9 @@ trait Row {
     */
   def short(name: String): Short
 
-  /** Returns a [[Short]] from column with a given name.
+  /** Returns a `Short` from column with a given name.
     *
-    * All numeric types can be converted to [[Short]], but some conversions may
+    * All numeric types can be converted to `Short`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -287,9 +287,9 @@ trait Row {
     */
   def shortOpt(name: String): Option[Short]
 
-  /** Returns a [[Short]] from column with a given index.
+  /** Returns a `Short` from column with a given index.
     *
-    * All numeric types can be converted to [[Short]], but some conversions may
+    * All numeric types can be converted to `Short`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -300,9 +300,9 @@ trait Row {
     */
   def short(idx: Int): Short
 
-  /** Returns a [[Short]] from column with a given index.
+  /** Returns a `Short` from column with a given index.
     *
-    * All numeric types can be converted to [[Short]], but some conversions may
+    * All numeric types can be converted to `Short`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -313,9 +313,9 @@ trait Row {
     */
   def shortOpt(idx: Int): Option[Short]
 
-  /** Returns an [[Int]] from column with a given name.
+  /** Returns an `Int` from column with a given name.
     *
-    * All numeric types can be converted to [[Int]], but some conversions may
+    * All numeric types can be converted to `Int`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -326,9 +326,9 @@ trait Row {
     */
   def int(name: String): Int
 
-  /** Returns an [[Int]] from column with a given name.
+  /** Returns an `Int` from column with a given name.
     *
-    * All numeric types can be converted to [[Int]], but some conversions may
+    * All numeric types can be converted to `Int`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -339,9 +339,9 @@ trait Row {
     */
   def intOpt(name: String): Option[Int]
 
-  /** Returns an [[Int]] from column with a given index.
+  /** Returns an `Int` from column with a given index.
     *
-    * All numeric types can be converted to [[Int]], but some conversions may
+    * All numeric types can be converted to `Int`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -352,9 +352,9 @@ trait Row {
     */
   def int(idx: Int): Int
 
-  /** Returns an [[Int]] from column with a given index.
+  /** Returns an `Int` from column with a given index.
     *
-    * All numeric types can be converted to [[Int]], but some conversions may
+    * All numeric types can be converted to `Int`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -365,9 +365,9 @@ trait Row {
     */
   def intOpt(idx: Int): Option[Int]
 
-  /** Returns a [[Long]] from column with a given name.
+  /** Returns a `Long` from column with a given name.
     *
-    * All numeric types can be converted to [[Long]], but some conversions may
+    * All numeric types can be converted to `Long`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -378,9 +378,9 @@ trait Row {
     */
   def long(name: String): Long
 
-  /** Returns a [[Long]] from column with a given name.
+  /** Returns a `Long` from column with a given name.
     *
-    * All numeric types can be converted to [[Long]], but some conversions may
+    * All numeric types can be converted to `Long`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -391,9 +391,9 @@ trait Row {
     */
   def longOpt(name: String): Option[Long]
 
-  /** Returns a [[Long]] from column with a given index.
+  /** Returns a `Long` from column with a given index.
     *
-    * All numeric types can be converted to [[Long]], but some conversions may
+    * All numeric types can be converted to `Long`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -404,9 +404,9 @@ trait Row {
     */
   def long(idx: Int): Long
 
-  /** Returns a [[Long]] from column with a given index.
+  /** Returns a `Long` from column with a given index.
     *
-    * All numeric types can be converted to [[Long]], but some conversions may
+    * All numeric types can be converted to `Long`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -417,10 +417,10 @@ trait Row {
     */
   def longOpt(idx: Int): Option[Long]
 
-  /** Returns a [[BigDecimal]] from column with a given name.
+  /** Returns a [[scala.math.BigDecimal BigDecimal]] from column with a given name.
     *
-    * All numeric types can be converted to [[BigDecimal]], note however that
-    * NaN value is not representable by a [[BigDecimal]]. If you expect values
+    * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
+    * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
     * to be NaN use `numeric` method instead.
     *
     * $nullSafetyNote
@@ -431,10 +431,10 @@ trait Row {
     */
   def bigDecimal(name: String): BigDecimal
 
-  /** Returns a [[BigDecimal]] from column with a given name.
+  /** Returns a [[scala.math.BigDecimal BigDecimal]] from column with a given name.
     *
-    * All numeric types can be converted to [[BigDecimal]], note however that
-    * NaN value is not representable by a [[BigDecimal]]. If you expect values
+    * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
+    * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
     * to be NaN use `numeric` method instead.
     *
     * $returningNone
@@ -445,10 +445,10 @@ trait Row {
     */
   def bigDecimalOpt(name: String): Option[BigDecimal]
 
-  /** Returns a [[BigDecimal]] from column with a given index.
+  /** Returns a [[scala.math.BigDecimal BigDecimal]] from column with a given index.
     *
-    * All numeric types can be converted to [[BigDecimal]], note however that
-    * NaN value is not representable by a [[BigDecimal]]. If you expect values
+    * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
+    * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
     * to be NaN use `numeric` method instead.
     *
     * $nullSafetyNote
@@ -459,10 +459,10 @@ trait Row {
     */
   def bigDecimal(idx: Int): BigDecimal
 
-  /** Returns a [[BigDecimal]] from column with a given index.
+  /** Returns a [[scala.math.BigDecimal BigDecimal]] from column with a given index.
     *
-    * All numeric types can be converted to [[BigDecimal]], note however that
-    * NaN value is not representable by a [[BigDecimal]]. If you expect values
+    * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
+    * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
     * to be NaN use `numeric` method instead.
     *
     * $returningNone
@@ -521,9 +521,9 @@ trait Row {
     */
   def numericOpt(idx: Int): Option[SqlNumeric]
 
-  /** Returns a [[Double]] from column with a given name.
+  /** Returns a `Double` from column with a given name.
     *
-    * All numeric types can be converted to [[Double]], but some conversions
+    * All numeric types can be converted to `Double`, but some conversions
     * may involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -534,9 +534,9 @@ trait Row {
     */
   def double(name: String): Double
 
-  /** Returns a [[Double]] from column with a given name.
+  /** Returns a `Double` from column with a given name.
     *
-    * All numeric types can be converted to [[Double]], but some conversions may
+    * All numeric types can be converted to `Double`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -547,9 +547,9 @@ trait Row {
     */
   def doubleOpt(name: String): Option[Double]
 
-  /** Returns a [[Double]] from column with a given index.
+  /** Returns a `Double` from column with a given index.
     *
-    * All numeric types can be converted to [[Double]], but some conversions
+    * All numeric types can be converted to `Double`, but some conversions
     * may involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -560,9 +560,9 @@ trait Row {
     */
   def double(idx: Int): Double
 
-  /** Returns a [[Double]] from column with a given index.
+  /** Returns a `Double` from column with a given index.
     *
-    * All numeric types can be converted to [[Double]], but some conversions may
+    * All numeric types can be converted to `Double`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -573,9 +573,9 @@ trait Row {
     */
   def doubleOpt(idx: Int): Option[Double]
 
-  /** Returns a [[Float]] from column with a given name.
+  /** Returns a `Float` from column with a given name.
     *
-    * All numeric types can be converted to [[Float]], but some conversions may
+    * All numeric types can be converted to `Float`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -586,9 +586,9 @@ trait Row {
     */
   def float(name: String): Float
 
-  /** Returns a [[Float]] from column with a given name.
+  /** Returns a `Float` from column with a given name.
     *
-    * All numeric types can be converted to [[Float]], but some conversions may
+    * All numeric types can be converted to `Float`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -599,9 +599,9 @@ trait Row {
     */
   def floatOpt(name: String): Option[Float]
 
-  /** Returns a [[Float]] from column with a given index.
+  /** Returns a `Float` from column with a given index.
     *
-    * All numeric types can be converted to [[Float]], but some conversions may
+    * All numeric types can be converted to `Float`, but some conversions may
     * involve rounding or truncation.
     *
     * $nullSafetyNote
@@ -612,9 +612,9 @@ trait Row {
     */
   def float(idx: Int): Float
 
-  /** Returns a [[Float]] from column with a given index.
+  /** Returns a `Float` from column with a given index.
     *
-    * All numeric types can be converted to [[Float]], but some conversions may
+    * All numeric types can be converted to `Float`, but some conversions may
     * involve rounding or truncation.
     *
     * $returningNone
@@ -625,9 +625,9 @@ trait Row {
     */
   def floatOpt(idx: Int): Option[Float]
 
-  /** Returns an [[Instant]] from column with a given name.
+  /** Returns an `Instant` from column with a given name.
     *
-    * Note that regular timestamp values are not convertible to an [[Instant]]
+    * Note that regular timestamp values are not convertible to an `Instant`
     * because timestamp values do not hold a time zone information.
     *
     * $nullSafetyNote
@@ -638,9 +638,9 @@ trait Row {
     */
   def instant(name: String): Instant
 
-  /** Returns an [[Instant]] from column with a given name.
+  /** Returns an `Instant` from column with a given name.
     *
-    * Note that regular timestamp values are not convertible to an [[Instant]]
+    * Note that regular timestamp values are not convertible to an `Instant`
     * because timestamp values do not hold a time zone information.
     *
     * $returningNone
@@ -651,9 +651,9 @@ trait Row {
     */
   def instantOpt(name: String): Option[Instant]
 
-  /** Returns an [[Instant]] from column with a given index.
+  /** Returns an `Instant` from column with a given index.
     *
-    * Note that regular timestamp values are not convertible to an [[Instant]]
+    * Note that regular timestamp values are not convertible to an `Instant`
     * because timestamp values do not hold a time zone information.
     *
     * $nullSafetyNote
@@ -664,9 +664,9 @@ trait Row {
     */
   def instant(idx: Int): Instant
 
-  /** Returns an [[Instant]] from column with a given index.
+  /** Returns an `Instant` from column with a given index.
     *
-    * Note that regular timestamp values are not convertible to an [[Instant]]
+    * Note that regular timestamp values are not convertible to an `Instant`
     * because timestamp values do not hold a time zone information.
     *
     * $returningNone
@@ -677,9 +677,9 @@ trait Row {
     */
   def instantOpt(idx: Int): Option[Instant]
 
-  /** Returns a [[LocalDateTime]] from column with a given name.
+  /** Returns a `LocalDateTime` from column with a given name.
     *
-    * For SQL date type that does not hold a time, [[LocalDateTime]] at start
+    * For SQL date type that does not hold a time, `LocalDateTime` at start
     * of day is returned.
     *
     * $nullSafetyNote
@@ -690,9 +690,9 @@ trait Row {
     */
   def localDateTime(name: String): LocalDateTime
 
-  /** Returns a [[LocalDateTime]] from column with a given name.
+  /** Returns a `LocalDateTime` from column with a given name.
     *
-    * For SQL date type that does not hold a time, [[LocalDateTime]] at start
+    * For SQL date type that does not hold a time, `LocalDateTime` at start
     * of day is returned.
     *
     * $returningNone
@@ -703,9 +703,9 @@ trait Row {
     */
   def localDateTimeOpt(name: String): Option[LocalDateTime]
 
-  /** Returns a [[LocalDateTime]] from column with a given index.
+  /** Returns a `LocalDateTime` from column with a given index.
     *
-    * For SQL date type that does not hold a time, [[LocalDateTime]] at start
+    * For SQL date type that does not hold a time, `LocalDateTime` at start
     * of day is returned.
     *
     * $nullSafetyNote
@@ -716,9 +716,9 @@ trait Row {
     */
   def localDateTime(idx: Int): LocalDateTime
 
-  /** Returns a [[LocalDateTime]] from column with a given index.
+  /** Returns a `LocalDateTime` from column with a given index.
     *
-    * For SQL date type that does not hold a time, [[LocalDateTime]] at start
+    * For SQL date type that does not hold a time, `LocalDateTime` at start
     * of day is returned.
     *
     * $returningNone
@@ -729,10 +729,10 @@ trait Row {
     */
   def localDateTimeOpt(idx: Int): Option[LocalDateTime]
 
-  /** Returns a [[LocalDate]] from column with a given name.
+  /** Returns a `LocalDate` from column with a given name.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalDate]] - a time part is truncated.
+    * `LocalDate` - a time part is truncated.
     *
     * $nullSafetyNote
     *
@@ -742,10 +742,10 @@ trait Row {
     */
   def localDate(name: String): LocalDate
 
-  /** Returns a [[LocalDate]] from column with a given name.
+  /** Returns a `LocalDate` from column with a given name.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalDate]] - a time part is truncated.
+    * `LocalDate` - a time part is truncated.
     *
     * $returningNone
     *
@@ -755,10 +755,10 @@ trait Row {
     */
   def localDateOpt(name: String): Option[LocalDate]
 
-  /** Returns a [[LocalDate]] from column with a given index.
+  /** Returns a `LocalDate` from column with a given index.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalDate]] - a time part is truncated.
+    * `LocalDate` - a time part is truncated.
     *
     * $nullSafetyNote
     *
@@ -768,10 +768,10 @@ trait Row {
     */
   def localDate(idx: Int): LocalDate
 
-  /** Returns a [[LocalDate]] from column with a given index.
+  /** Returns a `LocalDate` from column with a given index.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalDate]] - a time part is truncated.
+    * `LocalDate` - a time part is truncated.
     *
     * $returningNone
     *
@@ -781,10 +781,10 @@ trait Row {
     */
   def localDateOpt(idx: Int): Option[LocalDate]
 
-  /** Returns a [[LocalDate]] from column with a given name.
+  /** Returns a `LocalDate` from column with a given name.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalTime]] - a date part is truncated.
+    * `LocalTime` - a date part is truncated.
     *
     * $nullSafetyNote
     *
@@ -794,10 +794,10 @@ trait Row {
     */
   def localTime(name: String): LocalTime
 
-  /** Returns a [[LocalDate]] from column with a given name.
+  /** Returns a `LocalDate` from column with a given name.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalTime]] - a date part is truncated.
+    * `LocalTime` - a date part is truncated.
     *
     * $returningNone
     *
@@ -807,10 +807,10 @@ trait Row {
     */
   def localTimeOpt(name: String): Option[LocalTime]
 
-  /** Returns a [[LocalDate]] from column with a given index.
+  /** Returns a `LocalDate` from column with a given index.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalTime]] - a date part is truncated.
+    * `LocalTime` - a date part is truncated.
     *
     * $nullSafetyNote
     *
@@ -820,10 +820,10 @@ trait Row {
     */
   def localTime(idx: Int): LocalTime
 
-  /** Returns a [[LocalDate]] from column with a given index.
+  /** Returns a `LocalDate` from column with a given index.
     *
     * SQL types that represent a date with a time are convertible to
-    * [[LocalTime]] - a date part is truncated.
+    * `LocalTime` - a date part is truncated.
     *
     * $returningNone
     *
@@ -887,10 +887,10 @@ trait Row {
     */
   def bytesOpt(idx: Int): Option[Array[Byte]]
 
-  /** Returns an [[UUID]] from column with a given name.
+  /** Returns an `UUID` from column with a given name.
     *
     * A string type with a standard UUID representation as defined by
-    * [[UUID.fromString]] is convertible to UUID.
+    * `UUID.fromString` is convertible to UUID.
     *
     * $nullSafetyNote
     *
@@ -900,10 +900,10 @@ trait Row {
     */
   def uuid(name: String): UUID
 
-  /** Returns an [[UUID]] from column with a given name.
+  /** Returns an `UUID` from column with a given name.
     *
     * A string type with a standard UUID representation as defined by
-    * [[UUID.fromString]] is convertible to UUID.
+    * `UUID.fromString` is convertible to UUID.
     *
     * $returningNone
     *
@@ -913,10 +913,10 @@ trait Row {
     */
   def uuidOpt(name: String): Option[UUID]
 
-  /** Returns an [[UUID]] from column with a given index.
+  /** Returns an `UUID` from column with a given index.
     *
     * A string type with a standard UUID representation as defined by
-    * [[UUID.fromString]] is convertible to UUID.
+    * `UUID.fromString` is convertible to UUID.
     *
     * $nullSafetyNote
     *
@@ -926,10 +926,10 @@ trait Row {
     */
   def uuid(idx: Int): UUID
 
-  /** Returns an [[UUID]] from column with a given index.
+  /** Returns an `UUID` from column with a given index.
     *
     * A string type with a standard UUID representation as defined by
-    * [[UUID.fromString]] is convertible to UUID.
+    * `UUID.fromString` is convertible to UUID.
     *
     * $returningNone
     *
