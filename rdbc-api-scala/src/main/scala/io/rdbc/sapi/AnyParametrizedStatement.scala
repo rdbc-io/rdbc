@@ -42,7 +42,7 @@ trait AnyParametrizedStatement {
 
   /** Executes this statement and returns a [[ResultStream]] instance
     * that can be used to stream rows from the database leveraging
-    * Reactive Streams specification's [[org.reactivestreams.Publisher]] with backpressure.
+    * Reactive Streams specification's `Publisher` with backpressure.
     *
     * $timeoutInfo
     * $exceptions
@@ -98,7 +98,7 @@ trait AnyParametrizedStatement {
     * {{{
     * for {
     *   val id = 10
-    *   select <- conn.statement(sql"select name from users where id = $id")
+    *   select <- conn.statement(sql"select name from users where id = $$id")
     *   name <- select.executeForValue(_.str("name"))
     * } yield name
     * }}}
@@ -122,7 +122,7 @@ trait AnyParametrizedStatement {
     * {{{
     * val id = 10
     * for {
-    *   select <- conn.select(sql"select name from users where id = $id")
+    *   select <- conn.select(sql"select name from users where id = $$id")
     *   name <- parametrized.executeForValueOpt(_.str("name"))
     * } yield name
     * }}}
