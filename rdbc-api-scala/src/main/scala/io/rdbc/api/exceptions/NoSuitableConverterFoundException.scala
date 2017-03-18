@@ -16,7 +16,7 @@
 
 package io.rdbc.api.exceptions
 
-class NoSuitableConverterFoundException(any: Any)
+class NoSuitableConverterFoundException(val any: Any)
   extends RdbcException(
     s"No suitable converter was found for value '$any' of type ${any.getClass}"
   )
