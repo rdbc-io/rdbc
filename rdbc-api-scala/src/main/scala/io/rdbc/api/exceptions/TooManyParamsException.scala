@@ -16,8 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-abstract class RdbcException(msg: String, cause: Option[Throwable])
-  extends RuntimeException(msg, cause.orNull) {
-  def this(msg: String) = this(msg, None)
-  def this(msg: String, cause: Throwable) = this(msg, Some(cause))
-}
+class TooManyParamsException(val provided: Int, val expected: Int)
+  extends RdbcException(s"$expected parameters are expected for the query, $provided params were provided")
