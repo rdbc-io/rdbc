@@ -16,5 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-class SyntaxErrorException(msg: String, errorPosition: Option[Int])
-  extends RdbcException(msg + errorPosition.fold("")(pos => s" at position $pos"))
+class NoSuchParamException(val param: String)
+  extends RdbcException(s"No parameter '$param' was declared for the query")
