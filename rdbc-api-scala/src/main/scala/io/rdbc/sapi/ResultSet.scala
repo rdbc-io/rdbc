@@ -30,6 +30,6 @@ import io.rdbc._
 class ResultSet(val rowsAffected: Long,
                 val warnings: ImmutSeq[Warning],
                 val metadata: RowMetadata,
-                val rows: ImmutSeq[Row]) extends Traversable[Row] {
-  def foreach[U](f: (Row) => U): Unit = rows.foreach(f)
+                val rows: ImmutSeq[Row]) extends Iterable[Row] {
+  def iterator: Iterator[Row] = rows.iterator
 }
