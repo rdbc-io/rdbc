@@ -16,9 +16,9 @@
 
 package io.rdbc.api.exceptions
 
-class ConstraintViolationException(schema: String,
-                                   table: String,
-                                   constraint: String,
+class ConstraintViolationException(val schema: String,
+                                   val table: String,
+                                   val constraint: String,
                                    msg: String)
   extends RdbcException(msg) {
 
