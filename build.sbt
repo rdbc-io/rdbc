@@ -44,7 +44,8 @@ lazy val commonSettings = Seq(
     setNextVersion,
     commitNextVersion,
     pushChanges
-  )
+  ),
+  resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases"
 )
 
 lazy val rdbcRoot = (project in file("."))
@@ -53,7 +54,7 @@ lazy val rdbcRoot = (project in file("."))
     publishArtifact := false,
     bintrayReleaseOnPublish := false
   )
-  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil)
+  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil, rdbcTests)
 
 lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   .settings(commonSettings: _*)
@@ -102,3 +103,13 @@ lazy val rdbcUtil = (project in file("rdbc-util"))
       Library.scalaLogging
     )
   )
+
+lazy val rdbcTests = (project in file("rdbc-tests"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "rdbc-tests",
+    libraryDependencies ++= Vector(
+      Library.scalactic,
+      Library.scalatest
+    )
+  ).dependsOn(rdbcApiScala)
