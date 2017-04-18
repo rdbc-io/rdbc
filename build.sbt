@@ -3,8 +3,8 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 lazy val commonSettings = Seq(
   organization := "io.rdbc",
-  scalaVersion := "2.12.1",
-  crossScalaVersions := Vector("2.11.8"),
+  scalaVersion := "2.12.2",
+  crossScalaVersions := Vector("2.11.11"),
   scalacOptions ++= Vector(
     "-unchecked",
     "-deprecation",
