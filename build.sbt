@@ -110,6 +110,8 @@ lazy val rdbcTests = (project in file("rdbc-tests"))
     name := "rdbc-tests",
     libraryDependencies ++= Vector(
       Library.scalactic,
-      Library.scalatest
+      Library.scalatest,
+      Library.reactiveStreamsTck,
+      Library.akkaStream
     )
   ).dependsOn(rdbcApiScala)

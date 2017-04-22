@@ -10,4 +10,6 @@ object Library {
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
   val scalactic = "org.scalactic" %% "scalactic" % Versions.scalatest
   val scalatest = "org.scalatest" %% "scalatest" % Versions.scalatest
+  val reactiveStreamsTck = "org.reactivestreams" % "reactive-streams-tck" % "1.0.0"
+  val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.0"
 }
