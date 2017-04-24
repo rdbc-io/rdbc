@@ -98,7 +98,7 @@ trait AnyParametrizedStatement {
     * {{{
     * for {
     *   val id = 10
-    *   select <- conn.statement(sql"select name from users where id = $$id")
+    *   select <- conn.statement(sql"select name from users where id = \$id")
     *   name <- select.executeForValue(_.str("name"))
     * } yield name
     * }}}
@@ -122,7 +122,7 @@ trait AnyParametrizedStatement {
     * {{{
     * val id = 10
     * for {
-    *   select <- conn.select(sql"select name from users where id = $$id")
+    *   select <- conn.select(sql"select name from users where id = \$id")
     *   name <- parametrized.executeForValueOpt(_.str("name"))
     * } yield name
     * }}}
