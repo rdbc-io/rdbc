@@ -23,7 +23,7 @@ private[sapi] trait InterpolatorsTrait {
     *
     * {{{
     *  val id = 10
-    *  val select = conn.select(sql"select * from test where id = $$id")
+    *  val select = conn.select(sql"select * from test where id = \$id")
     * }}}
     */
   implicit class SqlInterpolator(val sc: StringContext) {
