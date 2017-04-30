@@ -1,0 +1,122 @@
+<scalastyle>
+    <name>rdbc-pgsql style</name>
+
+    <check level="error" class="org.scalastyle.file.HeaderMatchesChecker" enabled="true">
+        <parameters>
+            <parameter name="header"><![CDATA[/*
+ * Copyright 2016-2017 Krzysztof Pado
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */]]></parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.file.FileTabChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.file.WhitespaceEndOfLineChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.file.NewLineAtEofChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.file.FileLineLengthChecker">
+        <parameters>
+            <parameter name="maxLineLength"><![CDATA[120]]></parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.RedundantIfChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.SimplifyBooleanExpressionChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.UppercaseLChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.ProcedureDeclarationChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.ClassNamesChecker">
+        <parameters>
+            <parameter name="regex"><![CDATA[^[A-Z][A-Za-z0-9]*$]]></parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.ObjectNamesChecker">
+        <parameters>
+            <parameter name="regex"><![CDATA[^[A-Z][A-Za-z0-9]*$]]></parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.PackageObjectNamesChecker">
+        <parameters>
+            <parameter name="regex"><![CDATA[^[a-z][A-Za-z]*$]]></parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.EqualsHashCodeChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.CovariantEqualsChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.IllegalImportsChecker">
+        <parameters>
+            <parameter name="illegalImports"><![CDATA[sun._,java.awt._]]></parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.ReturnChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.EmptyClassChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.ForBraceChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.PublicMethodsHaveTypeChecker">
+        <parameters>
+            <parameter name="ignoreOverride">true</parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.NoWhitespaceBeforeLeftBracketChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.NoWhitespaceAfterLeftBracketChecker"/>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.DisallowSpaceBeforeTokenChecker">
+        <parameters>
+            <parameter name="tokens">COLON, COMMA, RPAREN</parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.DisallowSpaceAfterTokenChecker">
+        <parameters>
+            <parameter name="tokens">LPAREN</parameter>
+        </parameters>
+    </check>
+
+    <check level="error" enabled="true" class="org.scalastyle.scalariform.EnsureSingleSpaceAfterTokenChecker">
+        <parameters>
+            <parameter name="tokens">IF, FOR, WHILE, DO, TRY</parameter>
+        </parameters>
+    </check>
+
+    <check enabled="true" class="org.scalastyle.scalariform.CyclomaticComplexityChecker" level="warning">
+        <parameters>
+            <parameter name="maximum">10</parameter>
+        </parameters>
+    </check>
+
+    <check enabled="true" class="org.scalastyle.scalariform.MethodLengthChecker" level="warning">
+        <parameters>
+            <parameter name="maxLength">30</parameter>
+        </parameters>
+    </check>
+
+    <check enabled="true" class="org.scalastyle.scalariform.NonASCIICharacterChecker" level="error"/>
+
+    <check enabled="true" class="org.scalastyle.scalariform.StructuralTypeChecker" level="error"/>
+
+</scalastyle>
