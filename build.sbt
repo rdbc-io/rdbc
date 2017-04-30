@@ -32,7 +32,7 @@ lazy val commonSettings = Seq(
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   bintrayOrganization := Some("rdbc"),
   headers := Map(
-    "scala" -> Apache2_0("2016", "Krzysztof Pado")
+    "scala" -> Apache2_0("2016-2017", "Krzysztof Pado")
   ),
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,

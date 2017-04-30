@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016-2017 Krzysztof Pado
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.rdbc.test
 
 import io.rdbc.api.exceptions.InvalidQueryException
@@ -11,7 +27,10 @@ trait NonExistingColumnSpec extends RdbcSpec {
   "Error should be returned when referencing a non-existent column when" - {
     stmtTest("Select", _.statement(sql"select nonexistent from tbl"), errPos = 8)
     stmtTest("Insert", _.statement(sql"insert into tbl(nonexistent) values (1)"), errPos = 17)
-    stmtTest("Returning insert", _.statement(sql"insert into tbl(nonexistent) values (1)", StatementOptions.ReturnGenKeys), errPos = 17)
+    stmtTest("Returning insert",
+      _.statement(sql"insert into tbl(nonexistent) values (1)", StatementOptions.ReturnGenKeys),
+      errPos = 17
+    )
     stmtTest("Delete", _.statement(sql"delete from tbl where nonexistent = 1"), errPos = 23)
     stmtTest("Update", _.statement(sql"update tbl set nonexistent = 1"), errPos = 16)
     stmtTest("DDL", _.statement(sql"alter table tbl drop column nonexistent"), errPos = 29)

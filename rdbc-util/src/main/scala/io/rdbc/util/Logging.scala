@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Krzysztof Pado
+ * Copyright 2016-2017 Krzysztof Pado
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import scala.util.control.NonFatal
 
 object Logging {
   @volatile private lazy val rnd = new Random()
-  @volatile private lazy val tracingEc = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool()) //TODO make this a deamon
+  @volatile private lazy val tracingEc = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool())
+  //TODO ^^^ make this a deamon
 }
 
 trait Logging extends StrictLogging {
