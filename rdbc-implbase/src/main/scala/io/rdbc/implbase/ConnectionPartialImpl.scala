@@ -24,51 +24,18 @@ trait ConnectionPartialImpl extends Connection {
 
   implicit protected def ec: ExecutionContext
 
-  override def delete(sql: String): Future[Delete] = statement(sql).map(new DeleteImpl(_))
-
-  override def insert(sql: String): Future[Insert] = statement(sql).map(new InsertImpl(_))
-
-  override def select(sql: String): Future[Select] = statement(sql).map(new SelectImpl(_))
-
-  override def update(sql: String): Future[Update] = statement(sql).map(new UpdateImpl(_))
-
-  override def delete(sqlWithParams: SqlWithParams): Future[ParametrizedDelete] = {
-    parametrizedStmt(delete)(sqlWithParams)
+  override def statement(sql: String): Future[Statement] = {
+    statement(sql, StatementOptions.Default)
   }
 
-  override def insert(sqlWithParams: SqlWithParams): Future[ParametrizedInsert] = {
-    parametrizedStmt(insert)(sqlWithParams)
+  override def statement(sqlWithParams: SqlWithParams): Future[ParametrizedStatement] = {
+    statement(sqlWithParams, StatementOptions.Default)
   }
 
-  override def select(sqlWithParams: SqlWithParams): Future[ParametrizedSelect] = {
-    parametrizedStmt(select)(sqlWithParams)
-  }
-
-  override def update(sqlWithParams: SqlWithParams): Future[ParametrizedUpdate] = {
-    parametrizedStmt(update)(sqlWithParams)
-  }
-
-  override def returningInsert(sqlWithParams: SqlWithParams): Future[ParametrizedReturningInsert] = {
-    parametrizedStmt(returningInsert)(sqlWithParams)
-  }
-
-  override def returningInsert(sqlWithParams: SqlWithParams,
-                      keyColumns: String*): Future[ParametrizedReturningInsert] = {
-    parametrizedStmt {
-      sql => returningInsert(sql, keyColumns: _*)
-    }(sqlWithParams)
-  }
-
-  override def statement(sqlWithParams: SqlWithParams): Future[AnyParametrizedStatement] = {
-    parametrizedStmt(statement)(sqlWithParams)
-  }
-
-  override def ddl(sql: String): Future[DdlStatement] = {
-    statement(sql).flatMap(_.noParamsF).map(new DdlImpl(_))
-  }
-
-  protected def parametrizedStmt[T](bindable: String => Future[Bindable[T]])
-                                   (sqlWithParams: SqlWithParams): Future[T] = {
-    bindable(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params: _*))
+  override def statement(
+                          sqlWithParams: SqlWithParams,
+                          statementOptions: StatementOptions
+                        ): Future[ParametrizedStatement] = {
+    statement(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params: _*))
   }
 }

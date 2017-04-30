@@ -16,8 +16,22 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{AnyStatement, ParametrizedUpdate, Update}
+import io.rdbc.sapi.{ParametrizedStatement, Statement}
 
-class UpdateImpl(stmt: AnyStatement)
-  extends StmtWrapper[ParametrizedUpdate](stmt)(new ParametrizedUpdateImpl(_))
-    with Update
+import scala.concurrent.Future
+import scala.util.Try
+
+trait StatementPartialImpl extends Statement {
+
+  override def bindF(params: (String, Any)*): Future[ParametrizedStatement] = {
+    Future.fromTry(Try(bind(params: _*)))
+  }
+
+  override def bindByIdxF(params: Any*): Future[ParametrizedStatement] = {
+    Future.fromTry(Try(bindByIdx(params: _*)))
+  }
+
+  override def noParamsF: Future[ParametrizedStatement] = {
+    Future.fromTry(Try(noParams))
+  }
+}

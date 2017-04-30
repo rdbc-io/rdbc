@@ -16,11 +16,13 @@
 
 package io.rdbc.implbase
 
+import io.rdbc.api.exceptions.NoKeysReturnedException
 import io.rdbc.sapi._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
-trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
+trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   implicit protected def ec: ExecutionContext
 
   override def executeForSet()(implicit timeout: Timeout): Future[ResultSet] = {
@@ -42,7 +44,7 @@ trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
     }
   }
 
-  override def executeIgnoringResult()(implicit timeout: Timeout): Future[Unit] = {
+  override def execute()(implicit timeout: Timeout): Future[Unit] = {
     executeForRowsAffected().map(_ => ())
   }
 
@@ -69,5 +71,12 @@ trait AnyParametrizedStatementPartialImpl extends AnyParametrizedStatement {
   override def executeForValueOpt[A](valExtractor: Row => Option[A])
                                     (implicit timeout: Timeout): Future[Option[Option[A]]] = {
     executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
+  }
+
+  override def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K] = {
+    executeForValue[K](_.col(0)).flatMap {
+      case Some(key) => Future.successful(key)
+      case None => Future.failed(new NoKeysReturnedException)
+    }
   }
 }

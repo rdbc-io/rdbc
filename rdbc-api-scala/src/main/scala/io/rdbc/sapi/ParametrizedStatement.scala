@@ -17,6 +17,7 @@
 package io.rdbc.sapi
 
 import scala.concurrent.Future
+import scala.reflect.ClassTag
 
 /** Represents a parametrized statement of any type.
   *
@@ -38,7 +39,7 @@ import scala.concurrent.Future
   *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]]
   *  when operation results in an integrity constraint violation
   */
-trait AnyParametrizedStatement {
+trait ParametrizedStatement {
 
   /** Executes this statement and returns a [[ResultStream]] instance
     * that can be used to stream rows from the database leveraging
@@ -65,7 +66,7 @@ trait AnyParametrizedStatement {
     * $timeoutInfo
     * $exceptions
     */
-  def executeIgnoringResult()(implicit timeout: Timeout): Future[Unit]
+  def execute()(implicit timeout: Timeout): Future[Unit]
 
   /** Executes this statement returning a number of rows that were affected.
     *
@@ -133,6 +134,19 @@ trait AnyParametrizedStatement {
     */
   def executeForValueOpt[A](valExtractor: Row => Option[A])
                            (implicit timeout: Timeout): Future[Option[Option[A]]]
+
+  /** Executes this statement and returns a single generated key.
+    *
+    * $timeoutInfo
+    * $exceptions
+    *  - [[io.rdbc.api.exceptions.NoKeysReturnedException NoKeysReturnedException]]
+    *  when no keys were returned by the database engine
+    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+    *  when no suitable converter was found to transform key value to desired class instance
+    *
+    * @tparam K type of the returned key
+    */
+  def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K]
 
   /** Deallocates database resources related to this statement.
     *
