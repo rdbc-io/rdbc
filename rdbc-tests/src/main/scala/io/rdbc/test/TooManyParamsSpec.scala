@@ -1,7 +1,7 @@
 package io.rdbc.test
 
 import io.rdbc.api.exceptions.TooManyParamsException
-import io.rdbc.sapi.{Bindable, Connection}
+import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
 import scala.concurrent.Future
 
@@ -13,17 +13,17 @@ trait TooManyParamsSpec extends RdbcSpec {
     "throw a TooManyParamsException" - {
       "when too many params are provided" - {
         "when binding parameters by index" - {
-          of("a select", _.select("select * from tbl where x = :xparam"))
-          of("an insert", _.insert("insert into tbl values(:xparam)"))
-          of("an update", _.insert("update tbl set x = :xparam"))
-          of("a returning insert", _.returningInsert("insert into tbl values(:xparam)"))
-          of("a delete", _.delete("delete from tbl where x = :xparam"))
+          of("a select", _.statement("select * from tbl where x = :xparam"))
+          of("an insert", _.statement("insert into tbl values(:xparam)"))
+          of("an update", _.statement("update tbl set x = :xparam"))
+          of("a returning insert", _.statement("insert into tbl values(:xparam)", StatementOptions.ReturnGenKeys))
+          of("a delete", _.statement("delete from tbl where x = :xparam"))
         }
       }
     }
   }
 
-  private def of(stmtType: String, bindable: Connection => Future[Bindable[_]]): Unit = {
+  private def of(stmtType: String, bindable: Connection => Future[Statement]): Unit = {
     s"of $stmtType" - {
       "synchronously" in { c =>
         assertTooManyParamsThrown(c, _.bindByIdx(any, any))
@@ -34,7 +34,7 @@ trait TooManyParamsSpec extends RdbcSpec {
       }
     }
 
-    def assertTooManyParamsThrown(c: Connection, binder: Bindable[_] => Any): Unit = {
+    def assertTooManyParamsThrown(c: Connection, binder: Statement => Any): Unit = {
       val e = intercept[TooManyParamsException] {
         binder.apply(bindable(c).get)
       }
