@@ -6,7 +6,7 @@ scala:
 - 2.12.2
 sudo: false
 install: ci/bootstrap.sh
-script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+script: sbt ++$TRAVIS_SCALA_VERSION clean scalastyle coverage test coverageReport
 after_success: bash <(curl -s https://codecov.io/bash)
 deploy:
   skip_cleanup: true
