@@ -1,7 +1,7 @@
 package io.rdbc.test
 
 import io.rdbc.api.exceptions.NoSuchParamException
-import io.rdbc.sapi.{Bindable, Connection}
+import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
 import scala.concurrent.Future
 
@@ -11,21 +11,21 @@ trait NoSuchParamSpec extends RdbcSpec {
   private val param = "xparam"
   private val any: Any = 0
 
-  "Bindable should " - {
+  "Statement should " - {
     "return a NoSuchParamException" - {
       "when too many params are provided" - {
         "when binding parameters by name" - {
-          of("a select", _.select(s"select * from tbl where x = :$param"))
-          of("an insert", _.insert(s"insert into tbl values(:$param)"))
-          of("an update", _.insert(s"update tbl set x = :$param"))
-          of("a returning insert", _.returningInsert(s"insert into tbl values(:$param)"))
-          of("a delete", _.delete(s"delete from tbl where x = :$param"))
+          of("a select", _.statement(s"select * from tbl where x = :$param"))
+          of("an insert", _.statement(s"insert into tbl values(:$param)"))
+          of("an update", _.statement(s"update tbl set x = :$param"))
+          of("a returning insert", _.statement(s"insert into tbl values(:$param)", StatementOptions.ReturnGenKeys))
+          of("a delete", _.statement(s"delete from tbl where x = :$param"))
         }
       }
     }
   }
 
-  private def of(stmtType: String, bindable: Connection => Future[Bindable[_]]): Unit = {
+  private def of(stmtType: String, statement: Connection => Future[Statement]): Unit = {
     s"of $stmtType" - {
       "synchronously" in { c =>
         assertNoSuchParamThrown(c, _.bind(param -> any, superfluousParam -> any))
@@ -36,9 +36,9 @@ trait NoSuchParamSpec extends RdbcSpec {
       }
     }
 
-    def assertNoSuchParamThrown(c: Connection, binder: Bindable[_] => Any): Unit = {
+    def assertNoSuchParamThrown(c: Connection, binder: Statement => Any): Unit = {
       val e = intercept[NoSuchParamException] {
-        binder.apply(bindable(c).get)
+        binder.apply(statement(c).get)
       }
       e.param shouldBe superfluousParam
     }

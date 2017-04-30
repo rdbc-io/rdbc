@@ -1,126 +1,43 @@
 package io.rdbc.test
 
 import io.rdbc.api.exceptions.InvalidQueryException
-import io.rdbc.sapi.{Connection, ParametrizedSelect, _}
+import io.rdbc.sapi._
+import io.rdbc.test.util.Subscribers
 
 import scala.concurrent.Future
 
 trait NonExistingColumnSpec extends RdbcSpec {
 
-  "Select should" - {
-    "return an error when referencing a non-existent column when" - {
-      executedFor("stream", _.executeForStream())
+  "Error should be returned when referencing a non-existent column when" - {
+    stmtTest("Select", _.statement(sql"select nonexistent from tbl"), errPos = 8)
+    stmtTest("Insert", _.statement(sql"insert into tbl(nonexistent) values (1)"), errPos = 17)
+    stmtTest("Returning insert", _.statement(sql"insert into tbl(nonexistent) values (1)", StatementOptions.ReturnGenKeys), errPos = 17)
+    stmtTest("Delete", _.statement(sql"delete from tbl where nonexistent = 1"), errPos = 23)
+    stmtTest("Update", _.statement(sql"update tbl set nonexistent = 1"), errPos = 16)
+    stmtTest("DDL", _.statement(sql"alter table tbl drop column nonexistent"), errPos = 29)
+  }
+
+  private def stmtTest(stmtType: String, stmt: Connection => Future[ParametrizedStatement], errPos: Int): Unit = {
+    s"executing a $stmtType for" - {
+      executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
       executedFor("value", _.executeForValue(_.int(1)))
       executedFor("first row", _.executeForFirstRow())
       executedFor("optional value", _.executeForValueOpt(_.intOpt(1)))
+      executedFor("generated key", _.executeForKey[String])
+      executedFor("stream", _.executeForStream().flatMap { rs =>
+        val subscriber = Subscribers.eager()
+        rs.rows.subscribe(subscriber)
+        subscriber.rows
+      })
 
-      def executedFor[A](executorName: String, executor: ParametrizedSelect => Future[A]): Unit = {
-        executedForTempl(
-          executorName,
-          errPos = 8,
-          _.select(sql"select nonexistent from tbl"), //TODO string interpolation as in slick #$table
-          executor
-        )
-      }
-    }
-  }
-
-  "Insert should" - {
-    "return an error when referencing a non-existent column when" - {
-      executedFor("nothing", _.execute())
-      executedFor("rows affected", _.executeForRowsAffected())
-
-      def executedFor[A](executorName: String, executor: ParametrizedInsert => Future[A]): Unit = {
-        executedForTempl(
-          executorName,
-          errPos = 17,
-          _.insert(sql"insert into tbl(nonexistent) values (1)"),
-          executor
-        )
-      }
-    }
-  }
-
-  "Returning insert should" - {
-    "return an error when referencing a non-existent column when" - {
-      executedFor("nothing", _.execute())
-      executedFor("rows affected", _.executeForRowsAffected())
-      executedFor("int key", _.executeForIntKey())
-      executedFor("some key", _.executeForKey[String])
-      executedFor("keys set", _.executeForKeysSet())
-      executedFor("keys stream", _.executeForKeysStream())
-      executedFor("long key", _.executeForLongKey())
-      executedFor("UUID key", _.executeForUUIDKey())
-
-      def executedFor[A](executorName: String, executor: ParametrizedReturningInsert => Future[A]): Unit = {
-        executedForTempl(
-          executorName,
-          errPos = 17,
-          _.returningInsert(sql"insert into tbl(nonexistent) values (1)"),
-          executor
-        )
-      }
-    }
-  }
-
-  "Delete should" - {
-    "return an error when referencing a non-existent column when" - {
-      executedFor("nothing", _.execute())
-      executedFor("rows affected", _.executeForRowsAffected())
-
-      def executedFor[A](executorName: String, executor: ParametrizedDelete => Future[A]): Unit = {
-        executedForTempl(
-          executorName,
-          errPos = 23,
-          _.delete(sql"delete from tbl where nonexistent = 1"),
-          executor
-        )
-      }
-    }
-  }
-
-  "Update should" - {
-    "return an error when referencing a non-existent column when" - {
-      executedFor("nothing", _.execute())
-      executedFor("rows affected", _.executeForRowsAffected())
-
-      def executedFor[A](executorName: String, executor: ParametrizedUpdate => Future[A]): Unit = {
-        executedForTempl(
-          executorName,
-          errPos = 16,
-          _.update(sql"update tbl set nonexistent = 1"),
-          executor
-        )
-      }
-    }
-  }
-
-  "Any statement should" - {
-    "return an error when referencing a non-existent column when" - {
-      executedFor("nothing", _.executeIgnoringResult())
-      executedFor("stream", _.executeForStream())
-      executedFor("set", _.executeForSet())
-      executedFor("value", _.executeForValue(_.int(1)))
-      executedFor("first row", _.executeForFirstRow())
-      executedFor("optional value", _.executeForValueOpt(_.intOpt(1)))
-
-      def executedFor[A](executorName: String, executor: AnyParametrizedStatement => Future[A]): Unit = {
-        executedForTempl(
-          executorName,
-          errPos = 8,
-          _.statement(sql"select nonexistent from tbl"),
-          executor
-        )
-      }
-    }
-  }
-
-  "DDL statement should" - {
-    "return an error when" - {
-      "executed referencing a non-existent column" in { c =>
-        assertInvalidQueryThrown(errPos = 29) {
-          c.ddl("alter table tbl drop column nonexistent").flatMap(_.execute())
+      def executedFor[A](executorName: String, executor: ParametrizedStatement => Future[A]): Unit = {
+        s"executed for $executorName" in { c =>
+          withTable(c) {
+            assertInvalidQueryThrown(errPos) {
+              stmt(c).flatMap(executor)
+            }
+          }
         }
       }
     }
@@ -136,26 +53,14 @@ trait NonExistingColumnSpec extends RdbcSpec {
     }
   }
 
-  private def executedForTempl[S, R](name: String,
-                                     errPos: Int,
-                                     creator: Connection => Future[S],
-                                     executor: S => Future[R]): Unit = {
-    s"executed for $name" in { c =>
-      withTable(c) {
-        assertInvalidQueryThrown(errPos) {
-          creator(c).flatMap(executor)
-        }
-      }
-    }
-  }
-
   private def withTable[A](c: Connection)(body: => A): A = {
     try {
-      c.ddl(s"create table tbl (col $arbitraryDataType)")
-        .flatMap(_.execute()).get
+      c.statement(s"create table tbl (col $arbitraryDataType)").get
+        .noParams.execute().get
       body
     } finally {
-      c.ddl("drop table tbl").flatMap(_.execute()).get
+      c.statement("drop table tbl").get
+        .noParams.execute().get
     }
   }
 
