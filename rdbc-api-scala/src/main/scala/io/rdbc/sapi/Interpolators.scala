@@ -18,23 +18,53 @@ package io.rdbc.sapi
 
 private[sapi] trait InterpolatorsTrait {
 
-  /** A "sql" string interpolator that provides functionality to
-    * create [[SqlWithParams]] instances like:
-    *
-    * {{{
-    *  val id = 10
-    *  val select = conn.select(sql"select * from test where id = \$id")
-    * }}}
-    */
   implicit class SqlInterpolator(val sc: StringContext) {
-    def sql(args: Any*): SqlWithParams = {
-      val sqlWithPlaceholders = sc.parts.zipWithIndex.reduce { (t1, t2) =>
-        val (part1, idx) = t1
-        val (part2, nextIdx) = t2
-        (s"$part1:p$idx$part2", nextIdx)
-      }._1
 
-      SqlWithParams(sqlWithPlaceholders, args.toVector)
+    /** A "sql" string interpolator that provides functionality to
+      * create [[SqlWithParams]] instances like:
+      *
+      * {{{
+      *  val id = 10
+      *  val select = conn.select(sql"select * from test where id = \$id")
+      * }}}
+      *
+      * The code above produces `select * from test where id = :p1` statement
+      * with `p1` parameter bound to value `10`.
+      *
+      * The interpolator supports also literal values that allow to dynamically
+      * construct statements. To use this feature, instead of \$, use #\$,
+      * for example:
+      *
+      * {{{
+      *  val id = 10
+      *  val table = "test"
+      *  val select = conn.select(sql"select * from #\$table where id = \$id")
+      * }}}
+      *
+      * The code above produces `select * from test where id = :p1` statement
+      * with `p1` parameter bound to value `10`.
+      */
+    def sql(args: Any*): SqlWithParams = {
+      sc.checkLengths(args)
+
+      var sqlArgs = Vector.empty[Any]
+      val argsIter = args.iterator
+      var sqlArgIdx = 1
+      val sql = new StringBuilder
+
+      sc.parts.foreach { part =>
+        if (part.endsWith("#") && argsIter.hasNext) {
+          sql.append(part.take(part.length - 1))
+          sql.append(argsIter.next)
+        } else if (argsIter.hasNext) {
+          sql.append(part).append(":p").append(sqlArgIdx)
+          sqlArgIdx += 1
+          sqlArgs = sqlArgs :+ argsIter.next
+        } else {
+          sql.append(part)
+        }
+      }
+      SqlWithParams(sql.toString, sqlArgs)
     }
   }
 }
