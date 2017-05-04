@@ -56,11 +56,10 @@ trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
   }
 
   override def executeForFirstRow()(implicit timeout: Timeout): Future[Option[Row]] = {
-    executeForStream().flatMap { resultStream =>
-      val subscriber = new HeadSubscriber(Some(1L))
-      resultStream.rows.subscribe(subscriber)
-      subscriber.rows.map(_.headOption)
-    }
+    /* The method is optimized for result sets that are small.
+       It's faster to fetch all rows instead of fetching
+       just one and cancelling the subscription. */
+    executeForSet().map(_.rows.headOption)
   }
 
   override def executeForValue[A](valExtractor: Row => A)
