@@ -22,21 +22,57 @@ import io.rdbc.test.util.Subscribers
 
 import scala.concurrent.Future
 
-trait NonExistingColumnSpec extends RdbcSpec {
+trait NonExistingColumnSpec
+  extends RdbcSpec
+    with TableSpec {
+
+  protected def arbitraryDataType: String
+  override protected def columnsDefinition = s"col $arbitraryDataType"
+
+  final case class WrongStatement(stmt: Future[ParametrizedStatement], errPos: Int)
 
   "Error should be returned when referencing a non-existent column when" - {
-    stmtTest("Select", _.statement(sql"select nonexistent from tbl"), errPos = 8)
-    stmtTest("Insert", _.statement(sql"insert into tbl(nonexistent) values (1)"), errPos = 17)
-    stmtTest("Returning insert",
-      _.statement(sql"insert into tbl(nonexistent) values (1)", StatementOptions.ReturnGenKeys),
-      errPos = 17
+    stmtTest("Select", (c, t) =>
+      WrongStatement(
+        c.statement(sql"select nonexistent from #$t"),
+        errPos = 8
+      )
     )
-    stmtTest("Delete", _.statement(sql"delete from tbl where nonexistent = 1"), errPos = 23)
-    stmtTest("Update", _.statement(sql"update tbl set nonexistent = 1"), errPos = 16)
-    stmtTest("DDL", _.statement(sql"alter table tbl drop column nonexistent"), errPos = 29)
+
+    stmtTest("Insert", (c, t) =>
+      WrongStatement(
+        c.statement(sql"insert into #$t(nonexistent) values (1)"),
+        errPos = 14 + t.length
+      )
+    )
+
+    stmtTest("Returning insert", (c, t) =>
+      WrongStatement(
+        c.statement(sql"insert into #$t(nonexistent) values (1)", StatementOptions.ReturnGenKeys),
+        errPos = 14 + t.length
+      )
+    )
+
+    stmtTest("Delete", (c, t) =>
+      WrongStatement(
+        c.statement(sql"delete from #$t where nonexistent = 1"),
+        errPos = 20 + t.length)
+    )
+
+    stmtTest("Update", (c, t) =>
+      WrongStatement(
+        c.statement(sql"update #$t set nonexistent = 1"),
+        errPos = 13 + t.length)
+    )
+
+    stmtTest("DDL", (c, t) =>
+      WrongStatement(
+        c.statement(sql"alter table #$t drop column nonexistent"),
+        errPos = 26 + t.length)
+    )
   }
 
-  private def stmtTest(stmtType: String, stmt: Connection => Future[ParametrizedStatement], errPos: Int): Unit = {
+  private def stmtTest(stmtType: String, stmt: (Connection, String) => WrongStatement): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
@@ -52,9 +88,10 @@ trait NonExistingColumnSpec extends RdbcSpec {
 
       def executedFor[A](executorName: String, executor: ParametrizedStatement => Future[A]): Unit = {
         s"executed for $executorName" in { c =>
-          withTable(c) {
-            assertInvalidQueryThrown(errPos) {
-              stmt(c).flatMap(executor)
+          withTable(c) { t =>
+            val wrongStmt = stmt(c, t)
+            assertInvalidQueryThrown(wrongStmt.errPos) {
+              wrongStmt.stmt.flatMap(executor)
             }
           }
         }
@@ -71,17 +108,4 @@ trait NonExistingColumnSpec extends RdbcSpec {
         pos shouldBe errPos
     }
   }
-
-  private def withTable[A](c: Connection)(body: => A): A = {
-    try {
-      c.statement(s"create table tbl (col $arbitraryDataType)").get
-        .noParams.execute().get
-      body
-    } finally {
-      c.statement("drop table tbl").get
-        .noParams.execute().get
-    }
-  }
-
-  protected def arbitraryDataType: String
 }

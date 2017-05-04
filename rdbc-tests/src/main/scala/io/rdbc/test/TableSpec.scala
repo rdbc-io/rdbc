@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package io.rdbc
+package io.rdbc.test
 
-import io.rdbc.sapi.Timeout
+import java.util.concurrent.atomic.AtomicInteger
 
-import scala.concurrent.{Await, Awaitable}
+import io.rdbc.sapi.Connection
 
-package object test {
+trait TableSpec {
+  this: RdbcSpec =>
 
-  implicit class AwaitableOps[T](a: Awaitable[T]) {
-    def get(implicit atMost: Timeout): T = Await.result(a, atMost.value)
+  protected def columnsDefinition: String
+  private val counter: AtomicInteger = new AtomicInteger(0)
+
+  protected def withTable[A](c: Connection)(body: String => A): A = {
+    val tableName = s"tbl${counter.incrementAndGet()}"
+    c.statement(s"create table $tableName ($columnsDefinition)").get
+      .noParams.execute().get
+    body(tableName)
   }
-
 }

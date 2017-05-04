@@ -33,7 +33,7 @@ abstract class RowPublisherVerification(env: TestEnvironment, publisherShutdownT
   extends PublisherVerification[Row](env, publisherShutdownTimeout)
     with TestNGSuiteLike {
 
-  private implicit val system = ActorSystem("RowPublisherVerification")
+  private implicit val system = ActorSystem("RowPublisherVerification") //TODO shutdown the system
   private implicit val materializer = ActorMaterializer()
 
   protected implicit def ec: ExecutionContext = ExecutionContext.global
@@ -58,7 +58,7 @@ abstract class RowPublisherVerification(env: TestEnvironment, publisherShutdownT
     conn.statement(s"create table tbl$currIdx (col $intDataType)").get.noParams.execute().get
     conn.beginTx().get
     for { i <- 1L to elements } yield {
-      conn.statement(s"insert into tbl$currIdx(col) values(:v)").get.bind("v" -> i).execute().get
+      conn.statement(sql"insert into tbl#$currIdx(col) values($i)").get.execute().get
     }
     conn.commitTx().get
     val pub = conn.statement(s"select col from tbl$currIdx").get.noParams.executeForStream().get.rows
