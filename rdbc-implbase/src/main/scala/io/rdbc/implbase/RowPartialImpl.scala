@@ -28,13 +28,12 @@ trait RowPartialImpl extends Row {
 
   protected def typeConverters: TypeConverterRegistry
 
-  protected def any(name: String): Any
+  protected def any(name: String): Option[Any]
 
-  protected def any(idx: Int): Any
+  protected def any(idx: Int): Option[Any]
 
-  protected def convertType[A](any: Any, cls: Class[A]): A = {
-    if (any == null) null.asInstanceOf[A]
-    else {
+  private[this] def convertType[A](maybeAny: Option[Any], cls: Class[A]): Option[A] = {
+    maybeAny.map { any =>
       if (cls.isInstance(any)) {
         any.asInstanceOf[A]
       } else {
@@ -45,19 +44,23 @@ trait RowPartialImpl extends Row {
     }
   }
 
-  override def col[A: ClassTag](name: String): A = {
-    val notTyped = any(name)
-    convertType(notTyped, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
+  private[this] def colOpt[A: ClassTag](maybeAny: Option[Any]): Option[A] = {
+    convertType(maybeAny, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
   }
 
-  override def col[A: ClassTag](idx: Int): A = {
-    val notTyped = any(idx)
-    convertType(notTyped, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
+  private[this] def col[A: ClassTag](maybeAny: Option[Any]): A = {
+    colOpt(maybeAny).getOrElse {
+      throw new ConversionException(None, implicitly[ClassTag[A]].runtimeClass)
+    }
   }
 
-  override def colOpt[A: ClassTag](idx: Int): Option[A] = Option(col[A](idx))
+  override def col[A: ClassTag](name: String): A = col(any(name))
 
-  override def colOpt[A: ClassTag](name: String): Option[A] = Option(col[A](name))
+  override def col[A: ClassTag](idx: Int): A = col(any(idx))
+
+  override def colOpt[A: ClassTag](idx: Int): Option[A] = colOpt(any(idx))
+
+  override def colOpt[A: ClassTag](name: String): Option[A] = colOpt(any(name))
 
   override def str(name: String): String = col[String](name)
 

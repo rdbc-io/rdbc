@@ -65,8 +65,8 @@ import scala.reflect.ClassTag
   *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]]
   *  when database value could not be converted to the desired type
   * @define nullSafetyNote
-  *  For SQL `null` values, `null` is returned. For null-safety consider using
-  *  corresponding `*Opt` method.
+  *  For SQL `null` values, [[io.rdbc.api.exceptions.ConversionException ConversionException]] is thrown.
+  *  For null-safety consider using corresponding `*Opt` method.
   * @define returningNone
   *  For SQL `null` values [[scala.None None]] is returned.
   * @define boolValues
