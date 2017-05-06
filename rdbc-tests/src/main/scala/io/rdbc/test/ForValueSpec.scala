@@ -56,7 +56,7 @@ trait ForValueSpec
         val e = intercept[ConversionException] {
           stmt.executeForValue(_.int("col")).get
         }
-        e.any shouldBe None
+        e.value shouldBe None
         e.targetType shouldBe classOf[Int]
       }
     }
