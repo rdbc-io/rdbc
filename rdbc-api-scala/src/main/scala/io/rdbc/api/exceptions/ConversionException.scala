@@ -16,9 +16,9 @@
 
 package io.rdbc.api.exceptions
 
-class ConversionException(val any: Any, val targetType: Class[_], cause: Option[Throwable])
+class ConversionException(val value: Any, val targetType: Class[_], cause: Option[Throwable])
   extends RdbcException(
-    s"Value '$any' could not be converted to ${targetType.getCanonicalName}",
+    s"Value '$value' could not be converted to '${targetType.getCanonicalName}'",
     cause
   ) {
   def this(any: Any, targetType: Class[_]) = {
