@@ -24,3 +24,7 @@ trait RdbcSuite
     with NoSuchParamSpec
     with SyntaxErrorSpec
     with TimeoutSpec
+    with StreamingSpec
+    with ResultSetSpec
+    with ForValueSpec
+    with ForFirstRowSpec
