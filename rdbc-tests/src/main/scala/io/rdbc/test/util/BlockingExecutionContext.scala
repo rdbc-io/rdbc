@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package io.rdbc
+package io.rdbc.test.util
 
-import io.rdbc.sapi.Timeout
+import scala.concurrent.ExecutionContext
 
-import scala.concurrent.{Await, Awaitable}
-
-package object test {
-
-  implicit class AwaitableOps[T](a: Awaitable[T]) {
-    def get(implicit atMost: Timeout): T = Await.result(a, atMost.value)
-  }
-
+private[test] class BlockingExecutionContext extends ExecutionContext {
+  def execute(runnable: Runnable): Unit = runnable.run()
+  def reportFailure(cause: Throwable): Unit = throw cause
 }
