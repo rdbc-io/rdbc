@@ -1,0 +1,39 @@
+site_name: rdbc documentation
+site_author: Krzysztof Pado
+site_dir: target
+strict: true
+pages:
+    - Introduction: index.md
+    - Scala API user guide:
+      - Installation: todo.md
+      - Scaladoc: todo.md
+      - Working with a connection: todo.md
+      - Statements: todo.md
+      - Results: todo.md
+      - Transactions: todo.md
+      - Exceptions: todo.md
+    - Java API user guide: todo.md
+    - Developer guide: todo.md
+theme: material
+
+copyright: Copyright &copy; 2016 - 2017 Krzysztof Pado
+
+extra:
+  version: 1.0
+  palette:
+    primary: green
+    accent: red
+  social:
+    - type: github
+      link: https://github.com/rdbc-io
+    - type: twitter
+      link: https://twitter.com/rdbc-io
+
+repo_name: rdbc-io/rdbc
+repo_url: https://github.com/rdbc-io/rdbc
+edit_uri: blob/master/rdbc-doc/docs
+
+markdown_extensions:
+  - admonition
+  - codehilite(guess_lang=false)
+  - toc(permalink=true)
