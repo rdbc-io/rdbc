@@ -1,4 +1,7 @@
-<!---
+!!! warning
+    rdbc project and this documentation is still a work in progress.
+    It's not ready yet for production use.
+
 # Quickstart
 # User guide
 ## Installation
@@ -32,9 +35,11 @@
 ## Examples
 # Developer guide
 
-
 TODO:
+
 1. general info on thread safety
+
 2. type conversions, both parameters and results
+
 3. should statement provide access to the metadata (see JDBC)?
---->
+

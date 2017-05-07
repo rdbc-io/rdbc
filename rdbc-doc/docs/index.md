@@ -1,3 +1,7 @@
+!!! warning
+    rdbc project and this documentation is still a work in progress.
+    It's not ready yet for production use.
+    
 ## What is rdbc?
 
 rdbc is a SQL-level relational database connectivity API targeting Scala and 
@@ -44,6 +48,10 @@ Following list outlines the areas that the API is not meant to cover.
     of higher-level APIs on top of rdbc.
 
 2. **Replace FRM and ORM libraries.**
+
+    TODO description.
+
+## Getting help
 
     TODO description.
 

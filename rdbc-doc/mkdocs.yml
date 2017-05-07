@@ -1,18 +1,20 @@
-site_name: rdbc documentation
+site_name: rdbc documentation - 0.0.49
 site_author: Krzysztof Pado
 site_dir: target
 strict: true
 pages:
     - Introduction: index.md
     - Scala API user guide:
-      - Installation: todo.md
+      - Getting started: scala/gettingstarted.md
       - Scaladoc: todo.md
       - Working with a connection: todo.md
       - Statements: todo.md
       - Results: todo.md
       - Transactions: todo.md
       - Exceptions: todo.md
-    - Java API user guide: todo.md
+      - Frameworks integration: todo.md
+    - Java API user guide: java/java.md
+    - Drivers: drivers.md
     - Developer guide: todo.md
 theme: material
 
@@ -27,7 +29,7 @@ extra:
     - type: github
       link: https://github.com/rdbc-io
     - type: twitter
-      link: https://twitter.com/rdbc-io
+      link: https://twitter.com/rdbc_io
 
 repo_name: rdbc-io/rdbc
 repo_url: https://github.com/rdbc-io/rdbc
@@ -37,3 +39,6 @@ markdown_extensions:
   - admonition
   - codehilite(guess_lang=false)
   - toc(permalink=true)
+
+extra_css:
+  - 'css/extra.css'
