@@ -1,5 +1,5 @@
 [![Travis](https://img.shields.io/travis/rdbc-io/rdbc.svg?style=flat-square)](https://travis-ci.org/rdbc-io/rdbc)
-[![codecov](https://codecov.io/gh/rdbc-io/rdbc/branch/master/graph/badge.svg?style=flat-square)](https://codecov.io/gh/rdbc-io/rdbc)
+[![Codecov](https://img.shields.io/codecov/c/github/rdbc-io/rdbc.svg?style=flat-square)]()
 [![Bintray](https://img.shields.io/bintray/v/rdbc/maven/rdbc-api-scala.svg?style=flat-square)]()
 [![Gitter](https://img.shields.io/gitter/room/rdbc-io/rdbc.svg?style=flat-square)]()
 [![license](https://img.shields.io/github/license/rdbc-io/rdbc.svg?style=flat-square)]()
