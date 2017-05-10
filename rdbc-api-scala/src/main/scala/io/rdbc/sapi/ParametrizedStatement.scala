@@ -148,9 +148,4 @@ trait ParametrizedStatement {
     */
   def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K]
 
-  /** Deallocates database resources related to this statement.
-    *
-    * This method is safe to call multiple times on the same instance.
-    */
-  def deallocate(): Future[Unit]
 }
