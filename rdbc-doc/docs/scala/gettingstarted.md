@@ -1,3 +1,18 @@
+<!---
+ ! Copyright 2016-2017 Krzysztof Pado
+ !
+ ! Licensed under the Apache License, Version 2.0 (the "License");
+ ! you may not use this file except in compliance with the License.
+ ! You may obtain a copy of the License at
+ !
+ !     http://www.apache.org/licenses/LICENSE-2.0
+ !
+ ! Unless required by applicable law or agreed to in writing, software
+ ! distributed under the License is distributed on an "AS IS" BASIS,
+ ! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ! See the License for the specific language governing permissions and
+ ! limitations under the License. 
+ -->
 !!! warning
     rdbc project and this documentation is still a work in progress.
     It's not ready yet for production use.
@@ -24,7 +39,7 @@ libraryDependencies ++= Vector(
 ```
 
 ### Gradle
-For Gradle projects, add the following the `dependencies` section of `build.gradle`:
+For Gradle projects, add the following to the `dependencies` section of `build.gradle`:
 
 Scala 2.12
 ```groovy
@@ -39,7 +54,7 @@ compile //here goes the driver dependency
 ```
 
 ### Maven
-For Maven projects, add the following the `dependencies` element of `pom.xml`:
+For Maven projects, add the following to the `dependencies` element of `pom.xml`:
 
 Scala 2.12
 ```xml
@@ -67,7 +82,13 @@ Scala 2.11
 
 ## Working with Scala `Future`s
 
-TODO
+Since all rdbc API methods that perform I/O return Scala's `Future`s you'll
+need a knowledge on how to write asynchronous code using them. Throughout this 
+documentation it is assumed that the reader has a basic knowledge about `Future`
+trait. If you're new to this concept you may find these resources useful:
+
+*  [The Neophyte's Guide to Scala](http://danielwestheide.com/blog/2013/01/09/the-neophytes-guide-to-scala-part-8-welcome-to-the-future.html)
+*  [Official documentation](http://docs.scala-lang.org/overviews/core/futures.html)
 
 ## A "Hello world" application
 
