@@ -27,7 +27,10 @@ find artifact names you need to include in your build definition in the driver's
 documentation. For your convenience, however, [Drivers](../drivers.md) page lists available
 drivers grouped by a database engine they support.
 
-rdbc is currently available for Scala 2.11 and 2.12 and requires Java 8 runtime.
+rdbc JARs are published to
+[Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.rdbc%22%20api)
+repository. The API is currently available for Scala 2.11 and 2.12 and requires
+Java 8 runtime.
 
 ### SBT
 For sbt projects, add the following to `build.sbt`:
