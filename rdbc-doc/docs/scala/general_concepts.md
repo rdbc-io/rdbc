@@ -21,7 +21,6 @@
 
 TODO.
 
-
 ## SQL focus
 
 TODO.
@@ -34,7 +33,6 @@ to share class instances among threads, even those that are mutable.
 ## Null safety
 
 TODO.
-
 
 ## Setting maximum execution time
 

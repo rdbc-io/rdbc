@@ -8,9 +8,8 @@ pages:
       - Getting started: scala/gettingstarted.md
       - Scaladoc: scala/scaladoc.md
       - Working with a connection: scala/connection.md
-      - Statements: todo.md
+      - Statements: scala/statements.md
       - Results: todo.md
-      - Transactions: todo.md
       - Exceptions: todo.md
       - Frameworks integration: todo.md
       - Utilities: scala/utilities.md
@@ -37,9 +36,10 @@ repo_url: https://github.com/rdbc-io/rdbc
 edit_uri: blob/master/rdbc-doc/docs
 
 markdown_extensions:
-  - admonition
-  - codehilite(guess_lang=false)
-  - toc(permalink=true)
+  - markdown.extensions.admonition
+  - markdown.extensions.codehilite(guess_lang=false)
+  - markdown.extensions.toc(permalink=true)
+  - pymdownx.inlinehilite
 
 extra_css:
   - 'css/extra.css'

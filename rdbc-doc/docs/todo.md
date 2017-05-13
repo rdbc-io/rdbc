@@ -45,7 +45,6 @@
 ## Results
 ### Rows
 ### Metadata
-## Transactions
 ## Exceptions
 ## Utilities
 ## Examples
