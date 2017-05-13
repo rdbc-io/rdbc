@@ -143,6 +143,20 @@ trait Connection {
     */
   def rollbackTx()(implicit timeout: Timeout): Future[Unit]
 
+  /** Executes a function in a context of a transaction.
+    *
+    * Executes a function (which can be passed as a code block) in a context
+    * of a transaction. Before the function is executed, transaction is started.
+    * After the function finishes, transaction is committed in case of a success
+    * and rolled back in case of a failure.
+    *
+    * Because managing transaction state requires invoking functions that
+    * require specifying a timeout, this function requires an implicit timeout
+    * instance.
+    */
+  def withTransaction[A](body: => Future[A])
+                        (implicit timeout: Timeout): Future[A]
+
   /** Releases the connection and underlying resources.
     *
     * Only idle connections can be released using this method. To forcibly

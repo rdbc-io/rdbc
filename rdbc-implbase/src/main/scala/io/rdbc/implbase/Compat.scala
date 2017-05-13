@@ -16,31 +16,19 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{Connection, ConnectionFactory, Timeout}
-import io.rdbc.util.Futures._
-import io.rdbc.util.Logging
-
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
 
-trait ConnectionFactoryPartialImpl
-  extends ConnectionFactory
-    with Logging {
+private[implbase] object Compat {
 
-  implicit protected def ec: ExecutionContext
+  implicit class FutureCompat[+T](underlying: Future[T]) {
 
-  override def withConnection[A](body: Connection => Future[A]): Future[A] = {
-    connection().flatMap { conn =>
-      body(conn).andThenF { case _ =>
-        conn.release()
-      }
-    }
-  }
-
-  override def withTransaction[A](body: Connection => Future[A])
-                                 (implicit timeout: Timeout): Future[A] = {
-    withConnection { conn =>
-      conn.withTransaction {
-        body(conn)
+    def transformWith[S](f: Try[T] => Future[S])
+                        (implicit executor: ExecutionContext): Future[S] = {
+      underlying.flatMap { res =>
+        f(Success(res))
+      }.recoverWith { case ex =>
+        f(Failure(ex))
       }
     }
   }
