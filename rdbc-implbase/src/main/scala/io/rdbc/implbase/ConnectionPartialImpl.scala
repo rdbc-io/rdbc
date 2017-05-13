@@ -17,12 +17,33 @@
 package io.rdbc.implbase
 
 import io.rdbc.sapi._
+import io.rdbc.util.Logging
+import io.rdbc.implbase.Compat._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-trait ConnectionPartialImpl extends Connection {
+trait ConnectionPartialImpl
+  extends Connection
+    with Logging {
 
   implicit protected def ec: ExecutionContext
+
+  override def withTransaction[A](body: => Future[A])
+                                 (implicit timeout: Timeout): Future[A] = {
+    beginTx()
+      .flatMap(_ => body)
+      .transformWith {
+        case Success(res) => commitTx().map(_ => res)
+        case Failure(ex) =>
+          rollbackTx().recover { case rollbackEx =>
+            logger.warn(
+              "Error occurred when rolling back transaction",
+              rollbackEx
+            )
+          }.flatMap(_ => Future.failed(ex))
+      }
+  }
 
   override def statement(sql: String): Future[Statement] = {
     statement(sql, StatementOptions.Default)
