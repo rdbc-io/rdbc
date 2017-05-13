@@ -6,13 +6,14 @@ pages:
     - Introduction: index.md
     - Scala API user guide:
       - Getting started: scala/gettingstarted.md
-      - Scaladoc: todo.md
-      - Working with a connection: todo.md
+      - Scaladoc: scala/scaladoc.md
+      - Working with a connection: scala/connection.md
       - Statements: todo.md
       - Results: todo.md
       - Transactions: todo.md
       - Exceptions: todo.md
       - Frameworks integration: todo.md
+      - Utilities: scala/utilities.md
     - Java API user guide: java/java.md
     - Drivers: drivers.md
     - Developer guide: todo.md

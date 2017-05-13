@@ -16,3 +16,26 @@
 !!! warning
     rdbc project and this documentation is still a work in progress.
     It's not ready yet for production use.
+
+## Asynchronous processing
+
+TODO.
+
+
+## SQL focus
+
+TODO.
+
+## Thread safety
+
+rdbc API requires that its implementations must be thread-safe. You are free
+to share class instances among threads, even those that are mutable.
+
+## Null safety
+
+TODO.
+
+
+## Setting maximum execution time
+
+TODO.
