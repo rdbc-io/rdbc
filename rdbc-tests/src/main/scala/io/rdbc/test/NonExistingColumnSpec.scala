@@ -29,7 +29,7 @@ trait NonExistingColumnSpec
   protected def arbitraryDataType: String
   override protected def columnsDefinition = s"col $arbitraryDataType"
 
-  final case class WrongStatement(stmt: Future[ParametrizedStatement], errPos: Int)
+  final case class WrongStatement(stmt: Future[ExecutableStatement], errPos: Int)
 
   "Error should be returned when referencing a non-existent column when" - {
     stmtTest("Select", (c, t) =>
@@ -86,7 +86,7 @@ trait NonExistingColumnSpec
         subscriber.rows
       })
 
-      def executedFor[A](executorName: String, executor: ParametrizedStatement => Future[A]): Unit = {
+      def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         s"executed for $executorName" in { c =>
           withTable(c) { t =>
             val wrongStmt = stmt(c, t)

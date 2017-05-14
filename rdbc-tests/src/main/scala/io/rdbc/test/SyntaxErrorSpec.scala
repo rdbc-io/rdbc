@@ -33,7 +33,7 @@ trait SyntaxErrorSpec extends RdbcSpec {
     stmtTest("DDL", _.statement(sql"alter should_be_table tbl drop column col"))
   }
 
-  private def stmtTest(stmtType: String, stmt: Connection => Future[ParametrizedStatement]): Unit = {
+  private def stmtTest(stmtType: String, stmt: Connection => Future[ExecutableStatement]): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
@@ -47,7 +47,7 @@ trait SyntaxErrorSpec extends RdbcSpec {
         subscriber.rows
       })
 
-      def executedFor[A](executorName: String, executor: ParametrizedStatement => Future[A]): Unit = {
+      def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         executorName in { c =>
           withTable(c) {
             assertInvalidQueryThrown {

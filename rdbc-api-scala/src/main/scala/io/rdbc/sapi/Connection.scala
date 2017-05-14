@@ -53,8 +53,8 @@ import scala.concurrent.Future
   *   val login = "jdoe"
   *   for {
   *    select       <- conn.statement(sql"select * from users where login = :login")
-  *    parametrized <- select.bindF("login" -> login)
-  *   } yield parametrized.executeForStream()
+  *    executable   <- select.bindF("login" -> login)
+  *   } yield executable.executeForStream()
   * }}}
   *
   * @groupname tx Transaction management
@@ -211,11 +211,8 @@ trait Connection {
     */
   def statement(sql: String): Future[Statement]
 
-  /** Returns a [[ParametrizedStatement]] instance bound to this connection
+  /** Returns a [[ExecutableStatement]] instance bound to this connection
     * that represents any parametrized SQL statement.
-    *
-    * Clients are encouraged to use `select`, `insert`, `update`, `delete`
-    * methods in favor of this generic method.
     *
     * It's a shortcut for calling `statement` and then `bind`.
     *
@@ -226,13 +223,10 @@ trait Connection {
     *
     * @group stmtInter
     */
-  def statement(sqlWithParams: SqlWithParams, statementOptions: StatementOptions): Future[ParametrizedStatement]
+  def statement(sqlWithParams: SqlWithParams, statementOptions: StatementOptions): Future[ExecutableStatement]
 
-  /** Returns a [[ParametrizedStatement]] instance bound to this connection
+  /** Returns a [[ExecutableStatement]] instance bound to this connection
     * that represents any parametrized SQL statement.
-    *
-    * Clients are encouraged to use `select`, `insert`, `update`, `delete`
-    * methods in favor of this generic method.
     *
     * It's a shortcut for calling `statement` and then `bind`.
     *
@@ -243,7 +237,7 @@ trait Connection {
     *
     * @group stmtInter
     */
-  def statement(sqlWithParams: SqlWithParams): Future[ParametrizedStatement]
+  def statement(sqlWithParams: SqlWithParams): Future[ExecutableStatement]
 
 
   /** Returns a future that is complete when this connection is idle and ready

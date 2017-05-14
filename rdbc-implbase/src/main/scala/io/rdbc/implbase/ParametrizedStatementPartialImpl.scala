@@ -22,7 +22,7 @@ import io.rdbc.sapi._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
-trait ParametrizedStatementPartialImpl extends ParametrizedStatement {
+trait ExecutableStatementPartialImpl extends ExecutableStatement {
   implicit protected def ec: ExecutionContext
 
   override def executeForSet()(implicit timeout: Timeout): Future[ResultSet] = {

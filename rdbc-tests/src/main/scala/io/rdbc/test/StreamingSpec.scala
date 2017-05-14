@@ -156,7 +156,7 @@ trait StreamingSpec
   }
 
   private def subscribe[S <: Subscriber[Row]](
-                                               statement: Future[ParametrizedStatement],
+                                               statement: Future[ExecutableStatement],
                                                subscriber: S
                                              ): subscriber.type = {
     statement.flatMap(_.executeForStream().map(_.rows).map(_.subscribe(subscriber)))

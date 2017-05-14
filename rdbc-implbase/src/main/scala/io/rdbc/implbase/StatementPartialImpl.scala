@@ -16,22 +16,22 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{ParametrizedStatement, Statement}
+import io.rdbc.sapi.{ExecutableStatement, Statement}
 
 import scala.concurrent.Future
 import scala.util.Try
 
 trait StatementPartialImpl extends Statement {
 
-  override def bindF(params: (String, Any)*): Future[ParametrizedStatement] = {
+  override def bindF(params: (String, Any)*): Future[ExecutableStatement] = {
     Future.fromTry(Try(bind(params: _*)))
   }
 
-  override def bindByIdxF(params: Any*): Future[ParametrizedStatement] = {
+  override def bindByIdxF(params: Any*): Future[ExecutableStatement] = {
     Future.fromTry(Try(bindByIdx(params: _*)))
   }
 
-  override def noParamsF: Future[ParametrizedStatement] = {
+  override def noParamsF: Future[ExecutableStatement] = {
     Future.fromTry(Try(noParams))
   }
 }
