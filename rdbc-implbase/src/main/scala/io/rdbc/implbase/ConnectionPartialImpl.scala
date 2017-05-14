@@ -49,14 +49,14 @@ trait ConnectionPartialImpl
     statement(sql, StatementOptions.Default)
   }
 
-  override def statement(sqlWithParams: SqlWithParams): Future[ParametrizedStatement] = {
+  override def statement(sqlWithParams: SqlWithParams): Future[ExecutableStatement] = {
     statement(sqlWithParams, StatementOptions.Default)
   }
 
   override def statement(
                           sqlWithParams: SqlWithParams,
                           statementOptions: StatementOptions
-                        ): Future[ParametrizedStatement] = {
+                        ): Future[ExecutableStatement] = {
     statement(sqlWithParams.sql).map(_.bindByIdx(sqlWithParams.params: _*))
   }
 }
