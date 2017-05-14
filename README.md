@@ -1,8 +1,8 @@
-[![Travis](https://img.shields.io/travis/rdbc-io/rdbc.svg?style=flat-square)](https://travis-ci.org/rdbc-io/rdbc)
-[![Codecov](https://img.shields.io/codecov/c/github/rdbc-io/rdbc.svg?style=flat-square)]()
-[![Bintray](https://img.shields.io/bintray/v/rdbc/maven/rdbc-api-scala.svg?style=flat-square)]()
-[![Gitter](https://img.shields.io/gitter/room/rdbc-io/rdbc.svg?style=flat-square)]()
-[![license](https://img.shields.io/github/license/rdbc-io/rdbc.svg?style=flat-square)]()
+[![Travis](https://img.shields.io/travis/rdbc-io/rdbc/master.svg?style=flat-square)](https://travis-ci.org/rdbc-io/rdbc/branches)
+[![Codecov](https://img.shields.io/codecov/c/github/rdbc-io/rdbc.svg?style=flat-square)](https://codecov.io/gh/rdbc-io/rdbc/branch/master)
+[![Bintray](https://img.shields.io/bintray/v/rdbc/maven/rdbc-api-scala.svg?style=flat-square)](https://bintray.com/rdbc/maven/rdbc-api-scala)
+[![Gitter](https://img.shields.io/gitter/room/rdbc-io/rdbc.svg?style=flat-square)](https://gitter.im/rdbc-io/rdbc)
+[![license](https://img.shields.io/github/license/rdbc-io/rdbc.svg?style=flat-square)](https://github.com/rdbc-io/rdbc/blob/master/LICENSE)
 ## What is rdbc?
 
 rdbc is a SQL-level relational database connectivity API targeting Scala and 
