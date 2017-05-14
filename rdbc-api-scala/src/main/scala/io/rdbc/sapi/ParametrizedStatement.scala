@@ -19,9 +19,9 @@ package io.rdbc.sapi
 import scala.concurrent.Future
 import scala.reflect.ClassTag
 
-/** Represents a parametrized statement of any type.
+/** Represents an executable statement.
   *
-  * Parametrized statement is a statement that has all parameters
+  * Executable statement is a statement that has all parameters
   * provided and is ready to be executed.
   *
   * @define timeoutInfo
@@ -39,7 +39,7 @@ import scala.reflect.ClassTag
   *  - [[io.rdbc.api.exceptions.ConstraintViolationException ConstraintViolationException]]
   *  when operation results in an integrity constraint violation
   */
-trait ParametrizedStatement {
+trait ExecutableStatement {
 
   /** Executes this statement and returns a [[ResultStream]] instance
     * that can be used to stream rows from the database leveraging

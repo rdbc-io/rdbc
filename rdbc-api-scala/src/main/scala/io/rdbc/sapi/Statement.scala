@@ -54,7 +54,7 @@ trait Statement {
     *
     * @group primary
     */
-  def bind(params: (String, Any)*): ParametrizedStatement
+  def bind(params: (String, Any)*): ExecutableStatement
 
   /** Binds each parameter by name and wraps a result in a Future.
     *
@@ -76,7 +76,7 @@ trait Statement {
     *
     * @group fut
     */
-  def bindF(params: (String, Any)*): Future[ParametrizedStatement]
+  def bindF(params: (String, Any)*): Future[ExecutableStatement]
 
   /** Binds each parameter by index.
     *
@@ -94,7 +94,7 @@ trait Statement {
     *
     * @group primary
     */
-  def bindByIdx(params: Any*): ParametrizedStatement
+  def bindByIdx(params: Any*): ExecutableStatement
 
   /** Binds each parameter by index and wraps a result in a Future.
     *
@@ -119,22 +119,22 @@ trait Statement {
     *
     * @group fut
     */
-  def bindByIdxF(params: Any*): Future[ParametrizedStatement]
+  def bindByIdxF(params: Any*): Future[ExecutableStatement]
 
-  /** Returns a parametrized version of the bindable object without
+  /** Creaes an executable version of the statement object without
     * providing any parameters.
     *
     * Example:
     * {{{
-    * val insert = conn.insert("insert into table(p1, p2) values ('str', 10)")
+    * val insert = conn.statement("insert into table(p1, p2) values ('str', 10)")
     * insert.map(_.noParams).foreach(_.execute())
     * }}}
     *
     * @group primary
     */
-  def noParams: ParametrizedStatement
+  def noParams: ExecutableStatement
 
-  /** Returns a parametrized version of the bindable object without providing
+  /** Creates an executable version of the statement object without providing
     * any parameters and wraps a result in a future
     *
     * This is not an asynchronous operation, it's only an utility method
@@ -144,15 +144,15 @@ trait Statement {
     * Example:
     * {{{
     * for {
-    *   insert <- conn.insert("insert into table(p1, p2) values ('str', 10)")
-    *   bound <- insert.noParamsF
+    *   insert     <- conn.statement("insert into table(p1, p2) values ('str', 10)")
+    *   executable <- insert.noParamsF
     *   _ <- bound.execute()
     * } yield ()
     * }}}
     *
     * @group fut
     */
-  def noParamsF: Future[ParametrizedStatement]
+  def noParamsF: Future[ExecutableStatement]
 
   /** Streams statement parameters to a database.
     *
