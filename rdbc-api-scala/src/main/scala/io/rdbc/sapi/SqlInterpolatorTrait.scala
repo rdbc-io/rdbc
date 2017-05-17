@@ -27,8 +27,8 @@ trait SqlInterpolatorTrait {
       *  val select = conn.select(sql"select * from test where id = \$id")
       * }}}
       *
-      * The code above produces `select * from test where id = :p1` statement
-      * with `p1` parameter bound to value `10`.
+      * The code above produces `select * from test where id = ?` statement
+      * with the sole parameter bound to value `10`.
       *
       * The interpolator supports also literal values that allow to dynamically
       * construct statements. To use this feature, instead of \$, use #\$,
@@ -40,15 +40,14 @@ trait SqlInterpolatorTrait {
       *  val select = conn.select(sql"select * from #\$table where id = \$id")
       * }}}
       *
-      * The code above produces `select * from test where id = :p1` statement
-      * with `p1` parameter bound to value `10`.
+      * The code above produces `select * from test where id = ?` statement
+      * with the sole parameter bound to value `10`.
       */
     def sql(args: Any*): SqlWithParams = {
       sc.checkLengths(args)
 
       var sqlArgs = Vector.empty[Any]
       val argsIter = args.iterator
-      var sqlArgIdx = 1
       val sql = new StringBuilder
 
       sc.parts.foreach { part =>
@@ -56,8 +55,7 @@ trait SqlInterpolatorTrait {
           sql.append(part.take(part.length - 1))
           sql.append(argsIter.next)
         } else if (argsIter.hasNext) {
-          sql.append(part).append(":p").append(sqlArgIdx)
-          sqlArgIdx += 1
+          sql.append(part).append("?")
           sqlArgs = sqlArgs :+ argsIter.next
         } else {
           sql.append(part)
