@@ -26,5 +26,22 @@ import io.rdbc.ImmutIndexedSeq
   *   val id = 0
   *   val s: SqlWithParams = sql"select * from test where id = \$id"
   * }}}
+  *
+  * Instances created by the interpolator can be composed:
+  * {{{
+  *   import io.rdbc.sapi._
+  *   val x = 0
+  *   val y = 0
+  *   val s: SqlWithParams =
+  *     sql"select * from test where x = \x" +
+  *     sql"and y = $y"
+  * }}}
   */
-case class SqlWithParams(sql: String, params: ImmutIndexedSeq[Any])
+case class SqlWithParams(sql: String, params: ImmutIndexedSeq[Any]) {
+  def +(other: SqlWithParams): SqlWithParams = {
+    copy(
+      sql = sql + other.sql,
+      params = params.toVector ++ other.params
+    )
+  }
+}
