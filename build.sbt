@@ -1,52 +1,26 @@
+import Settings._
 import de.heikoseeberger.sbtheader.license.Apache2_0
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-lazy val commonSettings = Seq(
+lazy val commonSettings = Vector(
   organization := "io.rdbc",
   scalaVersion := "2.12.2",
   crossScalaVersions := Vector("2.11.11"),
-  scalacOptions ++= Vector(
-    "-unchecked",
-    "-deprecation",
-    "-language:_",
-    "-target:jvm-1.8",
-    "-encoding", "UTF-8",
-    "-Yno-adapted-args",
-    "-Ywarn-dead-code",
-    "-Ywarn-numeric-widen",
-    "-Ywarn-value-discard",
-    "-Xfuture",
-    "-Ywarn-unused"
+
+  licenses := Vector(
+    "Apache License, Version 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")
   ),
-  scalacOptions in(Compile, doc) := Vector(
-    "-groups",
-    "-implicits",
-    "-doc-root-content", (resourceDirectory.in(Compile).value / "rootdoc.txt").getAbsolutePath,
-    "-doc-footer", "Copyright 2016-2017 Krzysztof Pado",
-    "-doc-version", version.value
-  ),
-  autoAPIMappings := true,
-  apiMappings ++= Map(
-    scalaInstance.value.libraryJar -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
-  ),
-  licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-  bintrayOrganization := Some("rdbc"),
   headers := Map(
-    "scala" -> Apache2_0("2016-2017", "Krzysztof Pado")
+    "scala" -> Apache2_0(Copyright.years, Copyright.holder)
   ),
-  releaseProcess := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    setNextVersion,
-    commitNextVersion,
-    pushChanges
-  ),
-  resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases"
-)
+
+  homepage := Some(url("https://github.com/rdbc-io/rdbc")),
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/rdbc-io/rdbc"),
+      "scm:git@github.com:rdbc-io/rdbc.git"
+    )
+  )
+) ++ compilationConf ++ scaladocConf ++ developersConf ++ publishConf
 
 lazy val rdbcRoot = (project in file("."))
   .settings(commonSettings: _*)
@@ -73,9 +47,6 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-api-java",
-    crossPaths := false,
-    publishArtifact := scalaVersion.value.startsWith("2.12"),
-    bintrayReleaseOnPublish := publishArtifact.value,
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
