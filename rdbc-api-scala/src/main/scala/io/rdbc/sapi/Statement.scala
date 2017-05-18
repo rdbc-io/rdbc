@@ -54,7 +54,7 @@ trait Statement {
     *
     * @group primary
     */
-  def bind(params: (String, Any)*): ExecutableStatement
+  def bind(args: (String, Any)*): ExecutableStatement
 
   /** Binds each parameter by name and wraps a result in a Future.
     *
@@ -76,7 +76,7 @@ trait Statement {
     *
     * @group fut
     */
-  def bindF(params: (String, Any)*): Future[ExecutableStatement]
+  def bindF(args: (String, Any)*): Future[ExecutableStatement]
 
   /** Binds each parameter by index.
     *
@@ -94,7 +94,7 @@ trait Statement {
     *
     * @group primary
     */
-  def bindByIdx(params: Any*): ExecutableStatement
+  def bindByIdx(args: Any*): ExecutableStatement
 
   /** Binds each parameter by index and wraps a result in a Future.
     *
@@ -119,7 +119,7 @@ trait Statement {
     *
     * @group fut
     */
-  def bindByIdxF(params: Any*): Future[ExecutableStatement]
+  def bindByIdxF(args: Any*): Future[ExecutableStatement]
 
   /** Creaes an executable version of the statement object without
     * providing any parameters.
