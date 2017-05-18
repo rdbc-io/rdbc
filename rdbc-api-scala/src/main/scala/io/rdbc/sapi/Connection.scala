@@ -71,6 +71,8 @@ import scala.concurrent.Future
   *  Returned future can fail with:
   *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]]
   *  when statement is not syntactically correct
+  *  - [[io.rdbc.api.exceptions.MixedParamTypesException MixedParamTypesException]]
+  *  when statement uses both positional and named parameters
   *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
   *  when general error occurs
   * @define timeoutException
