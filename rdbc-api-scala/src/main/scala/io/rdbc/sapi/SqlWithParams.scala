@@ -33,8 +33,8 @@ import io.rdbc.ImmutIndexedSeq
   *   val x = 0
   *   val y = 0
   *   val s: SqlWithParams =
-  *     sql"select * from test where x = \x" +
-  *     sql"and y = $y"
+  *     sql"select * from test where x = \$x" +
+  *     sql"and y = \$y"
   * }}}
   */
 case class SqlWithParams(sql: String, params: ImmutIndexedSeq[Any]) {
