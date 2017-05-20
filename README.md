@@ -1,6 +1,6 @@
 [![Travis](https://img.shields.io/travis/rdbc-io/rdbc/master.svg?style=flat-square)](https://travis-ci.org/rdbc-io/rdbc/branches)
 [![Codecov](https://img.shields.io/codecov/c/github/rdbc-io/rdbc.svg?style=flat-square)](https://codecov.io/gh/rdbc-io/rdbc/branch/master)
-[![Maven Central](https://img.shields.io/maven-central/v/io.rdbc/rdbc-api-scala_2.12.svg?style=flat-square)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.rdbc%22%20AND%20a%3A%22rdbc-api-scala%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.rdbc/rdbc-api-scala_2.12.svg?style=flat-square)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.rdbc%22%20api)
 [![Gitter](https://img.shields.io/gitter/room/rdbc-io/rdbc.svg?style=flat-square)](https://gitter.im/rdbc-io/rdbc)
 [![license](https://img.shields.io/github/license/rdbc-io/rdbc.svg?style=flat-square)](https://github.com/rdbc-io/rdbc/blob/master/LICENSE)
 ## What is rdbc?
@@ -9,6 +9,8 @@ rdbc is a SQL-level relational database connectivity API targeting Scala and
 Java programming languages. The API is fully asynchronous and provides
 a possibility to leverage [Reactive Streams'](http://www.reactive-streams.org/)
 stream processing capabilities.
+
+## Documentation
 
 See the documentation at [http://rdbc.io](http://rdbc.io).
 
