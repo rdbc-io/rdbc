@@ -1,5 +1,8 @@
 import Settings._
 import de.heikoseeberger.sbtheader.license.Apache2_0
+import scala.Console._
+
+shellPrompt.in(ThisBuild) := (state => s"${CYAN}project:$GREEN${Project.extract(state).currentRef.project}$RESET> ")
 
 lazy val commonSettings = Vector(
   organization := "io.rdbc",
@@ -25,8 +28,7 @@ lazy val commonSettings = Vector(
 lazy val rdbcRoot = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
-    publishArtifact := false,
-    bintrayReleaseOnPublish := false
+    publishArtifact := false
   )
   .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil, rdbcTests)
 
@@ -39,8 +41,7 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
     ),
     scalacOptions in(Compile, doc) ++= Vector(
       "-doc-title", "rdbc API"
-    ),
-    apiURL := Some(url("https://rdbc.io/scala/api"))
+    )
   )
 
 lazy val rdbcApiJava = (project in file("rdbc-api-java"))
