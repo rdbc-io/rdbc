@@ -68,11 +68,11 @@ trait SyntaxErrorSpec extends RdbcSpec {
   private def withTable[A](c: Connection)(body: => A): A = {
     try {
       c.statement(s"create table tbl (col $arbitraryDataType)").get
-        .noParams.execute().get
+        .noArgs.execute().get
       body
     } finally {
       c.statement("drop table tbl").get
-        .noParams.execute().get
+        .noArgs.execute().get
     }
   }
 
