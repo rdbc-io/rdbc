@@ -31,7 +31,7 @@ trait StatementPartialImpl extends Statement {
     Future.fromTry(Try(bindByIdx(params: _*)))
   }
 
-  override def noParamsF: Future[ExecutableStatement] = {
-    Future.fromTry(Try(noParams))
+  override def noArgsF: Future[ExecutableStatement] = {
+    Future.fromTry(Try(noArgs))
   }
 }

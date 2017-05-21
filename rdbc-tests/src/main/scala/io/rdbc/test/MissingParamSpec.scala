@@ -56,7 +56,7 @@ trait MissingParamSpec extends RdbcSpec {
         }
 
         "providing no params" in { c =>
-          assertAnyMissingParamThrown(c, _.noParams)
+          assertAnyMissingParamThrown(c, _.noArgs)
         }
       }
 
@@ -70,7 +70,7 @@ trait MissingParamSpec extends RdbcSpec {
         }
 
         "providing no params" in { c =>
-          assertAnyMissingParamThrown(c, _.noParamsF.get)
+          assertAnyMissingParamThrown(c, _.noArgsF.get)
         }
       }
     }

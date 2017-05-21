@@ -47,7 +47,7 @@ trait TimeoutSpec extends RdbcSpec {
       def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         executedForTempl(
           executorName,
-          _.statement(slowStatement).map(_.noParams),
+          _.statement(slowStatement).map(_.noArgs),
           executor
         )
       }

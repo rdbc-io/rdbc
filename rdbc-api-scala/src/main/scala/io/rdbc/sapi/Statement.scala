@@ -16,6 +16,7 @@
 
 package io.rdbc.sapi
 
+import io.rdbc.ImmutIndexedSeq
 import org.reactivestreams.Publisher
 
 import scala.concurrent.Future
@@ -41,7 +42,7 @@ import scala.concurrent.Future
   */
 trait Statement {
 
-  /** Binds each parameter by name.
+  /** Binds value to each parameter by name.
     *
     * Example:
     * {{{
@@ -56,7 +57,7 @@ trait Statement {
     */
   def bind(args: (String, Any)*): ExecutableStatement
 
-  /** Binds each parameter by name and wraps a result in a Future.
+  /** Binds value to each parameter by name and wraps a result in a Future.
     *
     * This is not an asynchronous operation, it's only an utility method
     * that wraps `bind` result with a [[scala.concurrent.Future Future]]
@@ -78,7 +79,7 @@ trait Statement {
     */
   def bindF(args: (String, Any)*): Future[ExecutableStatement]
 
-  /** Binds each parameter by index.
+  /** Binds value to each parameter by index.
     *
     * Parameters are ordered, each value in `params` sequence will be bound
     * to the corresponding parameter.
@@ -96,7 +97,7 @@ trait Statement {
     */
   def bindByIdx(args: Any*): ExecutableStatement
 
-  /** Binds each parameter by index and wraps a result in a Future.
+  /** Binds value to each parameter by index and wraps a result in a Future.
     *
     * Parameters are ordered, each value in `params` sequence will be bound
     * to the corresponding parameter.
@@ -121,45 +122,45 @@ trait Statement {
     */
   def bindByIdxF(args: Any*): Future[ExecutableStatement]
 
-  /** Creaes an executable version of the statement object without
-    * providing any parameters.
+  /** Creates an executable version of the statement object without
+    * providing any arguments.
     *
     * Example:
     * {{{
     * val insert = conn.statement("insert into table(p1, p2) values ('str', 10)")
-    * insert.map(_.noParams).foreach(_.execute())
+    * insert.map(_.noArgs).foreach(_.execute())
     * }}}
     *
     * @group primary
     */
-  def noParams: ExecutableStatement
+  def noArgs: ExecutableStatement
 
   /** Creates an executable version of the statement object without providing
-    * any parameters and wraps a result in a future
+    * any arguments and wraps a result in a future
     *
     * This is not an asynchronous operation, it's only an utility method
-    * that wraps `noParams` result with a [[scala.concurrent.Future Future]]
+    * that wraps `noArgs` result with a [[scala.concurrent.Future Future]]
     * to allow chaining bind operations with asynchronous operations.
     *
     * Example:
     * {{{
     * for {
     *   insert     <- conn.statement("insert into table(p1, p2) values ('str', 10)")
-    *   executable <- insert.noParamsF
+    *   executable <- insert.noArgsF
     *   _ <- bound.execute()
     * } yield ()
     * }}}
     *
     * @group fut
     */
-  def noParamsF: Future[ExecutableStatement]
+  def noArgsF: Future[ExecutableStatement]
 
-  /** Streams statement parameters to a database.
+  /** Streams statement named arguments to a database.
     *
     * This method can be used to repeatedly execute this statement with
-    * published parameters by leveraging Reactive Streams specification's
-    * `Publisher` with a backpressure. Each published element is a map
-    * containing all parameters required by this statement.
+    * published arguments by leveraging Reactive Streams specification's
+    * `Publisher` with a back-pressure. Each published element is a map
+    * containing all arguments required by this statement.
     *
     * Resulting future can fail with:
     *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
@@ -167,5 +168,20 @@ trait Statement {
     *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
     * when some parameter value's type is not convertible to a database type
     */
-  def streamParams(paramsPublisher: Publisher[Map[String, Any]]): Future[Unit]
+  def streamArgs(argsPublisher: Publisher[Map[String, Any]]): Future[Unit]
+
+  /** Streams statement arguments to a database.
+    *
+    * This method can be used to repeatedly execute this statement with
+    * published arguments by leveraging Reactive Streams specification's
+    * `Publisher` with a back-pressure. Each published element is an indexed
+    * sequence containing all arguments required by this statement.
+    *
+    * Resulting future can fail with:
+    *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+    * when some parameter value was not provided
+    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+    * when some parameter value's type is not convertible to a database type
+    */
+  def streamArgsByIdx(argsPublisher: Publisher[ImmutIndexedSeq[Any]]): Future[Unit]
 }
