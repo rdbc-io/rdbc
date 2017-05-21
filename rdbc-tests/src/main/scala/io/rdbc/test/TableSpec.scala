@@ -29,7 +29,7 @@ trait TableSpec {
   protected def withTable[A](c: Connection)(body: String => A): A = {
     val tableName = s"tbl${counter.incrementAndGet()}"
     c.statement(s"create table $tableName ($columnsDefinition)").get
-      .noParams.execute().get
+      .noArgs.execute().get
     body(tableName)
   }
 }

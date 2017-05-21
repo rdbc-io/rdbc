@@ -55,13 +55,13 @@ abstract class RowPublisherVerification(env: TestEnvironment, publisherShutdownT
   override def createPublisher(elements: Long): Publisher[Row] = {
     val conn = connection()
     val currIdx = idx.incrementAndGet()
-    conn.statement(s"create table tbl$currIdx (col $intDataType)").get.noParams.execute().get
+    conn.statement(s"create table tbl$currIdx (col $intDataType)").get.noArgs.execute().get
     conn.beginTx().get
     for { i <- 1L to elements } yield {
       conn.statement(sql"insert into tbl#$currIdx(col) values($i)").get.execute().get
     }
     conn.commitTx().get
-    val pub = conn.statement(s"select col from tbl$currIdx").get.noParams.executeForStream().get.rows
+    val pub = conn.statement(s"select col from tbl$currIdx").get.noArgs.executeForStream().get.rows
     Source.fromPublisher(pub)
       .watchTermination() { (_, doneFut) =>
         doneFut.onComplete { _ =>
@@ -74,10 +74,10 @@ abstract class RowPublisherVerification(env: TestEnvironment, publisherShutdownT
   override def createFailedPublisher(): Publisher[Row] = {
     val conn = connection()
     val currIdx = idx.incrementAndGet()
-    conn.statement(s"create table tbl$currIdx (col $varcharDataType)").get.noParams.execute().get
-    conn.statement(s"insert into tbl$currIdx(col) values('text')").get.noParams.execute().get
+    conn.statement(s"create table tbl$currIdx (col $varcharDataType)").get.noArgs.execute().get
+    conn.statement(s"insert into tbl$currIdx(col) values('text')").get.noArgs.execute().get
     val pub = conn.statement(s"select ${castVarchar2Int("col")} from tbl$currIdx").get
-      .noParams
+      .noArgs
       .executeForStream().get
       .rows
     Source.fromPublisher(pub)
