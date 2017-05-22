@@ -97,5 +97,6 @@ lazy val rdbcTests = (project in file("rdbc-tests"))
       Library.reactiveStreamsTck,
       Library.akkaStream
     ),
-    buildInfoPackage := "io.rdbc.test"
+    buildInfoPackage := "io.rdbc.test",
+    scalacOptions -= "-Ywarn-value-discard"
   ).dependsOn(rdbcApiScala)

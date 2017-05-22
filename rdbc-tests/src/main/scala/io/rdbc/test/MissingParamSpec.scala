@@ -17,7 +17,7 @@
 package io.rdbc.test
 
 import io.rdbc.api.exceptions.MissingParamValException
-import io.rdbc.sapi.{Connection, KeyColumns, Statement, StatementOptions}
+import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
 import scala.concurrent.Future
 
