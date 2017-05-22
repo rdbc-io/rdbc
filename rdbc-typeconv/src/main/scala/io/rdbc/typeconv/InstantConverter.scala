@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import java.time.{Instant, ZonedDateTime}
+import java.time.Instant
 
 import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter

@@ -22,7 +22,13 @@ lazy val commonSettings = Vector(
       url("https://github.com/rdbc-io/rdbc"),
       "scm:git@github.com:rdbc-io/rdbc.git"
     )
-  )
+  ),
+
+  buildInfoKeys := Vector(version, scalaVersion, git.gitHeadCommit, BuildInfoKey.action("buildTime") {
+    java.time.Instant.now()
+  }),
+
+  scalastyleFailOnError := true
 ) ++ compilationConf ++ scaladocConf ++ developersConf ++ publishConf
 
 lazy val rdbcRoot = (project in file("."))
@@ -41,7 +47,8 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
     ),
     scalacOptions in(Compile, doc) ++= Vector(
       "-doc-title", "rdbc API"
-    )
+    ),
+    buildInfoPackage := "io.rdbc.sapi"
   )
 
 lazy val rdbcApiJava = (project in file("rdbc-api-java"))
@@ -50,19 +57,22 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
     name := "rdbc-api-java",
     libraryDependencies ++= Vector(
       Library.reactiveStreams
-    )
+    ),
+    buildInfoPackage := "io.rdbc.japi"
   )
 
 lazy val rdbcImplBase = (project in file("rdbc-implbase"))
   .settings(commonSettings: _*)
   .settings(
-    name := "rdbc-implbase"
+    name := "rdbc-implbase",
+    buildInfoPackage := "io.rdbc.implbase"
   ).dependsOn(rdbcApiScala, rdbcUtil)
 
 lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
   .settings(commonSettings: _*)
   .settings(
-    name := "rdbc-typeconv"
+    name := "rdbc-typeconv",
+    buildInfoPackage := "io.rdbc.typeconv"
   ).dependsOn(rdbcApiScala)
 
 
@@ -73,7 +83,8 @@ lazy val rdbcUtil = (project in file("rdbc-util"))
     libraryDependencies ++= Vector(
       Library.sourcecode,
       Library.scalaLogging
-    )
+    ),
+    buildInfoPackage := "io.rdbc.util"
   )
 
 lazy val rdbcTests = (project in file("rdbc-tests"))
@@ -85,5 +96,7 @@ lazy val rdbcTests = (project in file("rdbc-tests"))
       Library.scalatest,
       Library.reactiveStreamsTck,
       Library.akkaStream
-    )
+    ),
+    buildInfoPackage := "io.rdbc.test",
+    scalacOptions -= "-Ywarn-value-discard"
   ).dependsOn(rdbcApiScala)
