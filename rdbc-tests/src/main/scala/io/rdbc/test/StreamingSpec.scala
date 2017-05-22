@@ -47,7 +47,7 @@ trait StreamingSpec
           c.statement(sql"insert into #$t(col) values ($i)").get.execute().get
         }
         val rows = subscribe(c.statement(sql"select col from #$t order by col"), Subscribers.eager()).rows.get
-        rows should have size range.size
+        rows should have size range.size.toLong
         rows.map(_.int("col")) should contain theSameElementsInOrderAs range
       }
     }

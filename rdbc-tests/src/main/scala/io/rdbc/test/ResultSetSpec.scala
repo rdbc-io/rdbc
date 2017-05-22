@@ -43,7 +43,7 @@ trait ResultSetSpec
           c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
         }
         val rows = c.statement(sql"select col from #$t order by col").get.executeForSet().get.rows
-        rows should have size range.size
+        rows should have size range.size.toLong
         rows.map(_.int("col")) should contain theSameElementsInOrderAs range
       }
     }
