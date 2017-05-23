@@ -17,4 +17,6 @@
     rdbc project and this documentation is still a work in progress.
     It's not ready yet for production use.
 
-TODO
+You can browse Scaladoc using excellent javadoc.io site 
+[here](https://javadoc.io/doc/io.rdbc/rdbc-api-scala_2.12). The site
+allows to switch between Scala versions and rdbc versions.
