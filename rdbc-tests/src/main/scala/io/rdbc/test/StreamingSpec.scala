@@ -81,9 +81,9 @@ trait StreamingSpec
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"update #$t set col = null where col >= 6").executeForStream().get
+          val rs = c.statement(sql"update #$t set col = null where col >= 6").stream()
           val subscriber = Subscribers.eager()
-          rs.rows.subscribe(subscriber)
+          rs.subscribe(subscriber)
           rs.rowsAffected.get shouldBe 5L
 
           subscriber.rows.get
@@ -96,13 +96,13 @@ trait StreamingSpec
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"select col from #$t").executeForStream().get
+          val rs = c.statement(sql"select col from #$t").stream()
           val subscriber = Subscribers.eager()
-          rs.rows.subscribe(subscriber)
+          rs.subscribe(subscriber)
 
-          rs.metadata.columns should have size 1
+          rs.metadata.get.columns should have size 1
 
-          val colMetadata = rs.metadata.columns.head
+          val colMetadata = rs.metadata.get.columns.head
           colMetadata.name shouldBe "col"
           colMetadata.dbTypeId shouldBe intDataTypeId
           colMetadata.cls should contain(classOf[Int])
@@ -159,7 +159,8 @@ trait StreamingSpec
                                                statement: ExecutableStatement,
                                                subscriber: S
                                              ): subscriber.type = {
-    statement.executeForStream().map(_.rows).map(_.subscribe(subscriber))
+    val rs = statement.stream()
+    rs.subscribe(subscriber)
     subscriber
   }
 }

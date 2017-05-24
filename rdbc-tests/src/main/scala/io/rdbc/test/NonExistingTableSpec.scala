@@ -44,9 +44,10 @@ trait NonExistingTableSpec extends RdbcSpec {
       executedFor("first row", _.executeForFirstRow())
       executedFor("optional value", _.executeForValueOpt(_.intOpt(1)))
       executedFor("generated key", _.executeForKey[String])
-      executedFor("stream", _.executeForStream().flatMap { rs =>
+      executedFor("stream", stmt => {
+        val rs = stmt.stream()
         val subscriber = Subscribers.eager()
-        rs.rows.subscribe(subscriber)
+        rs.subscribe(subscriber)
         subscriber.rows
       })
 
