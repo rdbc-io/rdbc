@@ -235,11 +235,35 @@ conn.statement(
 ```
 
 ## Executing statements
+
+Once you have an `ExecutableStatement` instance, you can execute it in a couple
+of different ways. The method of execution controls in what shape you get the
+results from the database. Paragraphs below describe methods of executing statements.
+
+### Executing for a result set
+
+Arguably the simplest method of execution that returns results is to execute
+statement for a result set. To do this, use `ExecutableStatement`'s
+[`executeForSet`]() method that returns `Future` of [`ResultSet`]().
+
+`ResultSet` gives you access to the rows as well as to the metadata like warnings
+issued by the DB engine, columns metadata and count of rows affected by the statement.
+It also implements `Traversable` trait providing a convenience method of traversing
+through the rows.
+
+Executing for set is simple, but be aware that for bigger sets you may encounter
+`OutOfMemoryError`s. All results are stored in memory, there is no paging of any
+kind. If you want to avoid these kind of problems, consider
+[streaming](statements/#executing-for-a-stream) the results.
+
+For the documentation on how to work with the resulting rows see
+[Result Rows](rows) chapter.
+    
 ### Executing for a stream
-### Executing for a set
+### Executing ignoring results
 ### Executing for a first row
 ### Executing for a value
 ### Executing for rows affected
 ### Executing for generated key
-### Executing ignoring results
+
 ### Batch updates, inserts and deletes

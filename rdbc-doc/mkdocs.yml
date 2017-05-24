@@ -9,7 +9,7 @@ pages:
       - Scaladoc: scala/scaladoc.md
       - Working with a connection: scala/connection.md
       - Statements: scala/statements.md
-      - Results: todo.md
+      - Result Rows: scala/rows.md
       - Exceptions: todo.md
       - Frameworks integration: todo.md
       - Utilities: scala/utilities.md
