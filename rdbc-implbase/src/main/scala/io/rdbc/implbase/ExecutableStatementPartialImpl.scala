@@ -26,21 +26,21 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
   implicit protected def ec: ExecutionContext
 
   override def executeForSet()(implicit timeout: Timeout): Future[ResultSet] = {
-    executeForStream().flatMap { resultStream =>
-      val subscriber = new HeadSubscriber(None)
-      resultStream.rows.subscribe(subscriber)
-      for {
-        rowsAffected <- resultStream.rowsAffected
-        warnings <- resultStream.warnings
-        rows <- subscriber.rows
-      } yield {
-        new ResultSet(
-          rowsAffected = rowsAffected,
-          warnings = warnings,
-          metadata = resultStream.metadata,
-          rows = rows
-        )
-      }
+    val resultStream = stream()
+    val subscriber = new HeadSubscriber(None)
+    resultStream.subscribe(subscriber)
+    for {
+      rowsAffected <- resultStream.rowsAffected
+      warnings <- resultStream.warnings
+      metadata <- resultStream.metadata
+      rows <- subscriber.rows
+    } yield {
+      new ResultSet(
+        rowsAffected = rowsAffected,
+        warnings = warnings,
+        metadata = metadata,
+        rows = rows
+      )
     }
   }
 
@@ -49,10 +49,9 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
   }
 
   override def executeForRowsAffected()(implicit timeout: Timeout): Future[Long] = {
-    executeForStream().flatMap { source =>
-      source.rows.subscribe(new IgnoringSubscriber)
-      source.rowsAffected
-    }
+    val resultStream = stream()
+    resultStream.subscribe(new IgnoringSubscriber)
+    resultStream.rowsAffected
   }
 
   override def executeForFirstRow()(implicit timeout: Timeout): Future[Option[Row]] = {

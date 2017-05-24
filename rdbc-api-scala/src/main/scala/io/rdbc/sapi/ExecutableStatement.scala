@@ -41,14 +41,16 @@ import scala.reflect.ClassTag
   */
 trait ExecutableStatement {
 
-  /** Executes this statement and returns a [[ResultStream]] instance
-    * that can be used to stream rows from the database leveraging
-    * Reactive Streams specification's `Publisher` with backpressure.
+  /** Returns a [[RowPublisher]] instance that can be used to stream rows from
+    * the database leveraging Reactive Streams specification's `Publisher` with
+    * backpressure.
+    *
+    * The statement is not executed until the stream is subscribed to.
     *
     * $timeoutInfo
     * $exceptions
     */
-  def executeForStream()(implicit timeout: Timeout): Future[ResultStream]
+  def stream()(implicit timeout: Timeout): RowPublisher
 
   /** Executes this statement and returns a [[ResultSet]] instance.
     *
