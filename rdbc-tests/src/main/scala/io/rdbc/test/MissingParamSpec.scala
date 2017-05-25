@@ -44,7 +44,7 @@ trait MissingParamSpec extends RdbcSpec {
     }
   }
 
-  private def of(stmtType: String, statement: Connection => Future[Statement]): Unit = {
+  private def of(stmtType: String, statement: Connection => Statement): Unit = {
     s"of $stmtType" - {
       "synchronously" - {
         "by name" in { c =>
@@ -62,29 +62,29 @@ trait MissingParamSpec extends RdbcSpec {
 
       "asynchronously" - {
         "by name" in { c =>
-          assertMissingParamThrown(c, _.bindF(otherParam -> any).get)
+          assertMissingParamThrown(c, _.bind(otherParam -> any))
         }
 
         "by index" in { c =>
-          assertMissingParamThrown(c, _.bindByIdxF(any).get)
+          assertMissingParamThrown(c, _.bindByIdx(any))
         }
 
         "providing no params" in { c =>
-          assertAnyMissingParamThrown(c, _.noArgsF.get)
+          assertAnyMissingParamThrown(c, _.noArgs)
         }
       }
     }
 
     def assertMissingParamThrown(c: Connection, binder: Statement => Any): Unit = {
       val e = intercept[MissingParamValException] {
-        binder.apply(statement(c).get)
+        binder.apply(statement(c))
       }
       e.missingParam shouldBe missingParam
     }
 
     def assertAnyMissingParamThrown(c: Connection, binder: Statement => Any): Unit = {
       val e = intercept[MissingParamValException] {
-        binder.apply(statement(c).get)
+        binder.apply(statement(c))
       }
       e.missingParam should (equal(missingParam) or equal(otherParam))
     }

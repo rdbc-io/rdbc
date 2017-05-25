@@ -33,7 +33,7 @@ trait SyntaxErrorSpec extends RdbcSpec {
     stmtTest("DDL", _.statement(sql"alter should_be_table tbl drop column col"))
   }
 
-  private def stmtTest(stmtType: String, stmt: Connection => Future[ExecutableStatement]): Unit = {
+  private def stmtTest(stmtType: String, stmt: Connection => ExecutableStatement): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
@@ -51,7 +51,7 @@ trait SyntaxErrorSpec extends RdbcSpec {
         executorName in { c =>
           withTable(c) {
             assertInvalidQueryThrown {
-              stmt(c).flatMap(executor)
+              executor(stmt(c))
             }
           }
         }
@@ -67,11 +67,11 @@ trait SyntaxErrorSpec extends RdbcSpec {
 
   private def withTable[A](c: Connection)(body: => A): A = {
     try {
-      c.statement(s"create table tbl (col $arbitraryDataType)").get
+      c.statement(s"create table tbl (col $arbitraryDataType)")
         .noArgs.execute().get
       body
     } finally {
-      c.statement("drop table tbl").get
+      c.statement("drop table tbl")
         .noArgs.execute().get
     }
   }

@@ -30,7 +30,7 @@ trait ForFirstRowSpec
   "First row returning feature should" - {
     "return None on empty tables" - {
       withAndWithoutTx { (c, t) =>
-        val stmt = c.statement(sql"select col from #$t").get
+        val stmt = c.statement(sql"select col from #$t")
         stmt.executeForFirstRow().get shouldBe None
       }
     }
@@ -39,9 +39,9 @@ trait ForFirstRowSpec
       withAndWithoutTx { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
-          c.statement(sql"insert into #$t(col) values ($i)").get.execute().get
+          c.statement(sql"insert into #$t(col) values ($i)").execute().get
         }
-        val stmt = c.statement(sql"select col from #$t where col >= 5 order by col").get
+        val stmt = c.statement(sql"select col from #$t where col >= 5 order by col")
         val maybeRs = stmt.executeForFirstRow().get
         maybeRs shouldBe defined
         maybeRs.get.int("col") shouldBe 5
