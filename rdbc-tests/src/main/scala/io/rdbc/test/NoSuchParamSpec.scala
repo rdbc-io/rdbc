@@ -41,20 +41,20 @@ trait NoSuchParamSpec extends RdbcSpec {
     }
   }
 
-  private def of(stmtType: String, statement: Connection => Future[Statement]): Unit = {
+  private def of(stmtType: String, statement: Connection => Statement): Unit = {
     s"of $stmtType" - {
       "synchronously" in { c =>
         assertNoSuchParamThrown(c, _.bind(param -> any, superfluousParam -> any))
       }
 
       "asynchronously" in { c =>
-        assertNoSuchParamThrown(c, _.bindF(param -> any, superfluousParam -> any).get)
+        assertNoSuchParamThrown(c, _.bind(param -> any, superfluousParam -> any))
       }
     }
 
     def assertNoSuchParamThrown(c: Connection, binder: Statement => Any): Unit = {
       val e = intercept[NoSuchParamException] {
-        binder.apply(statement(c).get)
+        binder.apply(statement(c))
       }
       e.param shouldBe superfluousParam
     }

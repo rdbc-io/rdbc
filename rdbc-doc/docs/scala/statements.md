@@ -87,10 +87,11 @@ select * from users where first_name = '?' -- or middle_name = ?
 
 Statement can be created using a bare string and then in a separate step be
 filled with arguments for execution. There is a [`statement`]() method defined in `Connection`
-trait that accepts a string, and returns a `Future` of [`Statement`]():
+trait that accepts a string, and returns a [`Statement`]() instance bound to the
+connection:
 
 ```scala
-val stmt: Future[Statement] = conn.statement(
+val stmt: Statement = conn.statement(
  "select * from users " +
  "where (first_name = :name or last_name = :name) and age = :age"
 )
@@ -142,20 +143,20 @@ to them in one step, like this:
 ```scala
 val conn: Connection = ???
 
-def findUsersStmt(name: String): Future[ExecutableStatement] = {
+def findUsersStmt(name: String): ExecutableStatement = {
    conn.statement(sql"select * from users where name = $name")
 }
 ```
 
 As you can see, when `sql` interpolator is used `Connection`'s `statement` method
-produces `Future` of `ExecutableStatement`, so the statement already has values
+produces `ExecutableStatement`, so the statement already has values
 bound to its parameters. The above example is equivalent to the following, somewhat
 less concise snippet:
 
 ```scala
-def findUsersStmt(name: String): Future[ExecutableStatement] = {   
+def findUsersStmt(name: String): ExecutableStatement = {   
     conn.statement("select * from users where name = ?")
-      .map(stmt => stmt.bindByIndex(name))   
+        .bindByIdx(name)
 }
 ```
 
@@ -163,7 +164,7 @@ SQL parts created by `sql` interpolator can be concatenated in the same way you
 would concatenate plain strings:
 
 ```scala
-def findUsersStmt(name: String, age: Int): Future[ExecutableStatement] = {
+def findUsersStmt(name: String, age: Int): ExecutableStatement = {
   conn.statement(
    sql"select * from users " +
    sql"where (first_name = $name or last_name = $name) and age = $age"
@@ -180,9 +181,9 @@ in to the database as literals concatenated with the rest of the SQL.
 Sometimes, most notably in tests or some one-time use scripts, it may be useful
 to create SQL dynamically, like this:
 ```scala
-def stmt(table: String, name: String): Future[ExecutableStatement] = {
+def stmt(table: String, name: String): FutureExecutableStatement = {
   conn.statement(s"select * from $table where name = :name")
-    .map(stmt => stmt.bind("name" -> name))
+      .bind("name" -> name)
 }
 ```
 
@@ -190,7 +191,7 @@ If you want to create SQL dynamically and still benefit from `sql` interpolator
 features, use `#$` prefix for dynamic parts, like this:
 
 ```scala
-def sql(table: String, name: String): Future[ExecutableStatement] = {
+def sql(table: String, name: String): ExecutableStatement = {
   conn.statement(sql"select * from #$table where name = $name")
 }
 ```

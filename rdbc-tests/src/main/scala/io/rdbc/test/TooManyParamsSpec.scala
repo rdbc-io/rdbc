@@ -39,20 +39,14 @@ trait TooManyParamsSpec extends RdbcSpec {
     }
   }
 
-  private def of(stmtType: String, bindable: Connection => Future[Statement]): Unit = {
-    s"of $stmtType" - {
-      "synchronously" in { c =>
+  private def of(stmtType: String, bindable: Connection => Statement): Unit = {
+    s"of $stmtType" in { c =>
         assertTooManyParamsThrown(c, _.bindByIdx(any, any))
-      }
-
-      "asynchronously" in { c =>
-        assertTooManyParamsThrown(c, _.bindByIdxF(any, any).get)
-      }
     }
 
     def assertTooManyParamsThrown(c: Connection, binder: Statement => Any): Unit = {
       val e = intercept[TooManyParamsException] {
-        binder.apply(bindable(c).get)
+        binder.apply(bindable(c))
       }
       e.provided shouldBe 2
       e.expected shouldBe 1
