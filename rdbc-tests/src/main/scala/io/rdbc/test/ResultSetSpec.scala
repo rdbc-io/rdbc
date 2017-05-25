@@ -32,7 +32,7 @@ trait ResultSetSpec
   "Set returning feature should" - {
     "work on empty tables" - {
       withAndWithoutTx { (c, t) =>
-        c.statement(sql"select col from #$t").get.executeForSet().get.rows shouldBe empty
+        c.statement(sql"select col from #$t").executeForSet().get.rows shouldBe empty
       }
     }
 
@@ -40,9 +40,9 @@ trait ResultSetSpec
       withAndWithoutTx { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
-          c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+          c.statement(sql"insert into #$t(col) values ($i)").execute().get
         }
-        val rows = c.statement(sql"select col from #$t order by col").get.executeForSet().get.rows
+        val rows = c.statement(sql"select col from #$t order by col").executeForSet().get.rows
         rows should have size range.size.toLong
         rows.map(_.int("col")) should contain theSameElementsInOrderAs range
       }
@@ -53,9 +53,9 @@ trait ResultSetSpec
         withAndWithoutTx { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+            c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"update #$t set col = null where col >= 6").get.executeForSet().get
+          val rs = c.statement(sql"update #$t set col = null where col >= 6").executeForSet().get
           rs.rowsAffected shouldBe 5L
         }
       }
@@ -64,9 +64,9 @@ trait ResultSetSpec
         withAndWithoutTx { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+            c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"select col from #$t").get.executeForSet().get
+          val rs = c.statement(sql"select col from #$t").executeForSet().get
           rs.metadata.columns should have size 1
 
           val colMetadata = rs.metadata.columns.head

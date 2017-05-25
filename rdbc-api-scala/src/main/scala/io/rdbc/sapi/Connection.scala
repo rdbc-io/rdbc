@@ -51,10 +51,9 @@ import scala.concurrent.Future
   *
   *   val conn: Connection = ???
   *   val login = "jdoe"
-  *   for {
-  *    select       <- conn.statement(sql"select * from users where login = :login")
-  *    executable   <- select.bindF("login" -> login)
-  *   } yield executable.executeForStream()
+  *   conn.statement(sql"select * from users where login = :login")
+  *       .bind("login" -> login)
+  *       .executable.executeForStream()
   * }}}
   *
   * @groupname tx Transaction management
@@ -68,9 +67,7 @@ import scala.concurrent.Future
   *  aborted. Note however, that it may not be feasible to abort the operation
   *  immediately.
   * @define statementExceptions
-  *  Returned future can fail with:
-  *  - [[io.rdbc.api.exceptions.InvalidQueryException InvalidQueryException]]
-  *  when statement is not syntactically correct
+  * Throws:
   *  - [[io.rdbc.api.exceptions.MixedParamTypesException MixedParamTypesException]]
   *  when statement uses both positional and named parameters
   *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
@@ -89,11 +86,20 @@ import scala.concurrent.Future
   *  [[SqlWithParams]] parameter instance is meant to be constructed using `sql`
   *  string interpolator, for example:
   *  {{{
-  *                      import io.rdbc.sapi.Interpolators._
-  *                      val x = 1
-  *                      val y = 10
-  *                      val stmt = conn.select(sql"select * from table where colx > \$x and coly < \$y")
+  *      import io.rdbc.sapi.Interpolators._
+  *      val x = 1
+  *      val y = 10
+  *      val stmt = conn.statement(sql"select * from table where colx > \$x and coly < \$y")
   *  }}}
+  * @define withTransaction
+  * Executes a function (which can be passed as a code block) in a context
+  * of a transaction. Before the function is executed, transaction is started.
+  * After the function finishes, transaction is committed in case of a success
+  * and rolled back in case of a failure.
+  *
+  * Because managing transaction state requires invoking functions that
+  * require specifying a timeout, this function requires an implicit timeout
+  * instance.
   */
 trait Connection {
 
@@ -147,16 +153,16 @@ trait Connection {
 
   /** Executes a function in a context of a transaction.
     *
-    * Executes a function (which can be passed as a code block) in a context
-    * of a transaction. Before the function is executed, transaction is started.
-    * After the function finishes, transaction is committed in case of a success
-    * and rolled back in case of a failure.
-    *
-    * Because managing transaction state requires invoking functions that
-    * require specifying a timeout, this function requires an implicit timeout
-    * instance.
+    * $withTransaction
     */
-  def withTransaction[A](body: => Future[A])
+  def withTransaction[A](body: => A)
+                        (implicit timeout: Timeout): Future[A]
+
+  /** Executes a future-returning function in a context of a transaction.
+    *
+    * $withTransaction
+    */
+  def withTransactionF[A](body: => Future[A])
                         (implicit timeout: Timeout): Future[A]
 
   /** Releases the connection and underlying resources.
@@ -200,7 +206,7 @@ trait Connection {
     *
     * @group stmtBare
     */
-  def statement(sql: String, statementOptions: StatementOptions): Future[Statement]
+  def statement(sql: String, statementOptions: StatementOptions): Statement
 
   /** Returns a [[Statement]] instance bound to this connection that
     * represents any SQL statement.
@@ -211,7 +217,7 @@ trait Connection {
     *
     * @group stmtBare
     */
-  def statement(sql: String): Future[Statement]
+  def statement(sql: String): Statement
 
   /** Returns a [[ExecutableStatement]] instance bound to this connection
     * that represents any parametrized SQL statement.
@@ -225,7 +231,7 @@ trait Connection {
     *
     * @group stmtInter
     */
-  def statement(sqlWithParams: SqlWithParams, statementOptions: StatementOptions): Future[ExecutableStatement]
+  def statement(sqlWithParams: SqlWithParams, statementOptions: StatementOptions): ExecutableStatement
 
   /** Returns a [[ExecutableStatement]] instance bound to this connection
     * that represents any parametrized SQL statement.
@@ -239,8 +245,7 @@ trait Connection {
     *
     * @group stmtInter
     */
-  def statement(sqlWithParams: SqlWithParams): Future[ExecutableStatement]
-
+  def statement(sqlWithParams: SqlWithParams): ExecutableStatement
 
   /** Returns a future that is complete when this connection is idle and ready
     * for accepting queries. */

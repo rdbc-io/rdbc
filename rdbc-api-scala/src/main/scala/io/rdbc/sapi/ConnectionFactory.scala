@@ -20,7 +20,23 @@ import scala.concurrent.Future
 
 /** Provides access to a database [[Connection]].
   *
-  * Implementors are encouraged to make the implementation of this trait thread-safe.
+  * Implementors must make the implementation of this trait thread-safe.
+  *
+  * @define withTransaction
+  * Executes a function (which can be passed as a code block) in a context
+  * of a connection obtained via `connection` method. Before the function is
+  * executed, transaction is started. After the function finishes, transaction
+  * is committed in case of a success and rolled back in case of a
+  * failure - after that, the connection is released.
+  *
+  * Because managing transaction state requires invoking functions that
+  * require specifying a timeout, this function requires an implicit timeout
+  * instance.
+  *
+  * @define withConnection
+  * Executes a function (which can be passed as a code block) in a context of
+  * a connection obtained via `connection` method, and releases
+  * the connection afterwards.
   */
 trait ConnectionFactory {
 
@@ -30,27 +46,30 @@ trait ConnectionFactory {
 
   /** Executes a function in a context of a connection.
     *
-    * Executes a function (which can be passed as a code block) in a context of
-    * a connection obtained via [[connection]] method, and releases
-    * the connection afterwards.
+    * $withConnection
     */
-  def withConnection[A](body: Connection => Future[A]): Future[A]
+  def withConnection[A](body: Connection => A): Future[A]
+
+  /** Executes a future-returning function in a context of a connection.
+    *
+    * $withConnection
+    */
+  def withConnectionF[A](body: Connection => Future[A]): Future[A]
 
   /** Executes a function in a context of a transaction.
     *
-    * Executes a function (which can be passed as a code block) in a context
-    * of a connection obtained via [[connection]] method. Before the function is
-    * executed, transaction is started. After the function finishes, transaction
-    * is committed in case of a success and rolled back in case of a
-    * failure - after that, the connection is released.
-    *
-    * Because managing transaction state requires invoking functions that
-    * require specifying a timeout, this function requires an implicit timeout
-    * instance.
+    * $withTransaction
     */
-  def withTransaction[A](body: Connection => Future[A])
+  def withTransaction[A](body: Connection => A)
                         (implicit timeout: Timeout): Future[A]
 
+  /** Executes a future-returning function in a context of a transaction.
+    *
+    * $withTransaction
+    */
+  def withTransactionF[A](body: Connection => Future[A])
+                         (implicit timeout: Timeout): Future[A]
+  
   /** Shuts down this connection factory.
     *
     * Returned future never fails - it completes on finished shutdown attempt.

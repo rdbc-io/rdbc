@@ -36,7 +36,7 @@ trait NonExistingTableSpec extends RdbcSpec {
     stmtTest("DDL", _.statement(sql"drop table nonexistent"), errPos = 12)
   }
 
-  private def stmtTest(stmtType: String, stmt: Connection => Future[ExecutableStatement], errPos: Int): Unit = {
+  private def stmtTest(stmtType: String, stmt: Connection => ExecutableStatement, errPos: Int): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
@@ -53,7 +53,7 @@ trait NonExistingTableSpec extends RdbcSpec {
       def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         s"executed for $executorName" in { c =>
           assertInvalidQueryThrown(errPos) {
-            stmt(c).flatMap(executor)
+            executor(stmt(c))
           }
         }
       }
