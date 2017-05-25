@@ -69,7 +69,7 @@ trait ConnectionFactory {
     */
   def withTransactionF[A](body: Connection => Future[A])
                          (implicit timeout: Timeout): Future[A]
-  
+
   /** Shuts down this connection factory.
     *
     * Returned future never fails - it completes on finished shutdown attempt.
