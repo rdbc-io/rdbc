@@ -19,8 +19,6 @@ package io.rdbc.test
 import io.rdbc.api.exceptions.TooManyParamsException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
-import scala.concurrent.Future
-
 trait TooManyParamsSpec extends RdbcSpec {
 
   private val any: Any = 0

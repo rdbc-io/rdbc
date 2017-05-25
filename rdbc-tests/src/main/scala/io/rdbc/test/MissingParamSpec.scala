@@ -19,8 +19,6 @@ package io.rdbc.test
 import io.rdbc.api.exceptions.MissingParamValException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
-import scala.concurrent.Future
-
 trait MissingParamSpec extends RdbcSpec {
 
   private val missingParam = "yparam"

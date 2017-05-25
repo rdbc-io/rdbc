@@ -19,8 +19,6 @@ package io.rdbc.test
 import io.rdbc.api.exceptions.NoSuchParamException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
-import scala.concurrent.Future
-
 trait NoSuchParamSpec extends RdbcSpec {
 
   private val superfluousParam = "yparam"

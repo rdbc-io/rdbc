@@ -21,7 +21,7 @@ import io.rdbc.sapi._
 import io.rdbc.test.util.Subscribers
 import org.reactivestreams.Subscriber
 
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.Promise
 
 trait StreamingSpec
   extends RdbcSpec
