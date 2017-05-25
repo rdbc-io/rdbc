@@ -44,7 +44,7 @@ trait StreamingSpec
       withAndWithoutTx { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
-          c.statement(sql"insert into #$t(col) values ($i)").get.execute().get
+          c.statement(sql"insert into #$t(col) values ($i)").execute().get
         }
         val rows = subscribe(c.statement(sql"select col from #$t order by col"), Subscribers.eager()).rows.get
         rows should have size range.size.toLong
@@ -56,7 +56,7 @@ trait StreamingSpec
       withAndWithoutTx { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
-          c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+          c.statement(sql"insert into #$t(col) values ($i)").execute().get
         }
         val subscriber = subscribe(c.statement(sql"select col from #$t order by col"), Subscribers.chunk)
 
@@ -79,9 +79,9 @@ trait StreamingSpec
         withAndWithoutTx { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+            c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"update #$t set col = null where col >= 6").get.executeForStream().get
+          val rs = c.statement(sql"update #$t set col = null where col >= 6").executeForStream().get
           val subscriber = Subscribers.eager()
           rs.rows.subscribe(subscriber)
           rs.rowsAffected.get shouldBe 5L
@@ -94,9 +94,9 @@ trait StreamingSpec
         withAndWithoutTx { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+            c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"select col from #$t").get.executeForStream().get
+          val rs = c.statement(sql"select col from #$t").executeForStream().get
           val subscriber = Subscribers.eager()
           rs.rows.subscribe(subscriber)
 
@@ -120,7 +120,7 @@ trait StreamingSpec
         withAndWithoutTx { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+            c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
           val subscriber = subscribe(
             c.statement(sql"select col from #$t order by col"),
@@ -135,7 +135,7 @@ trait StreamingSpec
         withAndWithoutTx { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").flatMap(_.execute()).get
+            c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
           val subscriber = subscribe(
             c.statement(sql"select col from #$t order by col"),
@@ -156,10 +156,10 @@ trait StreamingSpec
   }
 
   private def subscribe[S <: Subscriber[Row]](
-                                               statement: Future[ExecutableStatement],
+                                               statement: ExecutableStatement,
                                                subscriber: S
                                              ): subscriber.type = {
-    statement.flatMap(_.executeForStream().map(_.rows).map(_.subscribe(subscriber)))
+    statement.executeForStream().map(_.rows).map(_.subscribe(subscriber))
     subscriber
   }
 }

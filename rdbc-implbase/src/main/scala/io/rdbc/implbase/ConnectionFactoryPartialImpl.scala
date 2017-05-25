@@ -28,7 +28,7 @@ trait ConnectionFactoryPartialImpl
 
   implicit protected def ec: ExecutionContext
 
-  override def withConnection[A](body: Connection => Future[A]): Future[A] = {
+  override def withConnectionF[A](body: Connection => Future[A]): Future[A] = {
     connection().flatMap { conn =>
       body(conn).andThenF { case _ =>
         conn.release()
@@ -36,13 +36,25 @@ trait ConnectionFactoryPartialImpl
     }
   }
 
-  override def withTransaction[A](body: Connection => Future[A])
-                                 (implicit timeout: Timeout): Future[A] = {
-    withConnection { conn =>
-      conn.withTransaction {
+  override def withTransactionF[A](body: Connection => Future[A])
+                                  (implicit timeout: Timeout): Future[A] = {
+    withConnectionF { conn =>
+      conn.withTransactionF {
         body(conn)
       }
     }
   }
 
+  override def withConnection[A](body: Connection => A): Future[A] = {
+    withConnectionF { conn =>
+      Future.successful(body(conn))
+    }
+  }
+
+  override def withTransaction[A](body: Connection => A)
+                                  (implicit timeout: Timeout): Future[A] = {
+    withTransactionF { conn =>
+      Future.successful(body(conn))
+    }
+  }
 }

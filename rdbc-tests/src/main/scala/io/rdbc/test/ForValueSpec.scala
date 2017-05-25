@@ -31,7 +31,7 @@ trait ForValueSpec
   "Value returning feature should" - {
     "return None on empty tables" - {
       withAndWithoutTx { (c, t) =>
-        val stmt = c.statement(sql"select col from #$t").get
+        val stmt = c.statement(sql"select col from #$t")
         stmt.executeForValue(_.int("col")).get shouldBe None
         stmt.executeForValueOpt(_.intOpt("col")).get shouldBe None
       }
@@ -41,9 +41,9 @@ trait ForValueSpec
       withAndWithoutTx { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
-          c.statement(sql"insert into #$t(col) values ($i)").get.execute().get
+          c.statement(sql"insert into #$t(col) values ($i)").execute().get
         }
-        val stmt = c.statement(sql"select col from #$t where col >= 5 order by col").get
+        val stmt = c.statement(sql"select col from #$t where col >= 5 order by col")
         stmt.executeForValue(_.int("col")).get should contain(5)
         stmt.executeForValueOpt(_.intOpt("col")).get should contain(Some(5))
       }
@@ -51,8 +51,8 @@ trait ForValueSpec
 
     "throw an exception when non null-safe getter is used" - {
       withAndWithoutTx { (c, t) =>
-        c.statement(sql"insert into #$t(col) values (null)").get.execute().get
-        val stmt = c.statement(sql"select col from #$t").get
+        c.statement(sql"insert into #$t(col) values (null)").execute().get
+        val stmt = c.statement(sql"select col from #$t")
         val e = intercept[ConversionException] {
           stmt.executeForValue(_.int("col")).get
         }
@@ -63,8 +63,8 @@ trait ForValueSpec
 
     "return None when null-safe getter is used" - {
       withAndWithoutTx { (c, t) =>
-        c.statement(sql"insert into #$t(col) values (null)").get.execute().get
-        val stmt = c.statement(sql"select col from #$t").get
+        c.statement(sql"insert into #$t(col) values (null)").execute().get
+        val stmt = c.statement(sql"select col from #$t")
         stmt.executeForValueOpt(_.intOpt("col")).get should contain(None)
       }
     }

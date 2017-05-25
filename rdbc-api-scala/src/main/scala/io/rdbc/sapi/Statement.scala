@@ -57,27 +57,6 @@ trait Statement {
     */
   def bind(args: (String, Any)*): ExecutableStatement
 
-  /** Binds value to each parameter by name and wraps a result in a Future.
-    *
-    * This is not an asynchronous operation, it's only an utility method
-    * that wraps `bind` result with a [[scala.concurrent.Future Future]]
-    * to allow chaining bind operations with asynchronous operations.
-    *
-    * Example:
-    * {{{
-    * for {
-    *   insert <- conn.insert("insert into table(p1, p2) values (:p1, :p2)")
-    *   bound <- insert.bindF("p1" -> "str", "p2" -> 10L)
-    *   _ <- bound.execute()
-    * } yield ()
-    * }}}
-    *
-    * Resulting future can fail with:
-    * $bindExceptions
-    *
-    * @group fut
-    */
-  def bindF(args: (String, Any)*): Future[ExecutableStatement]
 
   /** Binds value to each parameter by index.
     *
@@ -97,31 +76,6 @@ trait Statement {
     */
   def bindByIdx(args: Any*): ExecutableStatement
 
-  /** Binds value to each parameter by index and wraps a result in a Future.
-    *
-    * Parameters are ordered, each value in `params` sequence will be bound
-    * to the corresponding parameter.
-    *
-    * This is not an asynchronous operation, it's only an utility method
-    * that wraps `bindByIdx` result with a [[scala.concurrent.Future Future]]
-    * to allow chaining bind operations with asynchronous operations.
-    *
-    * Example:
-    * {{{
-    * for {
-    *   insert <- conn.insert("insert into table(p1, p2) values (:p1, :p2)")
-    *   bound <- insert.bindByIdxF("str", 10L)
-    *   _ <- bound.execute()
-    * } yield ()
-    * }}}
-    *
-    * Resulting future can fail with:
-    * $bindExceptions
-    *
-    * @group fut
-    */
-  def bindByIdxF(args: Any*): Future[ExecutableStatement]
-
   /** Creates an executable version of the statement object without
     * providing any arguments.
     *
@@ -134,26 +88,6 @@ trait Statement {
     * @group primary
     */
   def noArgs: ExecutableStatement
-
-  /** Creates an executable version of the statement object without providing
-    * any arguments and wraps a result in a future
-    *
-    * This is not an asynchronous operation, it's only an utility method
-    * that wraps `noArgs` result with a [[scala.concurrent.Future Future]]
-    * to allow chaining bind operations with asynchronous operations.
-    *
-    * Example:
-    * {{{
-    * for {
-    *   insert     <- conn.statement("insert into table(p1, p2) values ('str', 10)")
-    *   executable <- insert.noArgsF
-    *   _ <- bound.execute()
-    * } yield ()
-    * }}}
-    *
-    * @group fut
-    */
-  def noArgsF: Future[ExecutableStatement]
 
   /** Streams statement named arguments to a database.
     *

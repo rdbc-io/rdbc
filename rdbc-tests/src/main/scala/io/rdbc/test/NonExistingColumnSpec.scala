@@ -29,7 +29,7 @@ trait NonExistingColumnSpec
   protected def arbitraryDataType: String
   override protected def columnsDefinition = s"col $arbitraryDataType"
 
-  final case class WrongStatement(stmt: Future[ExecutableStatement], errPos: Int)
+  final case class WrongStatement(stmt: ExecutableStatement, errPos: Int)
 
   "Error should be returned when referencing a non-existent column when" - {
     stmtTest("Select", (c, t) =>
@@ -91,7 +91,7 @@ trait NonExistingColumnSpec
           withTable(c) { t =>
             val wrongStmt = stmt(c, t)
             assertInvalidQueryThrown(wrongStmt.errPos) {
-              wrongStmt.stmt.flatMap(executor)
+              executor(wrongStmt.stmt)
             }
           }
         }
