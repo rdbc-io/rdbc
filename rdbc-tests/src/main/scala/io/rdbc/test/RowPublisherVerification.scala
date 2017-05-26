@@ -61,7 +61,7 @@ abstract class RowPublisherVerification(env: TestEnvironment, publisherShutdownT
       conn.statement(sql"insert into tbl#$currIdx(col) values($i)").execute().get
     }
     conn.commitTx().get
-    val pub = conn.statement(s"select col from tbl$currIdx").noArgs.executeForStream().get.rows
+    val pub = conn.statement(s"select col from tbl$currIdx").noArgs.stream()
     Source.fromPublisher(pub)
       .watchTermination() { (_, doneFut) =>
         doneFut.onComplete { _ =>
@@ -78,8 +78,7 @@ abstract class RowPublisherVerification(env: TestEnvironment, publisherShutdownT
     conn.statement(s"insert into tbl$currIdx(col) values('text')").noArgs.execute().get
     val pub = conn.statement(s"select ${castVarchar2Int("col")} from tbl$currIdx")
       .noArgs
-      .executeForStream().get
-      .rows
+      .stream()
     Source.fromPublisher(pub)
       .watchTermination() { (_, doneFut) =>
         doneFut.onComplete { _ =>

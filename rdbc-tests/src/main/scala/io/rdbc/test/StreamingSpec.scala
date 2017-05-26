@@ -81,9 +81,9 @@ trait StreamingSpec
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"update #$t set col = null where col >= 6").executeForStream().get
+          val rs = c.statement(sql"update #$t set col = null where col >= 6").stream()
           val subscriber = Subscribers.eager()
-          rs.rows.subscribe(subscriber)
+          rs.subscribe(subscriber)
           rs.rowsAffected.get shouldBe 5L
 
           subscriber.rows.get
@@ -96,13 +96,13 @@ trait StreamingSpec
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
           }
-          val rs = c.statement(sql"select col from #$t").executeForStream().get
+          val rs = c.statement(sql"select col from #$t").stream()
           val subscriber = Subscribers.eager()
-          rs.rows.subscribe(subscriber)
+          rs.subscribe(subscriber)
 
-          rs.metadata.columns should have size 1
+          rs.metadata.get.columns should have size 1
 
-          val colMetadata = rs.metadata.columns.head
+          val colMetadata = rs.metadata.get.columns.head
           colMetadata.name shouldBe "col"
           colMetadata.dbTypeId shouldBe intDataTypeId
           colMetadata.cls should contain(classOf[Int])
@@ -113,53 +113,14 @@ trait StreamingSpec
     }
   }
 
-  "Subscription should" - {
-
-    "be able to be canceled " - {
-      "right away" - {
-        withAndWithoutTx { (c, t) =>
-          val range = 1 to 10
-          for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").execute().get
-          }
-          val subscriber = subscribe(
-            c.statement(sql"select col from #$t order by col"),
-            Subscribers.head(0L)
-          )
-          val rows = subscriber.rows.get
-          rows shouldBe empty
-        }
-      }
-
-      "after some rows are fetched" - {
-        withAndWithoutTx { (c, t) =>
-          val range = 1 to 10
-          for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").execute().get
-          }
-          val subscriber = subscribe(
-            c.statement(sql"select col from #$t order by col"),
-            Subscribers.chunk
-          )
-
-          val first5 = Promise[ImmutSeq[Row]]
-          subscriber.request(5L, first5)
-          first5.future.get should have size 5
-          first5.future.get.map(_.int("col")) should contain theSameElementsInOrderAs range.take(5)
-
-          subscriber.cancel()
-
-          subscriber.completion.get
-        }
-      }
-    }
-  }
+  //TODO how to test subscription cancellation?
 
   private def subscribe[S <: Subscriber[Row]](
                                                statement: ExecutableStatement,
                                                subscriber: S
                                              ): subscriber.type = {
-    statement.executeForStream().map(_.rows).map(_.subscribe(subscriber))
+    val rs = statement.stream()
+    rs.subscribe(subscriber)
     subscriber
   }
 }
