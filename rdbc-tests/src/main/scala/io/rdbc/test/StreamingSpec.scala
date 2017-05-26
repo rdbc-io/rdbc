@@ -113,47 +113,7 @@ trait StreamingSpec
     }
   }
 
-  "Subscription should" - {
-
-    "be able to be canceled " - {
-      "right away" - {
-        withAndWithoutTx { (c, t) =>
-          val range = 1 to 10
-          for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").execute().get
-          }
-          val subscriber = subscribe(
-            c.statement(sql"select col from #$t order by col"),
-            Subscribers.head(0L)
-          )
-          val rows = subscriber.rows.get
-          rows shouldBe empty
-        }
-      }
-
-      "after some rows are fetched" - {
-        withAndWithoutTx { (c, t) =>
-          val range = 1 to 10
-          for {i <- range} yield {
-            c.statement(sql"insert into #$t(col) values ($i)").execute().get
-          }
-          val subscriber = subscribe(
-            c.statement(sql"select col from #$t order by col"),
-            Subscribers.chunk
-          )
-
-          val first5 = Promise[ImmutSeq[Row]]
-          subscriber.request(5L, first5)
-          first5.future.get should have size 5
-          first5.future.get.map(_.int("col")) should contain theSameElementsInOrderAs range.take(5)
-
-          subscriber.cancel()
-
-          subscriber.completion.get
-        }
-      }
-    }
-  }
+  //TODO how to test subscription cancellation?
 
   private def subscribe[S <: Subscriber[Row]](
                                                statement: ExecutableStatement,
