@@ -36,11 +36,10 @@ trait TimeoutSpec extends RdbcSpec {
       executedFor("first row", _.executeForFirstRow()(testTimeout))
       executedFor("optional value", _.executeForValueOpt(_.intOpt(1))(testTimeout))
       executedFor("generated key", _.executeForKey[String]()(ClassTag(classOf[String]), testTimeout))
-
-
-      executedFor("stream", _.executeForStream()(testTimeout).flatMap { rs =>
+      executedFor("stream", stmt => {
+        val rs = stmt.stream()(testTimeout)
         val subscriber = Subscribers.eager()
-        rs.rows.subscribe(subscriber)
+        rs.subscribe(subscriber)
         subscriber.rows
       })
 

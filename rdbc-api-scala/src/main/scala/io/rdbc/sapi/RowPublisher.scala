@@ -21,14 +21,19 @@ import org.reactivestreams.Publisher
 
 import scala.concurrent.Future
 
-/** Represents a statement result that allows rows streaming.
+/** A reactive streams specification's `Publisher` giving access to the rows.
+  *
+  * When this publisher signals that it is complete clients can safely assume
+  * that a database is ready to accept new queries. If subscription is
+  * cancelled, however, clients have to wait for [[Connection.watchForIdle]]
+  * future to complete before issuing another query.
   *
   * @define futureCompleteNote
-  * Note that resulting future may not complete until a `rows` Publisher is
+  * Note that resulting `Future` may not complete until a `rows` Publisher is
   * complete. To complete this future, clients must either read the rows stream
   * until it is complete or cancel the subscription.
   */
-trait ResultStream {
+trait RowPublisher extends Publisher[Row] {
 
   /** A number of rows that were affected by the statement.
     *
@@ -48,15 +53,9 @@ trait ResultStream {
     */
   def warnings: Future[ImmutSeq[Warning]]
 
-  /** A meta data of columns of this result set */
-  def metadata: RowMetadata
-
-  /** A reactive streams specification's `Publisher` giving access to the rows.
+  /** A metadata of columns of this result set
     *
-    * When this publisher signals that it is complete clients can safely assume
-    * that a database is ready to accept new queries. If subscription is
-    * cancelled, however, clients have to wait for [[Connection.watchForIdle]]
-    * future to complete before issuing another query.
+    * Resulting `Future` may not be complete until subscription is started.
     */
-  def rows: Publisher[Row]
+  def metadata: Future[RowMetadata]
 }
