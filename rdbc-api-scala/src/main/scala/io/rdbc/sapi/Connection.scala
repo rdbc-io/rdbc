@@ -155,14 +155,7 @@ trait Connection {
     *
     * $withTransaction
     */
-  def withTransaction[A](body: => A)
-                        (implicit timeout: Timeout): Future[A]
-
-  /** Executes a future-returning function in a context of a transaction.
-    *
-    * $withTransaction
-    */
-  def withTransactionF[A](body: => Future[A])
+  def withTransaction[A](body: => Future[A])
                         (implicit timeout: Timeout): Future[A]
 
   /** Releases the connection and underlying resources.

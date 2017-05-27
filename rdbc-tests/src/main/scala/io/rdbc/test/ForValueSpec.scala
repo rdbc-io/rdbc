@@ -33,7 +33,6 @@ trait ForValueSpec
       withAndWithoutTx { (c, t) =>
         val stmt = c.statement(sql"select col from #$t")
         stmt.executeForValue(_.int("col")).get shouldBe None
-        stmt.executeForValueOpt(_.intOpt("col")).get shouldBe None
       }
     }
 
@@ -45,7 +44,6 @@ trait ForValueSpec
         }
         val stmt = c.statement(sql"select col from #$t where col >= 5 order by col")
         stmt.executeForValue(_.int("col")).get should contain(5)
-        stmt.executeForValueOpt(_.intOpt("col")).get should contain(Some(5))
       }
     }
 
@@ -58,14 +56,6 @@ trait ForValueSpec
         }
         e.value shouldBe None
         e.targetType shouldBe classOf[Int]
-      }
-    }
-
-    "return None when null-safe getter is used" - {
-      withAndWithoutTx { (c, t) =>
-        c.statement(sql"insert into #$t(col) values (null)").execute().get
-        val stmt = c.statement(sql"select col from #$t")
-        stmt.executeForValueOpt(_.intOpt("col")).get should contain(None)
       }
     }
   }

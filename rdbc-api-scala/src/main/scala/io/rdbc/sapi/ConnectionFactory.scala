@@ -48,27 +48,14 @@ trait ConnectionFactory {
     *
     * $withConnection
     */
-  def withConnection[A](body: Connection => A): Future[A]
-
-  /** Executes a future-returning function in a context of a connection.
-    *
-    * $withConnection
-    */
-  def withConnectionF[A](body: Connection => Future[A]): Future[A]
+  def withConnection[A](body: Connection => Future[A]): Future[A]
 
   /** Executes a function in a context of a transaction.
     *
     * $withTransaction
     */
-  def withTransaction[A](body: Connection => A)
+  def withTransaction[A](body: Connection => Future[A])
                         (implicit timeout: Timeout): Future[A]
-
-  /** Executes a future-returning function in a context of a transaction.
-    *
-    * $withTransaction
-    */
-  def withTransactionF[A](body: Connection => Future[A])
-                         (implicit timeout: Timeout): Future[A]
 
   /** Shuts down this connection factory.
     *

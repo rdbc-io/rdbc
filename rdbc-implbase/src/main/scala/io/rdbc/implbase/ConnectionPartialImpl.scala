@@ -29,7 +29,7 @@ trait ConnectionPartialImpl
 
   implicit protected def ec: ExecutionContext
 
-  override def withTransactionF[A](body: => Future[A])
+  override def withTransaction[A](body: => Future[A])
                                  (implicit timeout: Timeout): Future[A] = {
     beginTx()
       .flatMap(_ => body)
@@ -43,11 +43,6 @@ trait ConnectionPartialImpl
             )
           }.flatMap(_ => Future.failed(ex))
       }
-  }
-
-  override def withTransaction[A](body: => A)
-                        (implicit timeout: Timeout): Future[A] = {
-    withTransactionF(Future.successful(body))
   }
 
   override def statement(sql: String): Statement = {

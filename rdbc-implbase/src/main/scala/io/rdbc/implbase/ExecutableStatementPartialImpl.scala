@@ -66,11 +66,6 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
     executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 
-  override def executeForValueOpt[A](valExtractor: Row => Option[A])
-                                    (implicit timeout: Timeout): Future[Option[Option[A]]] = {
-    executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
-  }
-
   override def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K] = {
     executeForValue[K](_.col(0)).flatMap {
       case Some(key) => Future.successful(key)

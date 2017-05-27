@@ -34,7 +34,6 @@ trait TimeoutSpec extends RdbcSpec {
       executedFor("set", _.executeForSet()(testTimeout))
       executedFor("value", _.executeForValue(_.int(1))(testTimeout))
       executedFor("first row", _.executeForFirstRow()(testTimeout))
-      executedFor("optional value", _.executeForValueOpt(_.intOpt(1))(testTimeout))
       executedFor("generated key", _.executeForKey[String]()(ClassTag(classOf[String]), testTimeout))
       executedFor("stream", stmt => {
         val rs = stmt.stream()(testTimeout)
