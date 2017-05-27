@@ -42,7 +42,6 @@ trait NonExistingTableSpec extends RdbcSpec {
       executedFor("set", _.executeForSet())
       executedFor("value", _.executeForValue(_.int(1)))
       executedFor("first row", _.executeForFirstRow())
-      executedFor("optional value", _.executeForValueOpt(_.intOpt(1)))
       executedFor("generated key", _.executeForKey[String])
       executedFor("stream", stmt => {
         val rs = stmt.stream()
