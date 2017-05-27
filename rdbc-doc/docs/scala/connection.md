@@ -71,7 +71,6 @@ val result = cf.withConnection { conn =>
 The above example is equivalent to the one from the
 [previous paragraph](connection.md#manually-opening-and-releasing-a-connection).
 
-**TODO** describe withConnectionF
 **TODO** how to use loan pattern with streaming? Introduce a stream that closes
 the connection on stream completion, cancellation or error
 
@@ -130,8 +129,6 @@ val result = cf.withTransaction { conn =>
     ???
 }
 ```
-
-**TODO** describe withTransactionF
 
 ## Validation
 

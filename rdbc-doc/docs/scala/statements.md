@@ -254,16 +254,89 @@ through the rows.
 
 Executing for set is simple, but be aware that for bigger sets you may encounter
 `OutOfMemoryError`s. All results are stored in memory, there is no paging of any
-kind. If you want to avoid these kind of problems, consider
-[streaming](statements/#executing-for-a-stream) the results.
+kind. If you want to avoid this sort of problems, consider
+[streaming](statements/#streaming-results) the results.
 
 For the documentation on how to work with the resulting rows see
 [Result Rows](rows) chapter.
+
+**TODO example**
     
-### Executing for a stream
+### Streaming results
+
+To stream results from the database, use `ExecutableStatement`'s [`stream`]()
+method. This method returns [`RowPublisher`]() instance which implements
+reactive stream's [`Publisher`]() interface. Items published are rows represented
+by `Row` trait. For the documentation on how to work with the resulting rows see
+[Result Rows](rows) chapter.
+
+Here are a couple of things to know when working with streams:
+
+*    statement execution is deferred until publisher is subscribed to,
+*    a publisher can be subscribed to only once,
+*    after `stream` method is invoked, connection is considered busy and can be used
+     for other queries only after the stream completes or is cancelled,
+*    cancel is an asynchronous operation and reactive streams specification doesn't
+     provide a way of notifying a client that cancel operation completed. If clients
+     want to use the connection after stream cancellation, they must watch for
+     connection's `watchForIdle` `Future` completion before requesting any
+     subsequent operations.
+
+Processing streams is out of scope of this manual, for details please refer to
+documentation of libraries that are built to facilitate this, like
+[Akka stream]() or [Monix]().
+
+**TODO describe how to release connection after stream completion**
+
+**TODO example**
+
 ### Executing ignoring results
-### Executing for a first row
-### Executing for a value
+
+In many cases clients are not interested in any result of statement execution
+other than simple "success" or "failure" information. This is often the case
+for `insert`, `update` and `delete` commands. This use case is covered by
+`ExecutableStatement`'s `execute` method which returns `Future` of `Unit`.
+
+```scala
+def insertUser(name: String): Future[Unit] = {
+  conn.statement(sql"insert into users(name) values ($name)").execute()
+}
+```
+
+### Executing for a single row and for a value
+
+It is a common use case to expect just a single row to be returned by a query.
+For instance, when querying by a primary key. This can be easily achieved by
+using `ExecutableStatement`'s [`executeForFirstRow`]() method which returns
+a `Future` of `Option[Row]`. Returned `Option` is `None` in case when query
+doesn't return any results, otherwise, the first row is returned as a `Some`.
+
+Example:
+
+```scala
+def findUser(login: String): Future[Option[Row]] = {
+  conn.statement(sql"select name from users where login = $login")
+      .executeForFirstRow()
+}
+```
+
+Sometimes, not even a single row is needed by a client, only a single column
+value, like user's name when searching by login. [`executeForValue`]() method
+comes in handy in these kind of situations. The method accepts  a function that
+is supposed to extract this single value from a returned row, if any.
+
+See the example below:
+
+```scala
+def findUsersName(login: String): Future[Option[String]] = {
+  conn.statement(sql"select name from users where login = $login")
+      .executeForValue(r => r.str("name"))
+}
+```
+
+For the documentation on how to work with the resulting rows see
+[Result Rows](rows) chapter.
+
 ### Executing for rows affected
 ### Executing for generated key
 
