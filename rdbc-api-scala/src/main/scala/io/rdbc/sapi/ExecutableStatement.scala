@@ -91,12 +91,6 @@ trait ExecutableStatement {
     *
     * If no rows are found, [[scala.None None]] will be returned.
     *
-    * If extracted value has SQL `null` value, a [[scala.Some Some]] instance
-    * containing a `null` value will be returned.
-    *
-    * This method is not intended to be used for returning values from columns
-    * that can have a SQL `null` value. Use  `executeForValueOpt` for such columns.
-    *
     * Example:
     * {{{
     * for {
@@ -112,30 +106,6 @@ trait ExecutableStatement {
     */
   def executeForValue[A](valExtractor: Row => A)
                         (implicit timeout: Timeout): Future[Option[A]]
-
-  /** Executes this statement and returns a single column value from the first
-    * row returned by a database engine.
-    *
-    * If no rows are found, [[scala.None None]] will be returned.
-    *
-    * If row was found but extracted value has SQL `null` value, a [[scala.Some Some]]
-    * instance will be returned containing a [[scala.None None]].
-    *
-    * Example:
-    * {{{
-    * val id = 10
-    * for {
-    *   select <- conn.select(sql"select name from users where id = \$id")
-    *   name <- parametrized.executeForValueOpt(_.str("name"))
-    * } yield name
-    * }}}
-    * $timeoutInfo
-    * $exceptions
-    *
-    * @param valExtractor function used to extract value from the returned row
-    */
-  def executeForValueOpt[A](valExtractor: Row => Option[A])
-                           (implicit timeout: Timeout): Future[Option[Option[A]]]
 
   /** Executes this statement and returns a single generated key.
     *
