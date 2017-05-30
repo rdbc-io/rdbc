@@ -6,16 +6,17 @@ pages:
     - Introduction: index.md
     - Scala API user guide:
       - Getting started: scala/gettingstarted.md
-      - Scaladoc: scala/scaladoc.md
+      - Core concepts: scala/core_concepts.md
       - Working with a connection: scala/connection.md
       - Statements: scala/statements.md
+      - Data types: scala/types.md
       - Result Rows: scala/rows.md
-      - Exceptions: todo.md
-      - Frameworks integration: todo.md
+      - Exceptions: scala/exceptions.md
+      - Frameworks integration: scala/frameworks.md
       - Utilities: scala/utilities.md
     - Java API user guide: java/java.md
     - Drivers: drivers.md
-    - Developer guide: todo.md
+    - Developer guide: developer.md
 theme: material
 
 copyright: Copyright &copy; 2016 - 2017 Krzysztof Pado

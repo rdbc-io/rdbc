@@ -163,3 +163,9 @@ In this very simple application:
    `22` when the application waits for operations requested earlier to complete.
    Because this demo is just a simple console application, we need to block the
    thread somewhere to wait for a moment that the application can exit.
+
+## Scaladoc
+
+You can browse Scaladoc using javadoc.io site 
+[here](https://javadoc.io/doc/io.rdbc/rdbc-api-scala_2.12). The site
+allows to switch between Scala versions and rdbc versions.

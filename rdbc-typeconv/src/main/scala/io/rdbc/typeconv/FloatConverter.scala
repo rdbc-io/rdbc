@@ -20,6 +20,10 @@ import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
 
+//TODO should these converters be between Scala types or SQL -> Scala types?
+//like, should there be a converted from java.lang.Number to Float
+//or rather converter from SQL NUMERIC type to Float? <- this
+
 object FloatConverter extends TypeConverter[Float] {
   val cls = classOf[Float]
 
