@@ -172,8 +172,7 @@ will start executing the first request (line `6`) before the second (line `7`)
 
 To make the above code safe, it could be rewritten like this:
 
-```
-#!scala
+```scala
 import io.rdbc.sapi._
 
 val cf: ConnectionFactory = ???
@@ -190,8 +189,7 @@ cf.withConnection { conn =>
 completes when connection becomes idle. Snippet below is safe from failing
 with `IllegalSessionStateException`.
 
-```
-#!scala
+```scala
 import io.rdbc.sapi._
 
 val cf: ConnectionFactory = ???
