@@ -1,4 +1,4 @@
-site_name: rdbc documentation - 0.0.49
+site_name: rdbc documentation - {{version}}
 site_author: Krzysztof Pado
 site_dir: target
 strict: true
