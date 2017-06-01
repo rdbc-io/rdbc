@@ -1,5 +1,6 @@
 import Settings._
 import de.heikoseeberger.sbtheader.license.Apache2_0
+
 import scala.Console._
 
 shellPrompt.in(ThisBuild) := (state => s"${CYAN}project:$GREEN${Project.extract(state).currentRef.project}$RESET> ")
@@ -100,3 +101,13 @@ lazy val rdbcTests = (project in file("rdbc-tests"))
     buildInfoPackage := "io.rdbc.test",
     scalacOptions -= "-Ywarn-value-discard"
   ).dependsOn(rdbcApiScala)
+
+lazy val rdbcDoc = (project in file("rdbc-doc"))
+  .enablePlugins(TemplateReplace)
+  .settings(
+    publishArtifact := false,
+    mkdocsVariables := Map(
+      "version" -> version.value,
+      "scaladocRoot" -> ("https://javadoc.io/page/" + organization.in(rdbcApiScala).value + "/" + name.in(rdbcApiScala).value + "_2.12/" + version.value + "/")
+    )
+  )
