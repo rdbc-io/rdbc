@@ -14,6 +14,7 @@ pages:
       - Exceptions: scala/exceptions.md
       - Frameworks integration: scala/frameworks.md
       - Utilities: scala/utilities.md
+      - FAQ: scala/faq.md
     - Java API user guide: java/java.md
     - Drivers: drivers.md
     - Developer guide: developer.md
