@@ -117,6 +117,9 @@ trait ExecutableStatement {
     *  when no suitable converter was found to transform key value to desired class instance
     *
     * @tparam K type of the returned key
+    *
+    * @usecase def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K]
+    *  @inheritdoc
     */
   def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K]
 
