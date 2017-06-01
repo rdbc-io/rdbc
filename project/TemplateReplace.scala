@@ -25,7 +25,7 @@ object TemplateReplace extends AutoPlugin {
         val substituted = Source.fromFile(f, "UTF-8").getLines().map { line =>
           var newLine = line
           variables.foreach { case (variable, value) =>
-            newLine = line.replaceAll(s"\\{\\{$variable\\}\\}", value)
+            newLine = newLine.replaceAll(s"\\{\\{$variable\\}\\}", value)
           }
           newLine
         }.reduce(_ + "\n" + _) + "\n"
@@ -39,7 +39,7 @@ object TemplateReplace extends AutoPlugin {
 
   override def projectSettings = Seq(
     mkdocs := {
-      Process(Seq("mkdocs", "build", "--clean", "-q"), new File("rdbc-doc")).!!
+      Process(Seq("mkdocs", "build", "--clean", "-q"), baseDirectory.value).!!
       processDir(baseDirectory.value / "target", mkdocsVariables.value)
     }
   )
