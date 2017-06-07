@@ -108,6 +108,6 @@ lazy val rdbcDoc = (project in file("rdbc-doc"))
     publishArtifact := false,
     mkdocsVariables := Map(
       "version" -> version.value,
-      "scaladocRoot" -> ("https://javadoc.io/page/" + organization.in(rdbcApiScala).value + "/" + name.in(rdbcApiScala).value + "_2.12/" + version.value + "/")
+      "scaladocRoot" -> ("https://javadoc.io/page/" + organization.in(rdbcApiScala).value + "/" + name.in(rdbcApiScala).value + "_2.12/" + version.value)
     )
   )

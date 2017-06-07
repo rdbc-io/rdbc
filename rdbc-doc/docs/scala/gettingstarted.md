@@ -36,7 +36,7 @@ Java 8 runtime.
 For sbt projects, add the following to `build.sbt`:
 ```scala
 libraryDependencies ++= Vector(
-  "io.rdbc" %% "rdbc-api-scala" % "0.0.49",
+  "io.rdbc" %% "rdbc-api-scala" % "{{version}}",
   //here goes the driver dependency
 )
 ```
@@ -46,13 +46,13 @@ For Gradle projects, add the following to the `dependencies` section of `build.g
 
 Scala 2.12
 ```groovy
-compile group: 'io.rdbc', name: 'rdbc-api-scala_2.12', version: '0.0.49'
+compile group: 'io.rdbc', name: 'rdbc-api-scala_2.12', version: '{{version}}'
 compile //here goes the driver dependency
 ```
 
 Scala 2.11
 ```groovy
-compile group: 'io.rdbc', name: 'rdbc-api-scala_2.11', version: '0.0.49'
+compile group: 'io.rdbc', name: 'rdbc-api-scala_2.11', version: '{{version}}'
 compile //here goes the driver dependency
 ```
 
@@ -64,7 +64,7 @@ Scala 2.12
 <dependency>
   <groupId>io.rdbc</groupId>
   <artifactId>rdbc-api-scala_2.12</artifactId>
-  <version>0.0.49</version>
+  <version>{{version}}</version>
 </dependency>
 <dependency>
   <!-- here goes the driver dependency -->
@@ -76,7 +76,7 @@ Scala 2.11
 <dependency>
   <groupId>io.rdbc</groupId>
   <artifactId>rdbc-api-scala_2.11</artifactId>
-  <version>0.0.49</version>
+  <version>{{version}}</version>
 </dependency>
 <dependency>
   <!-- here goes the driver dependency -->
@@ -136,7 +136,7 @@ object HelloRdbc extends App {
 In this very simple application:
 
 *  At line `10` a
-   [`ConnectionFactory`](http://rdbc.io/apidoc/scala-2.12/latest/io/rdbc/sapi/ConnectionFactory.html)
+   [`ConnectionFactory`]({{scaladocRoot}}/io/rdbc/sapi/ConnectionFactory.html)
    coming from a driver package should be instantiated. Each rdbc driver provides
    an implementation of this trait that allows to estabilish a connection to a database.
    `ConnectionFactory` implementation and classes needed for its configuration should
@@ -147,7 +147,7 @@ In this very simple application:
 
 *  In this code block, at line `15` a prepared statement is requested to be
    created using a
-   [`sql`](http://rdbc.io/apidoc/scala-2.12/latest/io/rdbc/sapi/SqlInterpolatorTrait$SqlInterpolator.html#sql(args:Any*):io.rdbc.sapi.SqlWithParams)
+   [`sql`]({{scaladocRoot}}/io/rdbc/sapi/SqlInterpolatorTrait$SqlInterpolator.html#sql(args:Any*):io.rdbc.sapi.SqlWithParams)
    [string interpolator](http://docs.scala-lang.org/overviews/core/string-interpolation.html)
    which passes a `greeting` string argument to it.
 
@@ -167,5 +167,5 @@ In this very simple application:
 ## Scaladoc
 
 You can browse Scaladoc using javadoc.io site 
-[here](https://javadoc.io/doc/io.rdbc/rdbc-api-scala_2.12). The site
+[here](https://javadoc.io/doc/io.rdbc/rdbc-api-scala_2.12/{{version}}). The site
 allows to switch between Scala versions and rdbc versions.
