@@ -28,7 +28,8 @@ trait ConnectionFactoryPartialImpl
 
   implicit protected def ec: ExecutionContext
 
-  override def withConnection[A](body: Connection => Future[A]): Future[A] = {
+  override def withConnection[A](body: Connection => Future[A])
+                                (implicit timeout: Timeout): Future[A] = {
     connection().flatMap { conn =>
       body(conn).andThenF { case _ =>
         conn.release()
