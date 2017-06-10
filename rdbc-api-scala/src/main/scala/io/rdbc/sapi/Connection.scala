@@ -186,9 +186,10 @@ trait Connection {
     *
     * If checking takes longer than `timeout`, connection is considered unusable.
     *
-    * @return Future of `true` iff connection is usable, `false` otherwise
+    * @return Successful future of `unit` iff connection is usable, future failed
+    *         with ConnectionValidationException otherwise.
     */
-  def validate()(implicit timeout: Timeout): Future[Boolean]
+  def validate()(implicit timeout: Timeout): Future[Unit]
 
   /** Returns a [[Statement]] instance bound to this connection that
     * represents any SQL statement.
