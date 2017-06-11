@@ -21,20 +21,24 @@ import java.util.concurrent.ScheduledExecutorService
 import io.rdbc.util.Logging
 
 import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{ExecutionContext, Future}
 
 class JdkScheduler(executorService: ScheduledExecutorService)
+                  (implicit ec: ExecutionContext)
   extends TaskScheduler
     with Logging {
 
-  def schedule(delay: FiniteDuration)(action: () => Unit): ScheduledTask = traced {
+  def schedule(delay: FiniteDuration)
+              (action: () => Unit): ScheduledTask = traced {
     logger.debug(s"Scheduling a task to run in ${delay.length} ${delay.unit} using $executorService")
-    val fut = executorService.schedule(runnable(action), delay.length, delay.unit)
+    val fut = executorService.schedule(runnable(() => Future(action())), delay.length, delay.unit)
     new JdkScheduledTask(fut)
   }
 
-  def shutdown(): Unit = {
-    executorService.shutdownNow()
-    ()
+  def shutdown(): Future[Unit] = {
+    Future {
+      executorService.shutdownNow()
+    }
   }
 
   /* Scala 2.11 compat */

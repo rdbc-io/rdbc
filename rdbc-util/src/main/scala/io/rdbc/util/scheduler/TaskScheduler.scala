@@ -16,9 +16,11 @@
 
 package io.rdbc.util.scheduler
 
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 trait TaskScheduler {
-  def schedule(delay: FiniteDuration)(action: () => Unit): ScheduledTask
-  def shutdown(): Unit
+  def schedule(delay: FiniteDuration)
+              (action: () => Unit): ScheduledTask
+  def shutdown(): Future[Unit]
 }

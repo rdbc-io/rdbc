@@ -17,6 +17,5 @@
 package io.rdbc.util.scheduler
 
 trait ScheduledTask {
-  def done: Boolean
   def cancel(): Unit
 }
