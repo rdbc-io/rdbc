@@ -20,7 +20,7 @@ pages:
     - Developer guide: developer.md
 theme: material
 
-copyright: Copyright &copy; 2016 - 2017 Krzysztof Pado
+copyright: Copyright &copy; 2016 - 2017 rdbc contributors
 
 extra:
   version: 1.0
