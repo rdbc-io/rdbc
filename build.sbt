@@ -1,5 +1,4 @@
 import Settings._
-import de.heikoseeberger.sbtheader.license.Apache2_0
 
 import scala.Console._
 
@@ -7,15 +6,14 @@ shellPrompt.in(ThisBuild) := (state => s"${CYAN}project:$GREEN${Project.extract(
 
 lazy val commonSettings = Vector(
   organization := "io.rdbc",
+  organizationName := "rdbc contributors",
   scalaVersion := "2.12.2",
   crossScalaVersions := Vector("2.11.11"),
 
   licenses := Vector(
-    "Apache License, Version 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")
+    "Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")
   ),
-  headers := Map(
-    "scala" -> Apache2_0(Copyright.years, Copyright.holder)
-  ),
+  startYear := Some(Copyright.startYear),
 
   homepage := Some(url("https://github.com/rdbc-io/rdbc")),
   scmInfo := Some(

@@ -1,3 +1,5 @@
+import java.time.LocalDate
+
 import sbt.Keys._
 import sbt._
 import sbtrelease.ReleasePlugin.autoImport._
@@ -6,8 +8,12 @@ import sbtrelease.ReleaseStateTransformations._
 object Settings {
 
   object Copyright {
-    val years = "2016-2017"
-    val holder = "Krzysztof Pado"
+    val startYear = 2016
+    val years: String = startYear + {
+      val currentYear = LocalDate.now().getYear
+      if(currentYear == startYear) ""
+      else " " + currentYear
+    }
   }
 
   val compilationConf = Vector(
@@ -31,7 +37,7 @@ object Settings {
       "-groups",
       "-implicits",
       "-doc-root-content", (resourceDirectory.in(Compile).value / "rootdoc.txt").getAbsolutePath,
-      "-doc-footer", s"Copyright ${Copyright.years} ${Copyright.holder}",
+      "-doc-footer", s"Copyright ${Copyright.years} ${organizationName.value}",
       "-doc-version", version.value
     ),
     autoAPIMappings := true,
