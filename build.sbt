@@ -38,6 +38,7 @@ lazy val rdbcRoot = (project in file("."))
   .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil, rdbcTests)
 
 lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-api-scala",
@@ -51,6 +52,7 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   )
 
 lazy val rdbcApiJava = (project in file("rdbc-api-java"))
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-api-java",
@@ -61,6 +63,7 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
   )
 
 lazy val rdbcImplBase = (project in file("rdbc-implbase"))
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-implbase",
@@ -68,6 +71,7 @@ lazy val rdbcImplBase = (project in file("rdbc-implbase"))
   ).dependsOn(rdbcApiScala, rdbcUtil)
 
 lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-typeconv",
@@ -76,6 +80,7 @@ lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
 
 
 lazy val rdbcUtil = (project in file("rdbc-util"))
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-util",
@@ -87,6 +92,7 @@ lazy val rdbcUtil = (project in file("rdbc-util"))
   )
 
 lazy val rdbcTests = (project in file("rdbc-tests"))
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-tests",
