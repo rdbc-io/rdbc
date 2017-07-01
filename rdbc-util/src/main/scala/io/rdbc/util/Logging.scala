@@ -16,19 +16,26 @@
 
 package io.rdbc.util
 
-import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.{Executors, ThreadFactory}
 
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Random
 import scala.util.control.NonFatal
 
 
 object Logging {
-  @volatile private lazy val rnd = new Random()
-  @volatile private lazy val tracingEc = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool())
-  //TODO ^^^ make this a deamon
+  private val reqCounter = new AtomicInteger(0)
+  @volatile private lazy val tracingEc = {
+    ExecutionContext.fromExecutorService(Executors.newCachedThreadPool(new ThreadFactory {
+      def newThread(r: Runnable): Thread = {
+        val thread = Executors.defaultThreadFactory().newThread(r)
+        thread.setDaemon(true)
+        thread
+      }
+    }))
+  }
 }
 
 trait Logging extends StrictLogging {
@@ -71,7 +78,7 @@ trait Logging extends StrictLogging {
   }
 
   private def newReqId(): String = {
-    rnd.nextInt(Short.MaxValue).toHexString
+    reqCounter.incrementAndGet().toString
   }
 
   private def formatArgs(args: sourcecode.Args): String = {

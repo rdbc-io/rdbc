@@ -19,8 +19,12 @@ package io.rdbc.util
 object Preconditions {
 
   def notNull(args: sourcecode.Text[_]*): Unit = {
-    args.foreach { param =>  //TODO this has major performance hit
-      if (param == null) throw new NullPointerException(s"Parameter '${param.source}' cannot be null")
+    val i = args.iterator
+    while (i.hasNext) {
+      val arg = i.next()
+      if (arg.value == null) {
+        throw new NullPointerException(s"Parameter '${arg.source}' cannot be null")
+      }
     }
   }
 
