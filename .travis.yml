@@ -7,7 +7,7 @@ scala:
 - 2.11.11
 - 2.12.2
 sudo: false
-script: sbt ++$TRAVIS_SCALA_VERSION scalastyle coverage test coverageReport
+script: sbt ++$TRAVIS_SCALA_VERSION scalastyle test:scalastyle coverage test coverageReport
 after_success: bash <(curl -s https://codecov.io/bash)
 cache:
   directories:
