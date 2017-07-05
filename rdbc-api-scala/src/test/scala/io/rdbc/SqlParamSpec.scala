@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 
-package io.rdbc.util
+package io.rdbc
 
-import org.scalatest.WordSpec
+import io.rdbc.sapi.{NotNullParam, NullParam}
+import io.rdbc.sapi.SqlParam._
 
-trait RdbcUtilSpec extends WordSpec
+class SqlParamSpec extends RdbcSpec {
+
+  "SqlParam implicit conversion" should {
+
+    "convert None to NULL param" in {
+      Option.empty[String].toSqlParam shouldBe NullParam(classOf[String])
+    }
+
+    "convert Some to not-NULL param" in {
+      val value = 10
+      Some(value).toSqlParam shouldBe NotNullParam(value)
+    }
+  }
+
+}

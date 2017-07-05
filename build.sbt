@@ -43,7 +43,8 @@ lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   .settings(
     name := "rdbc-api-scala",
     libraryDependencies ++= Vector(
-      Library.reactiveStreams
+      Library.reactiveStreams,
+      Library.scalatest % Test
     ),
     scalacOptions in(Compile, doc) ++= Vector(
       "-doc-title", "rdbc API"

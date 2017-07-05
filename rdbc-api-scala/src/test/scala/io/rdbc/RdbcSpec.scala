@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.rdbc.util
+package io.rdbc
 
-import org.scalatest.WordSpec
+import org.scalatest.{Matchers, WordSpec}
 
-trait RdbcUtilSpec extends WordSpec
+trait RdbcSpec
+  extends WordSpec
+    with Matchers
