@@ -22,7 +22,7 @@ import org.reactivestreams.Publisher
 import scala.concurrent.Future
 
 /**
-  * Represent a SQL statement
+  * Represents a SQL statement
   *
   * Methods of this trait allow to bind argument values to parameters
   * either by name or index. Classes extending this trait can be used

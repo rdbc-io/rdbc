@@ -36,9 +36,11 @@ object Timeout {
     }
   }
 
+  val Inf = Timeout(Duration.Inf)
+
   object Implicits extends ImplicitsTrait {
 
     /** Infinite timeout (i.e. no timeout) */
-    implicit val inf = Timeout(Duration.Inf)
+    implicit val inf = Inf
   }
 }
