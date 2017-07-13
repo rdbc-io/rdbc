@@ -16,6 +16,9 @@
 
 package io.rdbc.test
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+
 trait RdbcSuite
   extends NonExistingTableSpec
     with NonExistingColumnSpec
@@ -24,7 +27,11 @@ trait RdbcSuite
     with NoSuchParamSpec
     with SyntaxErrorSpec
     with TimeoutSpec
-    with StreamingSpec
+    with StreamingResultsSpec
     with ResultSetSpec
     with ForValueSpec
-    with ForFirstRowSpec
+    with ForFirstRowSpec {
+
+  protected implicit val system = ActorSystem()
+  protected implicit val materializer = ActorMaterializer()
+}

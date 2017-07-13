@@ -25,19 +25,18 @@ trait ForValueSpec
     with TxSpec {
 
   protected def intDataTypeName: String
-  override protected def columnsDefinition = s"col $intDataTypeName"
 
   //TODO if any test fails next tests fail too - fix this
   "Value returning feature should" - {
     "return None on empty tables" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(s"col $intDataTypeName") { (c, t) =>
         val stmt = c.statement(sql"select col from #$t")
         stmt.executeForValue(_.int("col")).get shouldBe None
       }
     }
 
     "return value from first row on non-empty tables" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(s"col $intDataTypeName") { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
           c.statement(sql"insert into #$t(col) values ($i)").execute().get
@@ -48,7 +47,7 @@ trait ForValueSpec
     }
 
     "throw an exception when non null-safe getter is used" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(s"col $intDataTypeName") { (c, t) =>
         c.statement(sql"insert into #$t(col) values (null)").execute().get
         val stmt = c.statement(sql"select col from #$t")
         val e = intercept[ConversionException] {

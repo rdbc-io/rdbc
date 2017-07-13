@@ -16,75 +16,112 @@
 
 package io.rdbc.test
 
+import akka.actor.ActorSystem
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.api.exceptions.MissingParamValException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
-trait MissingParamSpec extends RdbcSpec {
+import scala.collection.immutable.ListMap
+
+trait MissingParamSpec
+  extends RdbcSpec
+    with TableSpec {
 
   private val missingParam = "yparam"
   private val otherParam = "xparam"
   private val any: Any = 0
 
+  protected implicit def system: ActorSystem
+  protected implicit def materializer: Materializer
+
+  protected def arbitraryDataType: String
+
   "Statement should " - {
     "return a MissingParamValException" - {
-      "when not all params are provided" - {
-        "when binding parameters" - {
-          of("a select", _.statement(s"select * from tbl where x = :$otherParam, y = :$missingParam"))
-          of("an insert", _.statement(s"insert into tbl values(:$otherParam, :$missingParam)"))
-          of("an update", _.statement(s"update tbl set x = :$otherParam, y = :$missingParam"))
-          of("a returning insert",
+      "when not all args are provided" - {
+        "when binding arguments" - {
+          stmtType("of a select", _.statement(s"select * from tbl where x = :$otherParam, y = :$missingParam"))
+          stmtType("of an insert", _.statement(s"insert into tbl values(:$otherParam, :$missingParam)"))
+          stmtType("of an update", _.statement(s"update tbl set x = :$otherParam, y = :$missingParam"))
+          stmtType("of a returning insert",
             _.statement(s"insert into tbl values(:$otherParam, :$missingParam)",
-            StatementOptions.ReturnGenKeys)
+              StatementOptions.ReturnGenKeys)
           )
-          of("a delete", _.statement(s"delete from tbl where x = :$otherParam and y = :$missingParam)"))
+          stmtType("of a delete", _.statement(s"delete from tbl where x = :$otherParam and y = :$missingParam)"))
         }
       }
     }
   }
 
-  private def of(stmtType: String, statement: Connection => Statement): Unit = {
+  "Streaming arguments should" - {
+    "fail with a MissingParamValException" - {
+      val validMap = ListMap(otherParam -> any, missingParam -> any)
+      val missingMap = ListMap(otherParam -> any)
+
+      streaming("when first stream element is wrong", missingMap, validMap)
+      streaming("when middle stream element is wrong", validMap, missingMap, validMap)
+      streaming("when last stream element is wrong", validMap, missingMap)
+    }
+  }
+
+  private def stmtType(stmtType: String, statement: Connection => Statement): Unit = {
     s"of $stmtType" - {
-      "synchronously" - {
-        "by name" in { c =>
-          assertMissingParamThrown(c, _.bind(otherParam -> any))
-        }
-
-        "by index" in { c =>
-          assertMissingParamThrown(c, _.bindByIdx(any))
-        }
-
-        "providing no params" in { c =>
-          assertAnyMissingParamThrown(c, _.noArgs)
+      "by name" in { c =>
+        assertMissingParamThrown {
+          statement(c).bind(otherParam -> any)
         }
       }
 
-      "asynchronously" - {
-        "by name" in { c =>
-          assertMissingParamThrown(c, _.bind(otherParam -> any))
+      "by index" in { c =>
+        assertMissingParamThrown {
+          statement(c).bindByIdx(any)
         }
+      }
 
-        "by index" in { c =>
-          assertMissingParamThrown(c, _.bindByIdx(any))
+      "providing no params" in { c =>
+        val e = intercept[MissingParamValException] {
+          statement(c).noArgs
         }
+        e.missingParam should (equal(missingParam) or equal(otherParam))
+      }
+    }
+  }
 
-        "providing no params" in { c =>
-          assertAnyMissingParamThrown(c, _.noArgs)
+  private def streaming(desc: String, args: ListMap[String, Any]*): Unit = {
+    desc - {
+      "when passed by name" in { c =>
+        withTable(c, s"x $arbitraryDataType, y $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert into $tbl values (:$otherParam, :$missingParam)")
+          val src = Source(args.toVector).runWith(Sink.asPublisher(fanout = false))
+
+          assertMissingParamThrown {
+            stmt.streamArgs(src).get
+          }
+        }
+      }
+
+      "when passed by index" in { c =>
+        val argsVectors = args.map { argMap =>
+          argMap.values.toVector
+        }.toVector
+
+        withTable(c, s"x $arbitraryDataType, y $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert into $tbl values (:$otherParam, :$missingParam)")
+          val src = Source(argsVectors).runWith(Sink.asPublisher(fanout = false))
+
+          assertMissingParamThrown {
+            stmt.streamArgsByIdx(src).get
+          }
         }
       }
     }
+  }
 
-    def assertMissingParamThrown(c: Connection, binder: Statement => Any): Unit = {
-      val e = intercept[MissingParamValException] {
-        binder.apply(statement(c))
-      }
-      e.missingParam shouldBe missingParam
+  def assertMissingParamThrown(body: => Unit): Unit = {
+    val e = intercept[MissingParamValException] {
+      body
     }
-
-    def assertAnyMissingParamThrown(c: Connection, binder: Statement => Any): Unit = {
-      val e = intercept[MissingParamValException] {
-        binder.apply(statement(c))
-      }
-      e.missingParam should (equal(missingParam) or equal(otherParam))
-    }
+    e.missingParam shouldBe missingParam
   }
 }

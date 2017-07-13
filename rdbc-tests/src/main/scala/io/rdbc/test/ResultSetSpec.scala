@@ -26,18 +26,18 @@ trait ResultSetSpec
   protected def intDataTypeName: String
   protected def intDataTypeId: String
 
-  override protected def columnsDefinition = s"col $intDataTypeName"
+  private def columnsDefinition = s"col $intDataTypeName"
 
   //TODO if any test fails next tests fail too - fix this
   "Set returning feature should" - {
     "work on empty tables" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         c.statement(sql"select col from #$t").executeForSet().get.rows shouldBe empty
       }
     }
 
     "be able to fetch all rows at once" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
           c.statement(sql"insert into #$t(col) values ($i)").execute().get
@@ -50,7 +50,7 @@ trait ResultSetSpec
 
     "return metadata" - {
       "about rows affected" - {
-        withAndWithoutTx { (c, t) =>
+        withAndWithoutTx(columnsDefinition) { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
@@ -61,7 +61,7 @@ trait ResultSetSpec
       }
 
       "about columns" - {
-        withAndWithoutTx { (c, t) =>
+        withAndWithoutTx(columnsDefinition) { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get

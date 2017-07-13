@@ -21,9 +21,9 @@ import io.rdbc.sapi._
 trait TxSpec {
   this: RdbcSpec with TableSpec =>
 
-  protected def withAndWithoutTx(block: (Connection, String) => Unit): Unit = {
+  protected def withAndWithoutTx(columnsDefinition: String)(block: (Connection, String) => Unit): Unit = {
     "inside a transaction" in { c =>
-      withTable(c) { t =>
+      withTable(c, columnsDefinition) { t =>
         c.beginTx().get
         try {
           block(c, t)
@@ -35,7 +35,7 @@ trait TxSpec {
     }
 
     "without explicit transaction" in { c =>
-      withTable(c) { tableName =>
+      withTable(c, columnsDefinition) { tableName =>
         block(c, tableName)
       }
     }
