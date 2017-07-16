@@ -16,45 +16,84 @@
 
 package io.rdbc.test
 
+import akka.actor.ActorSystem
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.api.exceptions.NoSuchParamException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
-trait NoSuchParamSpec extends RdbcSpec {
+import scala.collection.immutable.ListMap
+
+trait NoSuchParamSpec
+  extends RdbcSpec
+    with TableSpec {
 
   private val superfluousParam = "yparam"
   private val param = "xparam"
   private val any: Any = 0
 
+  protected def arbitraryDataType: String
+
+  protected implicit def system: ActorSystem
+  protected implicit def materializer: Materializer
+
   "Statement should " - {
     "return a NoSuchParamException" - {
       "when too many params are provided" - {
         "when binding parameters by name" - {
-          of("a select", _.statement(s"select * from tbl where x = :$param"))
-          of("an insert", _.statement(s"insert into tbl values(:$param)"))
-          of("an update", _.statement(s"update tbl set x = :$param"))
-          of("a returning insert", _.statement(s"insert into tbl values(:$param)", StatementOptions.ReturnGenKeys))
-          of("a delete", _.statement(s"delete from tbl where x = :$param"))
+          stmtTest("a select", _.statement(s"select * from tbl where x = :$param"))
+          stmtTest("an insert", _.statement(s"insert into tbl values(:$param)"))
+          stmtTest("an update", _.statement(s"update tbl set x = :$param"))
+          stmtTest("a returning insert",
+            _.statement(s"insert into tbl values(:$param)", StatementOptions.ReturnGenKeys)
+          )
+          stmtTest("a delete", _.statement(s"delete from tbl where x = :$param"))
         }
       }
     }
   }
 
-  private def of(stmtType: String, statement: Connection => Statement): Unit = {
-    s"of $stmtType" - {
-      "synchronously" in { c =>
-        assertNoSuchParamThrown(c, _.bind(param -> any, superfluousParam -> any))
-      }
+  "Streaming arguments should" - {
+    "fail with a NoSuchParamException" - {
+      val validMap = ListMap(param -> any)
+      val invalidMap = ListMap(param -> any, superfluousParam -> any)
 
-      "asynchronously" in { c =>
-        assertNoSuchParamThrown(c, _.bind(param -> any, superfluousParam -> any))
+      "when stream element contains extra param" - {
+        streaming("when first stream element is wrong", invalidMap, validMap)
+        streaming("when middle stream element is wrong", validMap, invalidMap, validMap)
+        streaming("when last stream element is wrong", validMap, invalidMap)
       }
     }
+  }
 
-    def assertNoSuchParamThrown(c: Connection, binder: Statement => Any): Unit = {
-      val e = intercept[NoSuchParamException] {
-        binder.apply(statement(c))
+  private def streaming(desc: String, args: ListMap[String, Any]*): Unit = {
+    desc - {
+      "when passed by name" in { c =>
+        withTable(c, s"$param $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert into $tbl values (:$param)")
+          val src = Source(args.toVector).runWith(Sink.asPublisher(fanout = false))
+
+          assertNoSuchParamThrown {
+            stmt.streamArgs(src).get
+          }
+        }
       }
-      e.param shouldBe superfluousParam
     }
+  }
+
+
+  private def stmtTest(stmtType: String, statement: Connection => Statement): Unit = {
+    s"of $stmtType" in { c =>
+      assertNoSuchParamThrown {
+        statement(c).bind(param -> any, superfluousParam -> any)
+      }
+    }
+  }
+
+  def assertNoSuchParamThrown(body: => Unit): Unit = {
+    val e = intercept[NoSuchParamException] {
+      body
+    }
+    e.param shouldBe superfluousParam
   }
 }
