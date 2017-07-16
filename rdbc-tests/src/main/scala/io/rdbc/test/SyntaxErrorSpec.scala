@@ -16,24 +16,51 @@
 
 package io.rdbc.test
 
+import akka.actor.ActorSystem
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.api.exceptions.InvalidQueryException
 import io.rdbc.sapi._
 import io.rdbc.test.util.Subscribers
 
 import scala.concurrent.Future
 
-trait SyntaxErrorSpec extends RdbcSpec {
+trait SyntaxErrorSpec
+  extends RdbcSpec
+    with TableSpec {
+
+  protected def arbitraryDataType: String
+
+  protected implicit def system: ActorSystem
+  protected implicit def materializer: Materializer
 
   "Error should be returned when query is invalid when" - {
-    stmtTest("Select", _.statement(sql"select * should_be_from tbl"))
-    stmtTest("Insert", _.statement(sql"insert should_be_into tbl values (1)"))
-    stmtTest("Returning insert", _.statement(sql"insert should_be_into tbl values (1)", StatementOptions.ReturnGenKeys))
-    stmtTest("Delete", _.statement(sql"delete should_be_from tbl"))
-    stmtTest("Update", _.statement(sql"update tbl should_be_set col = null"))
-    stmtTest("DDL", _.statement(sql"alter should_be_table tbl drop column col"))
+    stmtTest("Select", (c, t) => c.statement(sql"select * should_be_from #$t"))
+    stmtTest("Insert", (c, t) => c.statement(sql"insert should_be_into #$t values (1)"))
+    stmtTest("Returning insert", (c, t) =>
+      c.statement(sql"insert should_be_into #$t values (1)", StatementOptions.ReturnGenKeys)
+    )
+    stmtTest("Delete", (c, t) => c.statement(sql"delete should_be_from #$t"))
+    stmtTest("Update", (c, t) => c.statement(sql"update #$t should_be_set col = null"))
+    stmtTest("DDL", (c, t) => c.statement(sql"alter should_be_table #$t drop column col"))
   }
 
-  private def stmtTest(stmtType: String, stmt: Connection => ExecutableStatement): Unit = {
+  "Streaming arguments should" - {
+    "fail with an InvalidQueryException" - {
+      "when statement is incorrect syntactically" in { c =>
+        withTable(c, s"col $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert should_be_into #$tbl values (:x)")
+          val src = Source(Vector(Vector(1), Vector(2))).runWith(Sink.asPublisher(fanout = false))
+
+          assertInvalidQueryThrown {
+            stmt.streamArgsByIdx(src).get
+          }
+        }
+      }
+    }
+  }
+
+  private def stmtTest(stmtType: String, stmt: (Connection, String) => ExecutableStatement): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
@@ -49,9 +76,9 @@ trait SyntaxErrorSpec extends RdbcSpec {
 
       def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         executorName in { c =>
-          withTable(c) {
+          withTable(c, s"col $arbitraryDataType") { tbl =>
             assertInvalidQueryThrown {
-              executor(stmt(c))
+              executor(stmt(c, tbl)).get
             }
           }
         }
@@ -60,21 +87,7 @@ trait SyntaxErrorSpec extends RdbcSpec {
   }
 
 
-  private def assertInvalidQueryThrown(body: => Future[Any]): Unit = {
-    assertThrows[InvalidQueryException](body.get)
+  private def assertInvalidQueryThrown(body: => Any): Unit = {
+    assertThrows[InvalidQueryException](body)
   }
-
-
-  private def withTable[A](c: Connection)(body: => A): A = {
-    try {
-      c.statement(s"create table tbl (col $arbitraryDataType)")
-        .noArgs.execute().get
-      body
-    } finally {
-      c.statement("drop table tbl")
-        .noArgs.execute().get
-    }
-  }
-
-  protected def arbitraryDataType: String
 }

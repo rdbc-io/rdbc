@@ -16,6 +16,9 @@
 
 package io.rdbc.test
 
+import akka.actor.ActorSystem
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.api.exceptions.InvalidQueryException
 import io.rdbc.sapi._
 import io.rdbc.test.util.Subscribers
@@ -27,6 +30,9 @@ trait NonExistingColumnSpec
     with TableSpec {
 
   protected def arbitraryDataType: String
+
+  protected implicit def system: ActorSystem
+  protected implicit def materializer: Materializer
 
   final case class WrongStatement(stmt: ExecutableStatement, errPos: Int)
 
@@ -71,6 +77,21 @@ trait NonExistingColumnSpec
     )
   }
 
+  "Streaming arguments should" - {
+    "fail with an InvalidQueryException" - {
+      "when statement references a non-existing column" in { c =>
+        withTable(c, s"col $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert into $tbl(nonexistent) values (:x)")
+          val src = Source(Vector(Vector(1), Vector(2))).runWith(Sink.asPublisher(fanout = false))
+
+          assertInvalidQueryThrown(errPos = 14 + tbl.length) {
+            stmt.streamArgsByIdx(src).get
+          }
+        }
+      }
+    }
+  }
+
   private def stmtTest(stmtType: String, stmt: (Connection, String) => WrongStatement): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
@@ -90,7 +111,7 @@ trait NonExistingColumnSpec
           withTable(c, s"col $arbitraryDataType") { t =>
             val wrongStmt = stmt(c, t)
             assertInvalidQueryThrown(wrongStmt.errPos) {
-              executor(wrongStmt.stmt)
+              executor(wrongStmt.stmt).get
             }
           }
         }
@@ -98,9 +119,9 @@ trait NonExistingColumnSpec
     }
   }
 
-  private def assertInvalidQueryThrown(errPos: Int)(body: => Future[Any]): Unit = {
+  private def assertInvalidQueryThrown(errPos: Int)(body: => Any): Unit = {
     val e = intercept[InvalidQueryException] {
-      body.get
+      body
     }
     e.errorPosition.fold(alert("non-fatal: no error position reported")) {
       pos =>

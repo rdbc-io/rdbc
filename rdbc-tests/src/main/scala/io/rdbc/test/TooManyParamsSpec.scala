@@ -16,38 +16,79 @@
 
 package io.rdbc.test
 
+import akka.actor.ActorSystem
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.api.exceptions.TooManyParamsException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
-trait TooManyParamsSpec extends RdbcSpec {
+trait TooManyParamsSpec
+  extends RdbcSpec
+    with TableSpec {
 
   private val any: Any = 0
 
-  "Bindable should " - {
+  protected def arbitraryDataType: String
+
+  protected implicit def system: ActorSystem
+
+  protected implicit def materializer: Materializer
+
+  "Statement should " - {
     "throw a TooManyParamsException" - {
       "when too many params are provided" - {
         "when binding parameters by index" - {
-          of("a select", _.statement("select * from tbl where x = :xparam"))
-          of("an insert", _.statement("insert into tbl values(:xparam)"))
-          of("an update", _.statement("update tbl set x = :xparam"))
-          of("a returning insert", _.statement("insert into tbl values(:xparam)", StatementOptions.ReturnGenKeys))
-          of("a delete", _.statement("delete from tbl where x = :xparam"))
+          stmtTest("a select", _.statement("select * from tbl where x = :xparam"))
+          stmtTest("an insert", _.statement("insert into tbl values(:xparam)"))
+          stmtTest("an update", _.statement("update tbl set x = :xparam"))
+          stmtTest("a returning insert", _.statement("insert into tbl values(:xparam)", StatementOptions.ReturnGenKeys))
+          stmtTest("a delete", _.statement("delete from tbl where x = :xparam"))
         }
       }
     }
   }
 
-  private def of(stmtType: String, bindable: Connection => Statement): Unit = {
-    s"of $stmtType" in { c =>
-        assertTooManyParamsThrown(c, _.bindByIdx(any, any))
-    }
+  "Streaming arguments should" - {
+    "fail with a TooManyParamsException" - {
+      val validArgs = Vector(any)
+      val invalidArgs = Vector(any, any)
 
-    def assertTooManyParamsThrown(c: Connection, binder: Statement => Any): Unit = {
-      val e = intercept[TooManyParamsException] {
-        binder.apply(bindable(c))
+      "when stream element contains extra param" - {
+        streaming("when first stream element is wrong", invalidArgs, validArgs)
+        streaming("when middle stream element is wrong", validArgs, invalidArgs, validArgs)
+        streaming("when last stream element is wrong", validArgs, invalidArgs)
       }
-      e.provided shouldBe 2
-      e.expected shouldBe 1
     }
+  }
+
+  private def streaming(desc: String, args: Vector[Any]*): Unit = {
+    desc - {
+      "when passed by index" in { c =>
+        withTable(c, s"xparam $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert into $tbl values (:xparam)")
+          val src = Source(args.toVector).runWith(Sink.asPublisher(fanout = false))
+
+          assertTooManyParamsThrown {
+            stmt.streamArgsByIdx(src).get
+          }
+        }
+      }
+    }
+  }
+
+  private def stmtTest(stmtType: String, statement: Connection => Statement): Unit = {
+    s"of $stmtType" in { c =>
+      assertTooManyParamsThrown {
+        statement(c).bindByIdx(any, any)
+      }
+    }
+  }
+
+  private def assertTooManyParamsThrown(body: => Unit): Unit = {
+    val e = intercept[TooManyParamsException] {
+      body
+    }
+    e.provided shouldBe 2
+    e.expected shouldBe 1
   }
 }
