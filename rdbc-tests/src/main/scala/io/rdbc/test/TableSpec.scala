@@ -23,10 +23,9 @@ import io.rdbc.sapi.Connection
 trait TableSpec {
   this: RdbcSpec =>
 
-  protected def columnsDefinition: String
   private val counter: AtomicInteger = new AtomicInteger(0)
 
-  protected def withTable[A](c: Connection)(body: String => A): A = {
+  protected def withTable[A](c: Connection, columnsDefinition: String)(body: String => A): A = {
     val tableName = s"tbl${counter.incrementAndGet()}"
     c.statement(s"create table $tableName ($columnsDefinition)")
       .noArgs.execute().get

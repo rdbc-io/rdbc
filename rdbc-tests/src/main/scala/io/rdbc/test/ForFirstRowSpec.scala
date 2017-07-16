@@ -24,19 +24,19 @@ trait ForFirstRowSpec
     with TxSpec {
 
   protected def intDataTypeName: String
-  override protected def columnsDefinition = s"col $intDataTypeName"
+  private def columnsDefinition = s"col $intDataTypeName"
 
   //TODO if any test fails next tests fail too - fix this
   "First row returning feature should" - {
     "return None on empty tables" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         val stmt = c.statement(sql"select col from #$t")
         stmt.executeForFirstRow().get shouldBe None
       }
     }
 
     "return first row on non-empty tables" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
           c.statement(sql"insert into #$t(col) values ($i)").execute().get

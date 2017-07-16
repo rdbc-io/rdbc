@@ -102,7 +102,7 @@ trait Statement {
     *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
     * when some parameter value's type is not convertible to a database type
     */
-  def streamArgs(argsPublisher: Publisher[Map[String, Any]]): Future[Unit]
+  def streamArgs(argsPublisher: Publisher[_ <: Map[String, Any]]): Future[Unit]
 
   /** Streams statement arguments to a database.
     *
@@ -117,5 +117,5 @@ trait Statement {
     *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
     * when some parameter value's type is not convertible to a database type
     */
-  def streamArgsByIdx(argsPublisher: Publisher[ImmutIndexedSeq[Any]]): Future[Unit]
+  def streamArgsByIdx(argsPublisher: Publisher[_ <: ImmutIndexedSeq[Any]]): Future[Unit]
 }

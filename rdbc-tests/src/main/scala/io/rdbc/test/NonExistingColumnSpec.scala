@@ -27,7 +27,6 @@ trait NonExistingColumnSpec
     with TableSpec {
 
   protected def arbitraryDataType: String
-  override protected def columnsDefinition = s"col $arbitraryDataType"
 
   final case class WrongStatement(stmt: ExecutableStatement, errPos: Int)
 
@@ -88,7 +87,7 @@ trait NonExistingColumnSpec
 
       def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         s"executed for $executorName" in { c =>
-          withTable(c) { t =>
+          withTable(c, s"col $arbitraryDataType") { t =>
             val wrongStmt = stmt(c, t)
             assertInvalidQueryThrown(wrongStmt.errPos) {
               executor(wrongStmt.stmt)

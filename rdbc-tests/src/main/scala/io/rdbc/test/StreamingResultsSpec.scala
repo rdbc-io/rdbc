@@ -23,25 +23,25 @@ import org.reactivestreams.Subscriber
 
 import scala.concurrent.Promise
 
-trait StreamingSpec
+trait StreamingResultsSpec
   extends RdbcSpec
     with TableSpec
     with TxSpec {
 
   protected def intDataTypeName: String
   protected def intDataTypeId: String
-  override protected def columnsDefinition = s"col $intDataTypeName"
+  private def columnsDefinition = s"col $intDataTypeName"
 
   //TODO if any test fails next tests fail too - fix this
   "Streaming results feature should" - {
     "work on empty tables" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         subscribe(c.statement(sql"select col from #$t"), Subscribers.eager()).rows.get shouldBe empty
       }
     }
 
     "be able to fetch all rows at once" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
           c.statement(sql"insert into #$t(col) values ($i)").execute().get
@@ -53,7 +53,7 @@ trait StreamingSpec
     }
 
     "be able to fetch rows in chunks" - {
-      withAndWithoutTx { (c, t) =>
+      withAndWithoutTx(columnsDefinition) { (c, t) =>
         val range = 1 to 10
         for {i <- range} yield {
           c.statement(sql"insert into #$t(col) values ($i)").execute().get
@@ -76,7 +76,7 @@ trait StreamingSpec
 
     "return metadata" - {
       "about rows affected" - {
-        withAndWithoutTx { (c, t) =>
+        withAndWithoutTx(columnsDefinition) { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
@@ -91,7 +91,7 @@ trait StreamingSpec
       }
 
       "about columns" - {
-        withAndWithoutTx { (c, t) =>
+        withAndWithoutTx(columnsDefinition) { (c, t) =>
           val range = 1 to 10
           for {i <- range} yield {
             c.statement(sql"insert into #$t(col) values ($i)").execute().get
