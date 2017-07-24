@@ -45,3 +45,5 @@ markdown_extensions:
 
 extra_css:
   - 'css/extra.css'
+
+google_analytics: ['UA-103140141-1', 'rdbc.io']
