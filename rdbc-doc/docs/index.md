@@ -62,10 +62,6 @@ Following list outlines the areas that the API is not meant to cover.
     type-safety but at the same time makes it possible to implement wider range
     of higher-level APIs on top of rdbc.
 
-2. **Replace FRM and ORM libraries.**
-
-    TODO description.
-
 ## Getting help
 
 Join [rdbc-io/rdbc](https://gitter.im/rdbc-io/rdbc) gitter channel for 

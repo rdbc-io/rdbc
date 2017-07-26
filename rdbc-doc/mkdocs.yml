@@ -18,7 +18,6 @@ pages:
     - Java API user guide: java/java.md
     - Drivers: drivers.md
     - Examples: examples.md
-    - Developer guide: developer.md
 theme: material
 
 copyright: Copyright &copy; 2016 - 2017 rdbc contributors
