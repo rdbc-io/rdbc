@@ -17,7 +17,7 @@ pages:
       - FAQ: scala/faq.md
     - Java API user guide: java/java.md
     - Drivers: drivers.md
-    - Developer guide: developer.md
+    - Examples: examples.md
 theme: material
 
 copyright: Copyright &copy; 2016 - 2017 rdbc contributors

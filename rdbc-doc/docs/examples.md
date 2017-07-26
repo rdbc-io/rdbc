@@ -17,4 +17,7 @@
     rdbc project and this documentation is still a work in progress.
     It's not ready yet for production use.
 
-TODO
+Example projects are implemented in
+[rdbc-io/rdbc-examples](https://github.com/rdbc-io/rdbc-examples)
+GitHub repository. For detailed description of these samples see the repository's
+README.

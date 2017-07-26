@@ -1,5 +1,5 @@
 <!---
- ! Copyright 2016-2017 Krzysztof Pado
+ ! Copyright 2016-2017 rdbc contributors
  !
  ! Licensed under the Apache License, Version 2.0 (the "License");
  ! you may not use this file except in compliance with the License.
@@ -211,7 +211,5 @@ new session. In order to avoid this problem you can use connection pooling.
 Connection pooling mechanism isn't really part of the API &mdash; to use pooling
 you just need to use a special `ConnectionFactory` implementation.
 
-Currently, no implementation of `ConnectionFactory` capable of connection pooling
-is available. You can track the work by looking at
-[rdbc-io/rdbc-pool](https://github.com/rdbc-io/rdbc-pool)
-GitHub repository.
+Have a look at [rdbc-pool](https://github.com/rdbc-io/rdbc-pool) project that
+provides a `ConnectionFactory` implementation capable of connection pooling.

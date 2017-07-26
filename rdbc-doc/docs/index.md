@@ -1,5 +1,5 @@
 <!---
- ! Copyright 2016-2017 Krzysztof Pado
+ ! Copyright 2016-2017 rdbc contributors
  !
  ! Licensed under the Apache License, Version 2.0 (the "License");
  ! you may not use this file except in compliance with the License.
@@ -61,10 +61,6 @@ Following list outlines the areas that the API is not meant to cover.
     converters to be registered at runtime. This approach sacrifices some
     type-safety but at the same time makes it possible to implement wider range
     of higher-level APIs on top of rdbc.
-
-2. **Replace FRM and ORM libraries.**
-
-    TODO description.
 
 ## Getting help
 
