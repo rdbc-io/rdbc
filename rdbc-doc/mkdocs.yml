@@ -17,6 +17,7 @@ pages:
       - FAQ: scala/faq.md
     - Java API user guide: java/java.md
     - Drivers: drivers.md
+    - Examples: examples.md
     - Developer guide: developer.md
 theme: material
 
