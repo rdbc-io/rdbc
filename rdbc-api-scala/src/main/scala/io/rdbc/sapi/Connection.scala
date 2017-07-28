@@ -243,5 +243,5 @@ trait Connection {
 
   /** Returns a future that is complete when this connection is idle and ready
     * for accepting queries. */
-  def watchForIdle: Future[this.type]
+  def watchForIdle: Future[Unit]
 }
