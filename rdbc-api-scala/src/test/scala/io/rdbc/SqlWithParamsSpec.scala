@@ -16,7 +16,7 @@
 
 package io.rdbc
 
-import io.rdbc.sapi.Interpolators._
+import io.rdbc.sapi.SqlInterpolator._
 
 class SqlWithParamsSpec extends RdbcSpec {
 

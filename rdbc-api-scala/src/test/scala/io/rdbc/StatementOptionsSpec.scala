@@ -16,20 +16,25 @@
 
 package io.rdbc
 
-import io.rdbc.sapi.{NotNullParam, NullParam}
-import io.rdbc.sapi.SqlParam.Implicits._
+import io.rdbc.sapi.{KeyColumns, StatementOptions}
 
-class SqlParamSpec extends RdbcSpec {
+class StatementOptionsSpec extends RdbcSpec {
 
-  "SqlParam implicit conversion" should {
-
-    "convert None to NULL param" in {
-      Option.empty[String].toSqlParam shouldBe NullParam(classOf[String])
+  "StatementOptions.Default" should {
+    "be set not to return any generated keys" in {
+      StatementOptions.Default.generatedKeyCols shouldBe KeyColumns.None
     }
+  }
 
-    "convert Some to not-NULL param" in {
-      val value = 10
-      Some(value).toSqlParam shouldBe NotNullParam(value)
+  "StatementOptions.ReturnGenKeys" should {
+    "be set to return all generated keys" in {
+      StatementOptions.ReturnGenKeys.generatedKeyCols shouldBe KeyColumns.All
+    }
+  }
+
+  "KeyColumns.named" should {
+    "create KeyColumns.Named instances" in {
+      KeyColumns.named("c1", "c2") shouldBe KeyColumns.Named(Vector("c1", "c2"))
     }
   }
 

@@ -22,8 +22,7 @@ import scala.concurrent.duration.Duration
 /** Represents a timeout */
 @implicitNotFound(
   """Cannot find an implicit Timeout. You might pass
-an (implicit timeout: Timeout) parameter to your method
-or import io.rdb.sapi.Timeout.Implicits.inf.""")
+an (implicit timeout: Timeout) parameter to your method""")
 final case class Timeout(value: Duration) extends AnyVal
 
 /** Timeout companion */
@@ -37,10 +36,4 @@ object Timeout {
   }
 
   val Inf = Timeout(Duration.Inf)
-
-  object Implicits extends ImplicitsTrait {
-
-    /** Infinite timeout (i.e. no timeout) */
-    implicit val inf = Inf
-  }
 }

@@ -14,9 +14,33 @@
  * limitations under the License.
  */
 
-package io.rdbc.sapi
+package io.rdbc
 
-trait InterpolatorsTrait extends SqlInterpolatorTrait
 
-/** String interpolators */
-object Interpolators extends InterpolatorsTrait
+import io.rdbc.sapi.{ResultSet, Row, RowMetadata}
+import org.scalamock.scalatest.MockFactory
+
+class ResultSetSpec
+  extends RdbcSpec
+    with MockFactory {
+
+  "ResultSet" should {
+    "traverse over its rows" in {
+      val rows = Vector(mock[Row], mock[Row])
+
+      val rs = new ResultSet(
+        rowsAffected = 2L,
+        metadata = RowMetadata(Vector.empty),
+        warnings = Vector.empty,
+        rows = rows
+      )
+
+      var i = 0
+      rs.foreach { row =>
+        row shouldBe theSameInstanceAs(rows(i))
+        i += 1
+      }
+    }
+  }
+
+}
