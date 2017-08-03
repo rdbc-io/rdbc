@@ -18,18 +18,22 @@ package io.rdbc.sapi
 
 import scala.reflect.ClassTag
 
-private[sapi] trait SqlParamImplicits {
-  implicit class Opt2OptParam[A: ClassTag](opt: Option[A]) {
+object SqlParam {
 
-    /** Converts this option to nullable SQL parameter. */
-    def toSqlParam: SqlParam[A] = opt.map(NotNullParam.apply).getOrElse {
-      val cls = implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]]
-      NullParam(cls)
+  private[sapi] trait ImplicitsTrait {
+    implicit class Opt2OptParam[A: ClassTag](opt: Option[A]) {
+
+      /** Converts this option to nullable SQL parameter. */
+      def toSqlParam: SqlParam[A] = opt.map(NotNullParam.apply).getOrElse {
+        val cls = implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]]
+        NullParam(cls)
+      }
     }
   }
-}
 
-object SqlParam extends SqlParamImplicits
+  object Implicits extends ImplicitsTrait
+
+}
 
 /** A statement parameter that can represent null (empty) values.
   *

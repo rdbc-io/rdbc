@@ -16,12 +16,30 @@
 
 package io.rdbc
 
-/** Provides a Scala API for database connectivity.
-  *
-  * Main class is a [[io.rdbc.sapi.Connection Connection]] that can be
-  * obtained using a [[io.rdbc.sapi.ConnectionFactory ConnectionFactory]].
-  */
-package object sapi
-  extends SqlInterpolatorTrait
-    with SqlParam.ImplicitsTrait
-    with Timeout.ImplicitsTrait
+import io.rdbc.sapi._
+
+import scala.concurrent.duration._
+
+class TimeoutSpec extends RdbcSpec {
+
+  "Duration to timeout converter" should {
+
+    "convert finite duration to timeout" in {
+      val duration = 10.seconds
+      val timeout = duration.timeout
+      timeout.value shouldBe duration
+    }
+
+    "convert infinite duration to timeout" in {
+      val duration = Duration.Inf
+      val timeout = duration.timeout
+      timeout.value shouldBe duration
+    }
+  }
+
+  "Timeout.Inf" should {
+    "be an infinite timeout" in {
+      Timeout.Inf shouldBe Timeout(Duration.Inf)
+    }
+  }
+}
