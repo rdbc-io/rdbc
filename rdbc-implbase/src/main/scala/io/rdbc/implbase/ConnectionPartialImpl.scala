@@ -31,18 +31,22 @@ trait ConnectionPartialImpl
 
   override def withTransaction[A](body: => Future[A])
                                  (implicit timeout: Timeout): Future[A] = {
-    beginTx()
-      .flatMap(_ => body)
-      .transformWith {
-        case Success(res) => commitTx().map(_ => res)
-        case Failure(ex) =>
-          rollbackTx().recover { case rollbackEx =>
-            logger.warn(
-              "Error occurred when rolling back transaction",
-              rollbackEx
-            )
-          }.flatMap(_ => Future.failed(ex))
-      }
+
+    beginTx().transformWith {
+      case Success(_) =>
+        body.transformWith {
+          case Success(res) => commitTx().map(_ => res)
+          case Failure(ex) =>
+            rollbackTx().recover { case rollbackEx =>
+              logger.warn(
+                "Error occurred when rolling back transaction",
+                rollbackEx
+              )
+            }.flatMap(_ => Future.failed(ex))
+        }
+
+      case Failure(ex) => Future.failed(ex)
+    }
   }
 
   override def statement(sql: String): Statement = {
@@ -57,6 +61,6 @@ trait ConnectionPartialImpl
                           sqlWithParams: SqlWithParams,
                           statementOptions: StatementOptions
                         ): ExecutableStatement = {
-    statement(sqlWithParams.sql).bindByIdx(sqlWithParams.params: _*)
+    statement(sqlWithParams.sql, statementOptions).bindByIdx(sqlWithParams.params: _*)
   }
 }
