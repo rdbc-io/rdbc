@@ -16,8 +16,11 @@
 
 package io.rdbc.implbase
 
+import java.util.concurrent.atomic.AtomicBoolean
+
 import io.rdbc._
 import io.rdbc.sapi.Row
+import io.rdbc.util.Preconditions.notNull
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.concurrent.{Future, Promise}
@@ -27,14 +30,23 @@ class HeadSubscriber(n: Option[Long]) extends Subscriber[Row] {
   private var buf = Vector.empty[Row]
 
   private var subscription: Option[Subscription] = None
+  private val subscribed = new AtomicBoolean(false)
 
   val rows: Future[ImmutSeq[Row]] = promise.future
 
-  override def onError(t: Throwable): Unit = promise.failure(t)
+  override def onError(t: Throwable): Unit = {
+    notNull(t)
+    promise.failure(t)
+  }
 
   override def onSubscribe(s: Subscription): Unit = {
-    subscription = Some(s)
-    s.request(n.getOrElse(Long.MaxValue))
+    notNull(s)
+    if (subscribed.compareAndSet(false, true)) {
+      subscription = Some(s)
+      s.request(n.getOrElse(Long.MaxValue))
+    } else {
+      s.cancel()
+    }
   }
 
   override def onComplete(): Unit = {
@@ -44,6 +56,7 @@ class HeadSubscriber(n: Option[Long]) extends Subscriber[Row] {
   }
 
   override def onNext(t: Row): Unit = {
+    notNull(t)
     buf = buf :+ t
     if (n.contains(buf.size)) {
       promise.success(buf)
