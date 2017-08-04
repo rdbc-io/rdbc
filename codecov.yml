@@ -1,2 +1,3 @@
 ignore:
   - "rdbc-tests"
+  - "rdbc-api-scala/src/main/scala/io/rdbc/api/exceptions"
