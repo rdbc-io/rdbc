@@ -61,6 +61,6 @@ trait ConnectionPartialImpl
                           sqlWithParams: SqlWithParams,
                           statementOptions: StatementOptions
                         ): ExecutableStatement = {
-    statement(sqlWithParams.sql).bindByIdx(sqlWithParams.params: _*)
+    statement(sqlWithParams.sql, statementOptions).bindByIdx(sqlWithParams.params: _*)
   }
 }

@@ -16,7 +16,7 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.sapi.{Statement, StatementOptions, Timeout}
+import io.rdbc.sapi._
 import io.rdbc.implbase.Compat._
 import org.scalamock.scalatest.MockFactory
 
@@ -109,12 +109,60 @@ class ConnectionPartialImplSpec
     }
   }
 
+  "ConnectionPartialImpl" should {
+    "provide default statement options" when {
+      "called with plain SQL" in {
+        val conn = new TestConn
+        val sql = "selecet 1"
+        val res = mock[Statement]
+
+        conn.statementMock.expects(sql, StatementOptions.Default).once().returning(res)
+
+        conn.statement(sql) shouldBe theSameInstanceAs(res)
+      }
+
+      "called with SQL with params" in {
+        val conn = new TestConn
+        val param1 = 1
+        val param2 = 2
+        val sqlWithParams = sql"select $param1, $param2"
+        val resStmt = mock[Statement]
+        val resExecStmt = mock[ExecutableStatement]
+
+        inSequence {
+          conn.statementMock.expects(sqlWithParams.sql, StatementOptions.Default).once().returning(resStmt)
+          (resStmt.bindByIdx _).expects(sqlWithParams.params).once().returning(resExecStmt)
+        }
+
+        conn.statement(sqlWithParams) shouldBe theSameInstanceAs(resExecStmt)
+      }
+    }
+
+    "pass params from interpolated SQL as positional params" in {
+      val conn = new TestConn
+      val param1 = 1
+      val param2 = 2
+      val sqlWithParams = sql"select $param1, $param2"
+      val stmtOptions = StatementOptions(KeyColumns.named("c1, c2"))
+      val resStmt = mock[Statement]
+      val resExecStmt = mock[ExecutableStatement]
+
+      inSequence {
+        conn.statementMock.expects(sqlWithParams.sql, stmtOptions).once().returning(resStmt)
+        (resStmt.bindByIdx _).expects(sqlWithParams.params).once().returning(resExecStmt)
+      }
+
+      conn.statement(sqlWithParams, stmtOptions) shouldBe theSameInstanceAs(resExecStmt)
+    }
+  }
+
   class TestConn
     extends ConnectionPartialImpl {
 
     val beginMock = mockFunction[Timeout, Future[Unit]]("beginTx")
     val commitMock = mockFunction[Timeout, Future[Unit]]("commitTx")
     val rollbackMock = mockFunction[Timeout, Future[Unit]]("rollbackTx")
+    val statementMock = mockFunction[String, StatementOptions, Statement]("statement")
 
     implicit protected def ec: ExecutionContext = ExecutionContext.global
 
@@ -130,10 +178,13 @@ class ConnectionPartialImplSpec
       rollbackMock(timeout)
     }
 
+    def statement(sql: String, statementOptions: StatementOptions): Statement = {
+      statementMock(sql, statementOptions)
+    }
+
     def release(): Future[Unit] = ???
     def forceRelease(): Future[Unit] = ???
     def validate()(implicit timeout: Timeout): Future[Unit] = ???
-    def statement(sql: String, statementOptions: StatementOptions): Statement = ???
     def watchForIdle: Future[Unit] = ???
   }
 
