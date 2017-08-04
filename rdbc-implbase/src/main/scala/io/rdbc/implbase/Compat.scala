@@ -33,4 +33,8 @@ private[implbase] object Compat {
     }
   }
 
+  implicit class FutureObjectCompat(underlying: Future.type) {
+    val unit: Future[Unit] = Future.successful(())
+  }
+
 }
