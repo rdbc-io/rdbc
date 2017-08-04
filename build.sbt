@@ -72,7 +72,8 @@ lazy val rdbcImplBase = (project in file("rdbc-implbase"))
     libraryDependencies ++= Vector(
       Library.scalatest % Test,
       Library.scalamock % Test,
-      Library.reactiveStreamsTck % Test
+      Library.reactiveStreamsTck % Test,
+      Library.akkaStream % Test
     ),
     buildInfoPackage := "io.rdbc.implbase"
   ).dependsOn(rdbcApiScala, rdbcUtil)

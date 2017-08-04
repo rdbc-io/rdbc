@@ -17,3 +17,7 @@ cache:
 before_cache:
 - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
 - find $HOME/.sbt -name "*.lock" -delete
+env:
+  global:
+    - CI=true #to decrease coursier verbosity
+    - DEFAULT_TIMEOUT_MILLIS=300 #Reactive Streams testkit timeout for async ops
