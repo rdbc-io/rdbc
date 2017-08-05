@@ -44,6 +44,8 @@ object Futures {
         .flatMap { t =>
           pf.applyOrElse[Try[T], Future[Any]](t, _ => SuccessfulFuture).flatMap { _ =>
             Future.fromTry(t)
+          }.recoverWith {
+            case _ => Future.fromTry(t)
           }
         }
     }
