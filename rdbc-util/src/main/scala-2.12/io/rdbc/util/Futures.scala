@@ -17,7 +17,7 @@
 package io.rdbc.util
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 object Futures {
 
@@ -39,12 +39,8 @@ object Futures {
       */
     def andThenF[U](pf: PartialFunction[Try[T], Future[U]])(implicit ec: ExecutionContext): Future[T] = {
       underlying.transformWith[T] { result =>
-        pf.applyOrElse[Try[T], Future[Any]](result, _ => SuccessfulFuture).transform {
-          case Success(_) => result
-          case Failure(ex) =>
-            ec.reportFailure(ex)
-            result
-        }
+        pf.applyOrElse[Try[T], Future[Any]](result, _ => SuccessfulFuture)
+          .transform(_ => result)
       }
     }
   }
