@@ -68,7 +68,7 @@ class HeadSubscriberSpec
 
     completePromise.future.get
 
-    subscriber.rows shouldBe 'completed
+    subscriber.rows.get
     val headElems = head.map(h => elems.take(h.toInt)).getOrElse(elems)
     subscriber.rows.get shouldBe headElems
   }
