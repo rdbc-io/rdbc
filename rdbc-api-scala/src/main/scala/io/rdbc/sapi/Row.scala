@@ -60,10 +60,18 @@ import scala.reflect.ClassTag
   * @groupname uuid UUID getters
   * @groupprio uuid 100
   *
-  * @define exceptions
+  * @define exceptionsNamed
   *  Throws:
   *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]]
   *  when database value could not be converted to the desired type
+  *   - [[io.rdbc.api.exceptions.MissingColumnException MissingColumnException]]
+  *  when requested column is not present in the row
+  *  @define exceptionsIdx
+  *  Throws:
+  *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]]
+  *  when database value could not be converted to the desired type
+  *   - [[io.rdbc.api.exceptions.ColumnIndexOutOfBoundsException ColumnIndexOutOfBoundsException]]
+  *  when requested column index is out of range
   * @define nullSafetyNote
   *  For SQL `null` values, [[io.rdbc.api.exceptions.ConversionException ConversionException]] is thrown.
   *  For null-safety consider using corresponding `*Opt` method.
@@ -81,7 +89,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group generic
     * @usecase def col[A](idx: Int): A
@@ -93,7 +101,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group generic
     * @usecase def colOpt[A](idx: Int): Option[A]
@@ -105,7 +113,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group generic
     * @usecase def col[A](name: String): A
@@ -117,7 +125,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group generic
     * @usecase def colOpt[A](name: String): Option[A]
@@ -129,7 +137,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group string
     */
@@ -139,7 +147,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group string
     */
@@ -149,7 +157,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group string
     */
@@ -159,7 +167,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group string
     */
@@ -171,7 +179,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group bool
     */
@@ -183,7 +191,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group bool
     */
@@ -195,7 +203,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group bool
     */
@@ -207,7 +215,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group bool
     */
@@ -219,7 +227,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group char
     */
@@ -231,7 +239,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group char
     */
@@ -243,7 +251,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group char
     */
@@ -255,7 +263,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group char
     */
@@ -268,7 +276,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group int
     */
@@ -281,7 +289,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group int
     */
@@ -294,7 +302,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group int
     */
@@ -307,7 +315,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group int
     */
@@ -320,7 +328,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group int
     */
@@ -333,7 +341,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group int
     */
@@ -346,7 +354,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group int
     */
@@ -359,7 +367,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group int
     */
@@ -372,7 +380,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group int
     */
@@ -385,7 +393,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group int
     */
@@ -398,7 +406,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group int
     */
@@ -411,7 +419,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group int
     */
@@ -425,7 +433,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group unb
     */
@@ -439,7 +447,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group unb
     */
@@ -453,7 +461,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group unb
     */
@@ -467,7 +475,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group unb
     */
@@ -479,7 +487,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group unb
     */
@@ -491,7 +499,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group unb
     */
@@ -503,7 +511,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group unb
     */
@@ -515,7 +523,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group unb
     */
@@ -528,7 +536,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group float
     */
@@ -541,7 +549,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group float
     */
@@ -554,7 +562,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group float
     */
@@ -567,7 +575,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group float
     */
@@ -580,7 +588,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group float
     */
@@ -593,7 +601,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group float
     */
@@ -606,7 +614,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group float
     */
@@ -619,7 +627,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group float
     */
@@ -632,7 +640,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -645,7 +653,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -658,7 +666,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -671,7 +679,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -684,7 +692,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -697,7 +705,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -710,7 +718,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -723,7 +731,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -736,7 +744,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -749,7 +757,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -762,7 +770,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -775,7 +783,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -788,7 +796,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -801,7 +809,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group date
     */
@@ -814,7 +822,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -827,7 +835,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group date
     */
@@ -840,7 +848,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group binary
     */
@@ -854,7 +862,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group binary
     */
@@ -867,7 +875,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group binary
     */
@@ -881,7 +889,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group binary
     */
@@ -894,7 +902,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group uuid
     */
@@ -907,7 +915,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsNamed
     *
     * @group uuid
     */
@@ -920,7 +928,7 @@ trait Row {
     *
     * $nullSafetyNote
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group uuid
     */
@@ -933,7 +941,7 @@ trait Row {
     *
     * $returningNone
     *
-    * $exceptions
+    * $exceptionsIdx
     *
     * @group uuid
     */

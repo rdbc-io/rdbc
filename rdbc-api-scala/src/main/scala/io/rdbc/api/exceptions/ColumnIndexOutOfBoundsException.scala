@@ -16,9 +16,5 @@
 
 package io.rdbc.api.exceptions
 
-class NoKeysReturnedException(msg: String, cause: Option[Throwable])
-  extends RdbcException(msg, cause) {
-  def this(msg: String) = this(msg, None)
-  def this(msg: String, cause: Throwable) = this(msg, Some(cause))
-  def this(cause: Throwable) = this(cause.getMessage, Some(cause))
-}
+class ColumnIndexOutOfBoundsException(val idx: Int, val size: Int)
+  extends RdbcException(s"Requested index $idx is out of range, column count is $size")

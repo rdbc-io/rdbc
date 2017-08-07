@@ -19,7 +19,7 @@ package io.rdbc.implbase
 import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import java.util.UUID
 
-import io.rdbc.api.exceptions.{ConversionException, MissingColumnException}
+import io.rdbc.api.exceptions.{ColumnIndexOutOfBoundsException, ConversionException, MissingColumnException}
 import io.rdbc.sapi.{SqlNumeric, TypeConverter, TypeConverterRegistry}
 import org.scalamock.scalatest.MockFactory
 
@@ -316,9 +316,8 @@ class RowPartialImplSpec
         named.getOrElse(name, throw new MissingColumnException(name))
       }
       protected def any(idx: Int): Option[Any] = {
-        positional.getOrElse(idx, throw new MissingColumnException(idx.toString))
+        positional.getOrElse(idx, throw new ColumnIndexOutOfBoundsException(idx, 0))
       }
-      //TODO decide what any(idx: Int) should throw, definitely not MissingColumnException
     }
   }
 
