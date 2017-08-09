@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.rdbc.test
+package io.rdbc.tck
 
 import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi._

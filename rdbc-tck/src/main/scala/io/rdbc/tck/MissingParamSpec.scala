@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.rdbc.test
+package io.rdbc.tck
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer

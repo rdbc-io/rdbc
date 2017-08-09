@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.rdbc.test
+package io.rdbc.tck
 
 import io.rdbc.ImmutSeq
 import io.rdbc.sapi._
-import io.rdbc.test.util.Subscribers
+import io.rdbc.tck.util.Subscribers
 import org.reactivestreams.Subscriber
 
 import scala.concurrent.Promise

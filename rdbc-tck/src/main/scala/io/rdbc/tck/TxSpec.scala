@@ -14,16 +14,30 @@
  * limitations under the License.
  */
 
-package io.rdbc
+package io.rdbc.tck
 
-import io.rdbc.sapi.Timeout
+import io.rdbc.sapi._
 
-import scala.concurrent.{Await, Awaitable}
+trait TxSpec {
+  this: RdbcSpec with TableSpec =>
 
-package object test {
+  protected def withAndWithoutTx(columnsDefinition: String)(block: (Connection, String) => Unit): Unit = {
+    "inside a transaction" in { c =>
+      withTable(c, columnsDefinition) { t =>
+        c.beginTx().get
+        try {
+          block(c, t)
+          c.commitTx().get
+        } finally {
+          c.rollbackTx().get
+        }
+      }
+    }
 
-  implicit class AwaitableOps[T](a: Awaitable[T]) {
-    def get(implicit atMost: Timeout): T = Await.result(a, atMost.value)
+    "without explicit transaction" in { c =>
+      withTable(c, columnsDefinition) { tableName =>
+        block(c, tableName)
+      }
+    }
   }
-
 }
