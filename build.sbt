@@ -95,7 +95,8 @@ lazy val rdbcUtil = (project in file("rdbc-util"))
     libraryDependencies ++= Vector(
       Library.sourcecode,
       Library.scalaLogging,
-      Library.scalatest % Test
+      Library.scalatest % Test,
+      Library.scalamock % Test
     ),
     buildInfoPackage := "io.rdbc.util"
   )
