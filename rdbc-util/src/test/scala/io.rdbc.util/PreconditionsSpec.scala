@@ -16,45 +16,139 @@
 
 package io.rdbc.util
 
-class PreconditionsSpec extends RdbcUtilSpec {
+import org.scalatest.Matchers
+
+class PreconditionsSpec
+  extends RdbcUtilSpec
+    with Matchers {
 
   "Preconditions not null checking feature" when {
-    "executed for single argument" should {
+    "notNull check is used" when {
+      "executed for single argument" should {
 
-      def test(arg: String): Unit = {
-        Preconditions.notNull(arg)
+        def test(arg: String): Unit = {
+          Preconditions.notNull(arg)
+        }
+
+        "throw NPE for null argument" in {
+          assertThrows[NullPointerException](test(null))
+        }
+
+        "not throw NPE for not-null argument" in {
+          noException should be thrownBy test("notnull")
+        }
       }
 
-      "throw NPE for null argument" in {
-        assertThrows[NullPointerException](test(null))
-      }
+      "executed for multiple arguments" should {
 
-      "not throw NPE for not-null argument" in {
-        test("notnull")
+        def test(arg1: String, arg2: String): Unit = {
+          Preconditions.notNull(arg1, arg2)
+        }
+
+        "throw NPE for all null arguments" in {
+          assertThrows[NullPointerException](test(null, null))
+        }
+
+        "throw NPE for first null argument" in {
+          assertThrows[NullPointerException](test(null, "notnull"))
+        }
+
+        "throw NPE for second null argument" in {
+          assertThrows[NullPointerException](test("notnull", null))
+        }
+
+        "not throw NPE for not-null arguments" in {
+          noException should be thrownBy test("notnull1", "notnull2")
+        }
       }
     }
+    "argsNotNull check is used" when {
+      "executed for single argument" should {
 
-    "executed for multiple arguments" should {
+        def test(arg: String): Unit = {
+          Preconditions.argsNotNull()
+        }
 
-      def test(arg1: String, arg2: String): Unit = {
-        Preconditions.notNull(arg1, arg2)
+        "throw NPE for null argument" in {
+          assertThrows[NullPointerException](test(null))
+        }
+
+        "not throw NPE for not-null argument" in {
+          noException should be thrownBy test("notnull")
+        }
       }
 
-      "throw NPE for all null arguments" in {
-        assertThrows[NullPointerException](test(null, null))
-      }
+      "executed for multiple arguments" should {
 
-      "throw NPE for first null argument" in {
-        assertThrows[NullPointerException](test(null, "notnull"))
-      }
+        def test(arg1: String, arg2: String): Unit = {
+          Preconditions.argsNotNull()
+        }
 
-      "throw NPE for second null argument" in {
-        assertThrows[NullPointerException](test("notnull", null))
-      }
+        "throw NPE for all null arguments" in {
+          assertThrows[NullPointerException](test(null, null))
+        }
 
-      "not throw NPE for not-null arguments" in {
-        test("notnull1", "notnull2")
+        "throw NPE for first null argument" in {
+          assertThrows[NullPointerException](test(null, "notnull"))
+        }
+
+        "throw NPE for second null argument" in {
+          assertThrows[NullPointerException](test("notnull", null))
+        }
+
+        "not throw NPE for not-null arguments" in {
+          noException should be thrownBy test("notnull1", "notnull2")
+        }
       }
+    }
+  }
+
+  "Preconditions generic arg checking feature" should {
+    val failMessage = "must be 'a'"
+    def test(str: String): Unit = {
+      Preconditions.check(str, str == "a", failMessage)
+    }
+
+    "throw IAE for failing checks" in {
+      the[IllegalArgumentException] thrownBy {
+        test("b")
+      } should have message s"requirement failed: parameter 'str' $failMessage"
+    }
+
+    "not throw IAE for succeeding checks" in {
+      noException should be thrownBy test("a")
+    }
+  }
+
+  "Preconditions traversable emptiness checking feature" should {
+    def test(vec: Vector[Int]): Unit = {
+      Preconditions.checkNonEmpty(vec)
+    }
+
+    "throw IAE for empty traversables" in {
+      the[IllegalArgumentException] thrownBy {
+        test(Vector.empty)
+      } should have message "requirement failed: parameter 'vec' cannot be empty"
+    }
+
+    "not throw IAE for succeeding checks" in {
+      noException should be thrownBy test(Vector(1))
+    }
+  }
+
+  "Preconditions string emptiness checking feature" should {
+    def test(str: String): Unit = {
+      Preconditions.checkNonEmptyString(str)
+    }
+
+    "throw IAE for empty strings" in {
+      the[IllegalArgumentException] thrownBy {
+        test("")
+      } should have message "requirement failed: parameter 'str' cannot be empty"
+    }
+
+    "not throw IAE for succeeding checks" in {
+      noException should be thrownBy test("nonempty")
     }
   }
 }

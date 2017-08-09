@@ -33,7 +33,7 @@ object Preconditions {
   }
 
   def check[A](arg: sourcecode.Text[A], requirement: Boolean, msg: String): Unit = {
-    require(requirement, s"Requirement failed for parameter '${arg.source}': $msg")
+    require(requirement, s"parameter '${arg.source}' $msg")
   }
 
   def checkNonEmpty(arg: sourcecode.Text[TraversableOnce[_]]): Unit = {
