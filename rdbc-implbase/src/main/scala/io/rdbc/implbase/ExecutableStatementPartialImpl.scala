@@ -16,7 +16,7 @@
 
 package io.rdbc.implbase
 
-import io.rdbc.api.exceptions.NoKeysReturnedException
+import io.rdbc.api.exceptions.{ColumnIndexOutOfBoundsException, NoKeysReturnedException}
 import io.rdbc.sapi._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -67,9 +67,13 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
   }
 
   override def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K] = {
-    executeForValue[K](_.col(0)).flatMap {
-      case Some(key) => Future.successful(key)
-      case None => Future.failed(new NoKeysReturnedException)
+    executeForValue[Option[K]](_.colOpt(0)).flatMap {
+      case Some(Some(key)) => Future.successful(key)
+      case Some(None) => Future.failed(new NoKeysReturnedException("Row's first column is NULL"))
+      case None => Future.failed(new NoKeysReturnedException("No rows were returned"))
+    }.recoverWith {
+      case ex: ColumnIndexOutOfBoundsException =>
+        Future.failed(new NoKeysReturnedException(ex))
     }
   }
 }
