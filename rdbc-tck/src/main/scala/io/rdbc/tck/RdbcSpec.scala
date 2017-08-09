@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.rdbc.test
+package io.rdbc.tck
 
 import io.rdbc.sapi.{Connection, Timeout}
-import io.rdbc.test.util.BlockingExecutionContext
+import io.rdbc.tck.util.BlockingExecutionContext
 import org.scalatest.{Matchers, Outcome, fixture}
 
 import scala.concurrent.ExecutionContext

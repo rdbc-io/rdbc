@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.rdbc.test.util
+package io.rdbc.tck.util
 
 import scala.concurrent.ExecutionContext
 
-private[test] class BlockingExecutionContext extends ExecutionContext {
+private[tck] class BlockingExecutionContext extends ExecutionContext {
   def execute(runnable: Runnable): Unit = runnable.run()
   def reportFailure(cause: Throwable): Unit = throw cause
 }

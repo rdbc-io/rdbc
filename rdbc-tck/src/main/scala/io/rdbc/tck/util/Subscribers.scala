@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package io.rdbc.test.util
+package io.rdbc.tck.util
 
 import io.rdbc.ImmutSeq
 import io.rdbc.sapi.{Row, Timeout}
-import io.rdbc.test._
+import io.rdbc.tck._
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.concurrent.{Future, Promise}
 
-private[test] object Subscribers {
+private[tck] object Subscribers {
   def eager(): HeadSubscriber = new HeadSubscriber(None)
   def head(n: Long): HeadSubscriber = new HeadSubscriber(Some(n))
   def ignoring(): IgnoringSubscriber = new IgnoringSubscriber
   def chunk(implicit subscribeTimeout: Timeout): ChunkSubscriber = new ChunkSubscriber()(subscribeTimeout)
 }
 
-private[test] class IgnoringSubscriber extends Subscriber[Any] {
+private[tck] class IgnoringSubscriber extends Subscriber[Any] {
   override def onError(t: Throwable): Unit = ()
 
   override def onSubscribe(s: Subscription): Unit = s.request(Long.MaxValue)
@@ -40,7 +40,7 @@ private[test] class IgnoringSubscriber extends Subscriber[Any] {
   override def onNext(ignored: Any): Unit = ()
 }
 
-private[test] class HeadSubscriber(n: Option[Long]) extends Subscriber[Row] {
+private[tck] class HeadSubscriber(n: Option[Long]) extends Subscriber[Row] {
   private val promise = Promise[ImmutSeq[Row]]
   private var buf = Vector.empty[Row]
 
@@ -75,7 +75,7 @@ private[test] class HeadSubscriber(n: Option[Long]) extends Subscriber[Row] {
   }
 }
 
-private[test] class ChunkSubscriber()(implicit subscribeTimeout: Timeout) extends Subscriber[Row] {
+private[tck] class ChunkSubscriber()(implicit subscribeTimeout: Timeout) extends Subscriber[Row] {
   private var _rowsPromise = Promise[ImmutSeq[Row]]
   private val completionPromise = Promise[Unit]
   private var buf = Vector.empty[Row]

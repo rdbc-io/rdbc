@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.rdbc.test
+package io.rdbc.tck
 
 import java.util.concurrent.atomic.AtomicInteger
 

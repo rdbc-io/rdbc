@@ -35,7 +35,7 @@ lazy val rdbcRoot = (project in file("."))
   .settings(
     publishArtifact := false
   )
-  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil, rdbcTests)
+  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil, rdbcTck)
 
 lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   .enablePlugins(BuildInfoPlugin)
@@ -101,18 +101,18 @@ lazy val rdbcUtil = (project in file("rdbc-util"))
     buildInfoPackage := "io.rdbc.util"
   )
 
-lazy val rdbcTests = (project in file("rdbc-tests"))
+lazy val rdbcTck = (project in file("rdbc-tck"))
   .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
-    name := "rdbc-tests",
+    name := "rdbc-tck",
     libraryDependencies ++= Vector(
       Library.scalactic,
       Library.scalatest,
       Library.reactiveStreamsTck,
       Library.akkaStream
     ),
-    buildInfoPackage := "io.rdbc.test",
+    buildInfoPackage := "io.rdbc.tck",
     scalacOptions -= "-Ywarn-value-discard"
   ).dependsOn(rdbcApiScala)
 

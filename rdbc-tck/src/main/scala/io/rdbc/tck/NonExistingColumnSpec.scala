@@ -14,48 +14,85 @@
  * limitations under the License.
  */
 
-package io.rdbc.test
+package io.rdbc.tck
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Source}
 import io.rdbc.api.exceptions.InvalidQueryException
 import io.rdbc.sapi._
-import io.rdbc.test.util.Subscribers
+import io.rdbc.tck.util.Subscribers
 
 import scala.concurrent.Future
 
-trait NonExistingTableSpec extends RdbcSpec {
+trait NonExistingColumnSpec
+  extends RdbcSpec
+    with TableSpec {
+
+  protected def arbitraryDataType: String
 
   protected implicit def system: ActorSystem
   protected implicit def materializer: Materializer
 
-  "Error should be returned when referencing a non-existent table when" - {
-    stmtTest("Select", _.statement(sql"select * from nonexistent"), errPos = 15)
-    stmtTest("Insert", _.statement(sql"insert into nonexistent values (1)"), errPos = 13)
-    stmtTest("Returning insert",
-      _.statement(sql"insert into nonexistent values (1)", StatementOptions.ReturnGenKeys),
-      errPos = 13
+  final case class WrongStatement(stmt: ExecutableStatement, errPos: Int)
+
+  "Error should be returned when referencing a non-existent column when" - {
+    stmtTest("Select", (c, t) =>
+      WrongStatement(
+        c.statement(sql"select nonexistent from #$t"),
+        errPos = 8
+      )
     )
-    stmtTest("Delete", _.statement(sql"delete from nonexistent"), errPos = 13)
-    stmtTest("Update", _.statement(sql"update nonexistent set x = 1"), errPos = 8)
-    stmtTest("DDL", _.statement(sql"drop table nonexistent"), errPos = 12)
+
+    stmtTest("Insert", (c, t) =>
+      WrongStatement(
+        c.statement(sql"insert into #$t(nonexistent) values (1)"),
+        errPos = 14 + t.length
+      )
+    )
+
+    stmtTest("Returning insert", (c, t) =>
+      WrongStatement(
+        c.statement(sql"insert into #$t(nonexistent) values (1)", StatementOptions.ReturnGenKeys),
+        errPos = 14 + t.length
+      )
+    )
+
+    stmtTest("Delete", (c, t) =>
+      WrongStatement(
+        c.statement(sql"delete from #$t where nonexistent = 1"),
+        errPos = 20 + t.length)
+    )
+
+    stmtTest("Update", (c, t) =>
+      WrongStatement(
+        c.statement(sql"update #$t set nonexistent = 1"),
+        errPos = 13 + t.length)
+    )
+
+    stmtTest("DDL", (c, t) =>
+      WrongStatement(
+        c.statement(sql"alter table #$t drop column nonexistent"),
+        errPos = 26 + t.length)
+    )
   }
 
   "Streaming arguments should" - {
     "fail with an InvalidQueryException" - {
-      "when statement references a non-existing table" in { c =>
-          val stmt = c.statement("insert into nonexistent values (:x)")
+      "when statement references a non-existing column" in { c =>
+        withTable(c, s"col $arbitraryDataType") { tbl =>
+          val stmt = c.statement(s"insert into $tbl(nonexistent) values (:x)")
           val src = Source(Vector(Vector(1), Vector(2))).runWith(Sink.asPublisher(fanout = false))
 
-          assertInvalidQueryThrown(errPos = 13) {
+          assertInvalidQueryThrown(errPos = 14 + tbl.length) {
             stmt.streamArgsByIdx(src).get
+          }
         }
       }
     }
   }
 
-  private def stmtTest(stmtType: String, stmt: Connection => ExecutableStatement, errPos: Int): Unit = {
+  private def stmtTest(stmtType: String, stmt: (Connection, String) => WrongStatement): Unit = {
     s"executing a $stmtType for" - {
       executedFor("nothing", _.execute())
       executedFor("set", _.executeForSet())
@@ -71,14 +108,16 @@ trait NonExistingTableSpec extends RdbcSpec {
 
       def executedFor[A](executorName: String, executor: ExecutableStatement => Future[A]): Unit = {
         s"executed for $executorName" in { c =>
-          assertInvalidQueryThrown(errPos) {
-            executor(stmt(c)).get
+          withTable(c, s"col $arbitraryDataType") { t =>
+            val wrongStmt = stmt(c, t)
+            assertInvalidQueryThrown(wrongStmt.errPos) {
+              executor(wrongStmt.stmt).get
+            }
           }
         }
       }
     }
   }
-
 
   private def assertInvalidQueryThrown(errPos: Int)(body: => Any): Unit = {
     val e = intercept[InvalidQueryException] {
