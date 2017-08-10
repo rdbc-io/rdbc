@@ -37,5 +37,6 @@ There are a couple of core concepts that the API is built upon:
 *    **Limiting execution time**
 
      So that application doesn't "hang" forever, operations that interact with
-     the database accept a mandatory `implicit` [`Timeout`]() instance which
-     controls maximum processing time.
+     the database accept a mandatory `implicit`
+     [`Timeout`]({{scaladocRoot}}/io/rdbc/sapi/Timeout.html)
+     instance which controls maximum processing time.

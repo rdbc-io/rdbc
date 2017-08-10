@@ -21,14 +21,13 @@ Here are some questions that have a potential to become frequently asked.
 
 1.    **I have plenty of time, I don't want to use any timeout for any of my queries. What can I do?**
 
-      Import `Timeout` instance of infinite duration either by importing `io.rdbc.sapi._`
-      or directly `io.rdbc.sapi.Timeout.Implicits.inf`.
+      Declare implicit `Timeout` instance of infinite duration &mdash; `io.rdbc.sapi.Timeout.Inf`.
 
       ---
 
 2.    **How do I build SQL dynamically using `sql` interpolator?**
 
-      Use special `#$` prefix for the dynamic parts. See [this]()
+      Use special `#$` prefix for the dynamic parts. See [this](statements.md#dynamic-sql)
       paragraph for details.
 
       ---
@@ -60,4 +59,4 @@ Here are some questions that have a potential to become frequently asked.
 4.    **I'm executing insert statement and trying to get auto-generated key from the DB but nothing is returned. What am I doing wrong?**
 
       You probably forgot to set a `generatedKeyCols` statement option accordingly.
-      See [this]() paragraph for details.
+      See [this](statements.md#options) paragraph for details.

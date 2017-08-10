@@ -37,8 +37,8 @@ Following table lists mapping between Scala and SQL types.
 | VARBINARY                 | `Array[Byte]`|
 | BLOB                      | `Array[Byte]`|
 | BOOLEAN                   | `Boolean`|
-| NUMERIC                   | [`io.rdbc.sapi.SqlNumeric`]()|
-| DECIMAL                   | [`io.rdbc.sapi.SqlNumeric`]()|
+| NUMERIC                   | [`io.rdbc.sapi.SqlNumeric`]({{scaladocRoot}}/io/rdbc/sapi/SqlNumeric$.html)|
+| DECIMAL                   | [`io.rdbc.sapi.SqlNumeric`]({{scaladocRoot}}/io/rdbc/sapi/SqlNumeric$.html)|
 | REAL                      | `Float`|
 | DOUBLE                    | `Double`|
 | SMALLINT                  | `Short`|
@@ -78,7 +78,8 @@ conversions.
 | TIMESTAMP | `java.time.LocalDate` | Time part is truncated.
 | TIMESTAMP | `java.time.LocalTime` | Date part is truncated.
 
-If client requests to convert between inconvertible types, [`ConversionException`]()
+If client requests to convert between inconvertible types,
+[`ConversionException`]({{scaladocRoot}}/io/rdbc/api/exceptions/ConversionException.html)
 is thrown.
 
 ## Statement argument type conversions

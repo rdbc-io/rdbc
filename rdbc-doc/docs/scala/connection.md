@@ -19,18 +19,21 @@
 
 ## Connecting to a database
 
-To connect to a database you first need to get a hold on [`ConnectionFactory`]()
+To connect to a database you first need to get a hold on [`ConnectionFactory`]({{scaladocRoot}}/io/rdbc/sapi/ConnectionFactory.html)
 implementation provided by a rdbc driver. Consult the driver's documentation on how to
 instantiate and configure `ConnectionFactory` it provides. 
 
-To connect to a database means to obtain [`Connection`]() instance. Once you have
+To connect to a database means to obtain [`Connection`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html) instance. Once you have
 the factory, you have the following options on how to get the connection:
 
 ### Manually opening and releasing a connection
 
-Connection factory provides [`connection`]() method that simply returns a `Future`
-holding a `Connection`. A connection obtained this way must be then released
-manually using [`release`]() method. Here's the example usage:
+Connection factory provides 
+[`connection`]({{scaladocRoot}}/io/rdbc/sapi/ConnectionFactory.html#connection()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[io.rdbc.sapi.Connection])
+method that simply returns a `Future` holding a `Connection`. A connection
+obtained this way must be then released manually using 
+[`release`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#release():scala.concurrent.Future[Unit])
+method. Here's the example usage:
 
 ```scala
 import io.rdbc.sapi._
@@ -45,7 +48,8 @@ val result = cf.connect().flatMap { conn =>
    conn.release()
 }
 ```
-[`andThenF`]() future combinator provided by [rdbc utilities](utilities.md) package
+[`andThenF`]({{scaladocRoot}}io/rdbc/util/Futures$$FutureOps.html#andThenF[U](pf:PartialFunction[scala.util.Try[T],scala.concurrent.Future[U]])(implicitec:scala.concurrent.ExecutionContext):scala.concurrent.Future[T])
+future combinator provided by [rdbc utilities](utilities.md) package
 is like a standard `andThen` but partial function passed to it returns a `Future` and
 the chain can proceed only when this future completes. Relation between
 `andThenF` and `andThen` is analogous to the relation between `flatMap` and `map`.
@@ -53,9 +57,10 @@ the chain can proceed only when this future completes. Relation between
 ### Using the loan pattern
 
 Even if you haven't heard about the loan pattern you probably know what it is.
-Connection factory provides [`withConnection`]() method that executes a block
-of code in the context of a database connection and releases the connection
-afterwards. It looks like this:
+Connection factory provides
+[`withConnection`]({{scaladocRoot}}/io/rdbc/sapi/ConnectionFactory.html#withConnection[A](body:io.rdbc.sapi.Connection=>scala.concurrent.Future[A])(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[A])
+method that executes a block of code in the context of a database connection and
+releases the connection afterwards. It looks like this:
 
 ```scala
 import io.rdbc.sapi._
@@ -85,19 +90,24 @@ transactions.
 ### Manual
 
 Managing transaction manually means using the three methods provided by `Connection`
-trait: [`beginTx`](), [`commitTx`]() and [`rollbackTx`](). Each of these methods
-return a `Future` of `Unit` &mdash; there is no dedicated trait or class representing
-a transaction. Similar to manual handling of connecting and disconnecting from
-the database, manual transaction management is kind of cumbersome. When you
-don't need the flexibility provided by the three methods, use the transactional
-loan pattern described below.
+trait:
+[`beginTx`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#beginTx()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Unit]),
+[`commitTx`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#commitTx()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Unit])
+and [`rollbackTx`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#rollbackTx()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Unit]). 
+Each of these methods return a `Future` of `Unit` &mdash; there is no dedicated 
+trait or class representing a transaction. Similar to manual handling of connecting
+and disconnecting from the database, manual transaction management is kind of
+cumbersome. When you don't need the flexibility provided by the three methods,
+use the transactional loan pattern described below.
 
 ### Using the transactional loan pattern
 
-`Connection` trait provides [`withTransaction`]() method which allows to execute
-a block of code in a context of a newly started transaction. If a `Future` returned
-by the block of code is successful, the transaction will be committed &mdash; if
-it fails, the transaction will be rolled back:
+`Connection` trait provides
+[`withTransaction`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#withTransaction[A](body:=>scala.concurrent.Future[A])(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[A])
+method which allows to execute a block of code in a context of a newly started
+transaction. If a `Future` returned by the block of code is successful, the
+transaction will be committed &mdash; if it fails, the transaction will be rolled
+back:
 
 ```scala
 import io.rdbc.sapi._
@@ -116,8 +126,9 @@ If any error occurs when rolling back the transaction, this error will be report
 to the execution context and the original error causing the rollback will be returned.
 
 It's a common use case to connect to the database and execute just a single
-transaction. This use case is covered by [`withTransaction`]() method
-provided by a `ConnectionFactory`. Above snippet could be simplified as follows:
+transaction. This use case is covered by 
+[`withTransaction`]({{scaladocRoot}}/io/rdbc/sapi/ConnectionFactory.html#withTransaction[A](body:io.rdbc.sapi.Connection=>scala.concurrent.Future[A])(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[A])
+method provided by a `ConnectionFactory`. Above snippet could be simplified as follows:
 
 ```scala
 import io.rdbc.sapi._
@@ -135,7 +146,9 @@ val result = cf.withTransaction { conn =>
 Sometimes, it may be useful to verify whether already open connection is "valid",
 i.e. whether it can still execute queries. A connection may get broken because of
 a number of reasons including network-related problems. To check whether the connection
-is usable, use a [`validate`]() method which returns a `Future` of `Boolean`.
+is usable, use
+[`validate`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#validate()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Unit])
+method.
 
 Connection can also be validated by executing any query but using `validate` is
 a preferred way since it can leverage a vendor-specific way of validating the
@@ -147,9 +160,9 @@ As every other rdbc class, `Connection` is thread-safe. However, it doesn't mean
 that multiple threads can execute queries using the same connection at the same
 time. Only one operation can be executed at any given time. When some thread tries
 to use a non-idle connection, resulting `Future` fails with
-[`IllegalSessionStateException`]().
+[`IllegalSessionStateException`]({{scaladocRoot}}/io/rdbc/api/exceptions/IllegalSessionStateException.html).
 Exception to this rule is 
-[`forceRelease`]()
+[`forceRelease`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#forceRelease():scala.concurrent.Future[Unit])
 method which can be used regardless of whether connection is idle or not.
 
 Example below demonstrates an invalid code which can fail with `IllegalSessionStateException`:
@@ -185,9 +198,10 @@ cf.withConnection { conn =>
 }
 ```
 
-`Connection` also provides [`watchForIdle`]() method returning future which
-completes when connection becomes idle. Snippet below is safe from failing
-with `IllegalSessionStateException`.
+`Connection` also provides
+[`watchForIdle`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#watchForIdle:scala.concurrent.Future[Unit])
+method returning future which completes when connection becomes idle. Snippet below
+is safe from failing with `IllegalSessionStateException`.
 
 ```scala
 import io.rdbc.sapi._

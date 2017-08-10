@@ -17,7 +17,8 @@
     rdbc project and this documentation is still a work in progress.
     It's not ready yet for production use.
 
-Statement rows are represented in rdbc as [`Row`]() trait. This chapter describes
+Statement rows are represented in rdbc as
+[`Row`]({{scaladocRoot}}/io/rdbc/sapi/Row.html) trait. This chapter describes
 this trait and methods it provides that give access column values.
 
 ## Generic methods
@@ -42,7 +43,8 @@ The methods differ from one another in two areas:
 *    **Null-safety**
 
      `colOpt` methods are null-safe, and `col` methods aren't. You can't use
-     plain `col` method to get SQL `NULL` values. If you try that, [`ConversionException`]()
+     plain `col` method to get SQL `NULL` values. If you try that,
+     [`ConversionException`]({{scaladocRoot}}/io/rdbc/api/exceptions/ConversionException.html)
      will be thrown. `colOpt` returns `Option` so it's fit for handling `NULL`s
      &mdash; it represents them by `None`. `col` method is intended to be used
      only for columns that can't hold `NULL` values, for example because there is
@@ -54,7 +56,7 @@ The methods differ from one another in two areas:
 by type and their names reflect the type they return. They are simply shortcuts
 for calling generic `col` methods described earlier. For instance, there is a
 `str` method that is a shortcut for calling `col[String]` method. See the 
-[`Row` Scaladoc]() for a complete list.
+[`Row` Scaladoc]({{scaladocRoot}}/io/rdbc/sapi/Row.html) for a complete list.
 
 If you want to use types supported by the particular driver but not supported
 by default by rdbc, you must always use generic `col` methods.
