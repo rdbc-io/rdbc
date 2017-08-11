@@ -16,7 +16,7 @@
 
 package io.rdbc.sapi
 
-private[sapi] trait SqlInterpolatorTrait {
+trait SqlInterpolatorTrait {
   implicit class Sql(val sc: StringContext) {
 
     /** A "sql" string interpolator that provides functionality to
