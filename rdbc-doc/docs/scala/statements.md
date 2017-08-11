@@ -86,9 +86,11 @@ select * from users where first_name = '?' -- or middle_name = ?
 ### Bare strings
 
 Statement can be created using a bare string and then in a separate step be
-filled with arguments for execution. There is a [`statement`]() method defined in `Connection`
-trait that accepts a string, and returns a [`Statement`]() instance bound to the
-connection:
+filled with arguments for execution. There is a 
+[`statement`]({{scaladocRoot}}/io/rdbc/sapi/Connection.html#statement(sql:String):io.rdbc.sapi.Statement)
+method defined in `Connection` trait that accepts a string, and returns a
+[`Statement`]({{scaladocRoot}}/io/rdbc/sapi/Statement.html)
+instance bound to the connection:
 
 ```scala
 val stmt: Statement = conn.statement(
@@ -106,9 +108,12 @@ Once you have a `Statement` object, you can bind values to its parameters:
     statement's parameters could be bound to values like this:
     `:::scala stmt.bind("name" -> "Casey", "age" -> 30)`.
     
-    If you don't provide all parameter values when binding, a `MissingParamValException`
+    If you don't provide all parameter values when binding, a
+    [`MissingParamValException`]({{scaladocRoot}}/io/rdbc/api/exceptions/MissingParamValException.html)
     will be thrown. If you provide value for a parameter that wasn't declared by
-    the query, [`NoSuchParamException`]() will be thrown.
+    the query,
+    [`NoSuchParamException`]({{scaladocRoot}}/io/rdbc/api/exceptions/NoSuchParamException.html)
+    will be thrown.
     
     Binding by name is available only if name parameters were used.
 
@@ -119,8 +124,12 @@ Once you have a `Statement` object, you can bind values to its parameters:
     occurrence. Arguments can be bound to the above query like this:
     `:::scala stmt.bind("Casey", "Casey", 30)`.
     
-    If you provide too many parameters [`TooManyParamsException`]() will be thrown.
-    If you provide too few parameters [`MissingParamValException`]() will be thrown.
+    If you provide too many parameters
+    [`TooManyParamsException`]({{scaladocRoot}}/io/rdbc/api/exceptions/TooManyParamsException.html)
+    will be thrown.
+    If you provide too few parameters
+    [`MissingParamValException`]({{scaladocRoot}}/io/rdbc/api/exceptions/MissingParamValException.html)
+    will be thrown.
     
     This method of binding is the only one available if you used positional parameters.
 
@@ -130,7 +139,8 @@ Once you have a `Statement` object, you can bind values to its parameters:
 
 Creating statements using simple strings and binding values to parameters in
 a separate step is flexible but this flexibility is not really needed in most
-cases. A preferred way of creating statements is by using [`sql`]()
+cases. A preferred way of creating statements is by using
+[`sql`]({{scaladocRoot}}/io/rdbc/sapi/SqlInterpolatorTrait$Sql.html#sql(args:Any*):io.rdbc.sapi.SqlWithParams)
 [string interpolator](http://docs.scala-lang.org/overviews/core/string-interpolation.html).
 
 You can get `sql` interpolator into scope either by importing everything from
@@ -203,7 +213,8 @@ simply replaced by `table` method parameter value.
 
 When creating a statement you can provide options that can tweak statement's
 behavior. To pass options, use `Connection`'s `statement` methods that accept
-second argument of [`StatementOptions`]() type.
+second argument of
+[`StatementOptions`]({{scaladocRoot}}/io/rdbc/sapi/StatementOptions$.html) type.
 
 The list below contains currently supported options:
 
@@ -245,7 +256,9 @@ results from the database. Paragraphs below describe methods of executing statem
 
 Arguably the simplest method of execution that returns results is to execute
 statement for a result set. To do this, use `ExecutableStatement`'s
-[`executeForSet`]() method that returns `Future` of [`ResultSet`]().
+[`executeForSet`]({{scaladocRoot}}/io/rdbc/sapi/ExecutableStatement.html#executeForSet()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[io.rdbc.sapi.ResultSet])
+method that returns `Future` of
+[`ResultSet`]({{scaladocRoot}}/io/rdbc/sapi/ResultSet.html).
 
 `ResultSet` gives you access to the rows as well as to the metadata like warnings
 issued by the DB engine, columns metadata and count of rows affected by the statement.
@@ -255,20 +268,24 @@ through the rows.
 Executing for set is simple, but be aware that for bigger sets you may encounter
 `OutOfMemoryError`s. All results are stored in memory, there is no paging of any
 kind. If you want to avoid this sort of problems, consider
-[streaming](statements/#streaming-results) the results.
+[streaming](statements.md#streaming-results) the results.
 
 For the documentation on how to work with the resulting rows see
-[Result Rows](rows) chapter.
+[Result Rows](rows.md) chapter.
 
 **TODO example**
     
 ### Streaming results
 
-To stream results from the database, use `ExecutableStatement`'s [`stream`]()
-method. This method returns [`RowPublisher`]() instance which implements
-reactive stream's [`Publisher`]() interface. Items published are rows represented
-by `Row` trait. For the documentation on how to work with the resulting rows see
-[Result Rows](rows) chapter.
+To stream results from the database, use `ExecutableStatement`'s
+[`stream`]({{scaladocRoot}}/io/rdbc/sapi/ExecutableStatement.html#stream()(implicittimeout:io.rdbc.sapi.Timeout):io.rdbc.sapi.RowPublisher)
+method. This method returns
+[`RowPublisher`]({{scaladocRoot}}/io/rdbc/sapi/RowPublisher.html)
+instance which implements reactive stream's
+[`Publisher`](http://www.reactive-streams.org/reactive-streams-1.0.1-javadoc/)
+interface. Items published are rows represented by `Row` trait. For the
+documentation on how to work with the resulting rows see [Result Rows](rows.md)
+chapter.
 
 Here are a couple of things to know when working with streams:
 
@@ -284,7 +301,8 @@ Here are a couple of things to know when working with streams:
 
 Processing streams is out of scope of this manual, for details please refer to
 documentation of libraries that are built to facilitate this, like
-[Akka stream]() or [Monix]().
+[Akka stream](http://doc.akka.io/docs/akka/current/scala/stream/index.html) or
+[Monix](https://monix.io/).
 
 **TODO describe how to release connection after stream completion**
 
@@ -307,9 +325,11 @@ def insertUser(name: String): Future[Unit] = {
 
 It is a common use case to expect just a single row to be returned by a query.
 For instance, when querying by a primary key. This can be easily achieved by
-using `ExecutableStatement`'s [`executeForFirstRow`]() method which returns
-a `Future` of `Option[Row]`. Returned `Option` is `None` in case when query
-doesn't return any results, otherwise, the first row is returned as a `Some`.
+using `ExecutableStatement`'s
+[`executeForFirstRow`]({{scaladocRoot}}/io/rdbc/sapi/ExecutableStatement.html#executeForFirstRow()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Option[io.rdbc.sapi.Row]])
+method which returns a `Future` of `Option[Row]`. Returned `Option` is `None`
+in case when query doesn't return any results, otherwise, the first row is
+returned as a `Some`.
 
 Example:
 
@@ -321,9 +341,10 @@ def findUser(login: String): Future[Option[Row]] = {
 ```
 
 Sometimes, not even a single row is needed by a client, only a single column
-value, like user's name when searching by login. [`executeForValue`]() method
-comes in handy in these kind of situations. The method accepts  a function that
-is supposed to extract this single value from a returned row, if any.
+value, like user's name when searching by login.
+[`executeForValue`]({{scaladocRoot}}/io/rdbc/sapi/ExecutableStatement.html#executeForValue[A](valExtractor:io.rdbc.sapi.Row=>A)(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Option[A]])
+method comes in handy in these kind of situations. The method accepts  a function
+that is supposed to extract this single value from a returned row, if any.
 
 See the example below:
 
@@ -342,8 +363,9 @@ For the documentation on how to work with the resulting rows see
 When executing insert, update or delete statements it may be good to know
 how many rows were affected by the execution. A number of affected rows can be
 obtained when executing for set or by streaming but if it's the only information
-that is needed use `ExecutableStatement`'s `executeForRowsAffected` method
-which returns a `Future` of `Long`.
+that is needed use `ExecutableStatement`'s 
+[`executeForRowsAffected`]({{scaladocRoot}}/io/rdbc/sapi/ExecutableStatement.html#executeForRowsAffected()(implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[Long])
+method which returns a `Future` of `Long`.
 
 See the example below:
 
@@ -360,9 +382,10 @@ If you rely on primary keys being generated by the database when inserting
 new records you'll need just this one key as a result of the execution. If you
 need to get multiple generated values then use `executeForStream`, `executeForSet`
 or `executeForFirstRow` described above but for a single one, there is
-[`executeForKey`]() method. This method executes a statement and returns the first
-column of the first returned row (in most cases the result is going to be a single
-row with a single column anyway). The method is parametrized by a type of the key.
+[`executeForKey`]({{scaladocRoot}}/io/rdbc/sapi/ExecutableStatement.html#executeForKey[K]()(implicitevidence$1:scala.reflect.ClassTag[K],implicittimeout:io.rdbc.sapi.Timeout):scala.concurrent.Future[K])
+method. This method executes a statement and returns the first column of the first
+returned row (in most cases the result is going to be a single row with a single
+column anyway). The method is parametrized by a type of the key.
 
 A method in the example below inserts a new user and returns a generated UUID key.
 
@@ -371,7 +394,7 @@ def insertUser(name: String, age: Int): Future[UUID] = {
   conn.statement(
         sql"insert into users(name, age) values($name, $age)",
         StatementOptions.ReturnGenKeys
-  ).executeForKey[UUID]()
+  ).executeForKey[UUID]({{scaladocRoot}})
 }
 ```
 
