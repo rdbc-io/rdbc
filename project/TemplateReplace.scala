@@ -25,7 +25,9 @@ object TemplateReplace extends AutoPlugin {
         val substituted = Source.fromFile(f, "UTF-8").getLines().map { line =>
           var newLine = line
           variables.foreach { case (variable, value) =>
-            newLine = newLine.replaceAll(s"\\{\\{$variable\\}\\}", value)
+            newLine = newLine
+              .replaceAll(s"\\{\\{$variable\\}\\}", value)
+              .replaceAll("""href="\.\./http""", """href="http""")
           }
           newLine
         }.reduce(_ + "\n" + _) + "\n"
