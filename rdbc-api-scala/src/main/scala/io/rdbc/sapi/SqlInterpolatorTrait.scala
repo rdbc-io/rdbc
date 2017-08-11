@@ -24,7 +24,7 @@ trait SqlInterpolatorTrait {
       *
       * {{{
       *  val id = 10
-      *  val select = conn.select(sql"select * from test where id = \$id")
+      *  val stmt = conn.statement(sql"select * from test where id = \$id")
       * }}}
       *
       * The code above produces `select * from test where id = ?` statement
@@ -37,7 +37,7 @@ trait SqlInterpolatorTrait {
       * {{{
       *  val id = 10
       *  val table = "test"
-      *  val select = conn.select(sql"select * from #\$table where id = \$id")
+      *  val stmt = conn.statement(sql"select * from #\$table where id = \$id")
       * }}}
       *
       * The code above produces `select * from test where id = ?` statement
