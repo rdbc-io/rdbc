@@ -11,9 +11,6 @@ pages:
       - Statements: scala/statements.md
       - Data types: scala/types.md
       - Result Rows: scala/rows.md
-      - Exceptions: scala/exceptions.md
-      - Frameworks integration: scala/frameworks.md
-      - Utilities: scala/utilities.md
       - FAQ: scala/faq.md
     - Java API user guide: java/java.md
     - Drivers: drivers.md
