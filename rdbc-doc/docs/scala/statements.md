@@ -133,7 +133,8 @@ Once you have a `Statement` object, you can bind values to its parameters:
     
     This method of binding is the only one available if you used positional parameters.
 
-**TODO describe what to do with statements without parameters.**
+If your statement doesn't declare any parameters, use `bind` method without
+passing any arguments to it.
 
 ### String interpolator
 
@@ -170,6 +171,12 @@ def findUsersStmt(name: String): ExecutableStatement = {
 }
 ```
 
+!!! tip "SQL injection safety"
+    Important thing to understand is that when using `sql` interpolator you're still
+    safe from creating SQL injection vulnerability. Even though it may look like
+    that, parameter values are **not** passed in to the database as literals
+    concatenated with the rest of the SQL.
+
 SQL parts created by `sql` interpolator can be concatenated in the same way you
 would concatenate plain strings:
 
@@ -181,10 +188,6 @@ def findUsersStmt(name: String, age: Int): ExecutableStatement = {
   )
 }
 ```
-
-Important thing to understand is that when using `sql` interpolator you're still
-safe from creating SQL injection vulnerability. Parameter values are **not** passed
-in to the database as literals concatenated with the rest of the SQL.
 
 #### Dynamic SQL
 
@@ -273,7 +276,11 @@ kind. If you want to avoid this sort of problems, consider
 For the documentation on how to work with the resulting rows see
 [Result Rows](rows.md) chapter.
 
-**TODO example**
+```scala
+def selectUserAge(name: String): Future[ResultSet] = {
+  conn.statement(sql"select age from users where name = $name").executeForSet()
+}
+```
     
 ### Streaming results
 
@@ -304,9 +311,29 @@ documentation of libraries that are built to facilitate this, like
 [Akka stream](http://doc.akka.io/docs/akka/current/scala/stream/index.html) or
 [Monix](https://monix.io/).
 
-**TODO describe how to release connection after stream completion**
+Examples:
 
-**TODO example**
+```scala
+import akka.stream.scaladsl.Source
+
+def streamNamesAkka(login: String): Source = {
+  Source.fromPublisher(
+    conn.statement(sql"select name from users where login = $login").stream()
+  )
+}
+```
+
+```scala
+import monix.reactive.Observable
+
+def streamNamesMonix(login: String): Observable = {
+  Observable.fromReactivePublisher(
+    conn.statement(sql"select name from users where login = $login").stream()
+  )
+}
+```
+
+**TODO describe how to release connection after stream completion**
 
 ### Executing ignoring results
 
@@ -314,6 +341,8 @@ In many cases clients are not interested in any result of statement execution
 other than simple "success" or "failure" information. This is often the case
 for `insert`, `update` and `delete` commands. This use case is covered by
 `ExecutableStatement`'s `execute` method which returns `Future` of `Unit`.
+
+Example:
 
 ```scala
 def insertUser(name: String): Future[Unit] = {
@@ -394,7 +423,7 @@ def insertUser(name: String, age: Int): Future[UUID] = {
   conn.statement(
         sql"insert into users(name, age) values($name, $age)",
         StatementOptions.ReturnGenKeys
-  ).executeForKey[UUID]({{scaladocRoot}})
+  ).executeForKey[UUID]()
 }
 ```
 

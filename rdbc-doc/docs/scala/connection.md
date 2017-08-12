@@ -49,9 +49,10 @@ val result = cf.connect().flatMap { conn =>
 }
 ```
 [`andThenF`]({{scaladocRoot}}io/rdbc/util/Futures$$FutureOps.html#andThenF[U](pf:PartialFunction[scala.util.Try[T],scala.concurrent.Future[U]])(implicitec:scala.concurrent.ExecutionContext):scala.concurrent.Future[T])
-future combinator provided by [rdbc utilities](utilities.md) package
-is like a standard `andThen` but partial function passed to it returns a `Future` and
-the chain can proceed only when this future completes. Relation between
+future combinator provided by
+[rdbc utilities](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.rdbc%22%20util)
+package is like a standard `andThen` but partial function passed to it returns
+a `Future` and the chain can proceed only when this future completes. Relation between
 `andThenF` and `andThen` is analogous to the relation between `flatMap` and `map`.
 
 ### Using the loan pattern

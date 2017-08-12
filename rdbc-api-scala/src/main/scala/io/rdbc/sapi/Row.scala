@@ -946,5 +946,4 @@ trait Row {
     * @group uuid
     */
   def uuidOpt(idx: Int): Option[UUID]
-  //TODO support arrays?
 }

@@ -33,10 +33,3 @@ There are a couple of core concepts that the API is built upon:
 
      SQL `NULL` values are represented as `Option` instances. Scala `null` doesn't
      have to be used when working with the API.
-
-*    **Limiting execution time**
-
-     So that application doesn't "hang" forever, operations that interact with
-     the database accept a mandatory `implicit`
-     [`Timeout`]({{scaladocRoot}}/io/rdbc/sapi/Timeout.html)
-     instance which controls maximum processing time.

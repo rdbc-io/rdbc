@@ -39,6 +39,7 @@ The methods differ from one another in two areas:
 
      To fetch column value by name use method that accepts a `String`;
      to fetch value by column's index, use the version that accepts an `Int`.
+     Index is 0 based.
      
 *    **Null-safety**
 
@@ -50,6 +51,25 @@ The methods differ from one another in two areas:
      only for columns that can't hold `NULL` values, for example because there is
      a not-null constraint defined for them.
 
+Examples below show how to use `col` methods on rows produced by 
+
+```sql
+select first_name, last_name, age from persons
+```
+
+statement.
+
+```scala
+/* fetches first_name. If value is NULL ConversionException will be thrown */
+row.col[String](0) 
+
+/* fetches last_name. If value is NULL ConversionException will be thrown */
+row.col[String]("first_name")
+
+/* fetches age. If value is NULL, None will be returned */
+row.colOpt[Int](2)
+```
+
 ## Type-specific methods
 
 `Row` trait, for convenience, also provides methods that aren't parametrized
@@ -57,6 +77,19 @@ by type and their names reflect the type they return. They are simply shortcuts
 for calling generic `col` methods described earlier. For instance, there is a
 `str` method that is a shortcut for calling `col[String]` method. See the 
 [`Row` Scaladoc]({{scaladocRoot}}/io/rdbc/sapi/Row.html) for a complete list.
+
+Previous example could be rewritten as follows:
+
+```scala
+/* fetches first_name. If value is NULL ConversionException will be thrown */
+row.str(0) 
+
+/* fetches last_name. If value is NULL ConversionException will be thrown */
+row.str("first_name")
+
+/* fetches age. If value is NULL, None will be returned */
+row.int(2)
+```
 
 If you want to use types supported by the particular driver but not supported
 by default by rdbc, you must always use generic `col` methods.
