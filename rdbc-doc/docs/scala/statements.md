@@ -307,7 +307,8 @@ Here are a couple of things to know when working with streams:
      subsequent operations.
 
 Processing streams is out of scope of this manual, for details please refer to
-documentation of libraries that are built to facilitate this, like
+documentation of Reactive Streams compatible libraries that are built to
+facilitate this, like
 [Akka stream](http://doc.akka.io/docs/akka/current/scala/stream/index.html) or
 [Monix](https://monix.io/).
 
@@ -427,6 +428,72 @@ def insertUser(name: String, age: Int): Future[UUID] = {
 }
 ```
 
-### Batch updates, inserts and deletes
+### Streaming statement arguments
 
-**TODO**
+rdbc provides an efficient way to execute statement repeatedly with many
+sets of arguments. `Statement` can subscribe to a stream of argument sets by
+invoking `streamArgs` or `streamArgsByIdx` methods which accept Reactive Streams'
+`Publisher`. rdbc driver will back pressure the stream as needed.
+
+Streaming arguments can be used for statements that don't return any values.
+Technically it is possible to stream arguments of SQL `select`s but there are no
+means for the client to get the data back from the database.
+
+#### Positional and named parameters
+
+Each stream element contains entire set of arguments that a given statement
+expects. Clients have an alternative of using named and positional parameters:
+`streamArgs` accepts a stream producing `:::scala Map[String, Any]` elements
+(named parameters) and `streamArgsByIdx` indexed sequences of arguments
+(positional parameters).
+
+#### Handling failures
+
+If any error occurs in the middle of stream processing, the process will be aborted
+and `Future` returned by the streaming method will fail too.
+
+#### Examples
+
+Creating `Publisher` instances is out of scope of this manual, for details please
+refer to documentation of Reactive Streams compatible libraries that are built to
+facilitate this, like
+[Akka stream](http://doc.akka.io/docs/akka/current/scala/stream/index.html) or
+[Monix](https://monix.io/). Examples below use simple streams backed by in
+memory collections.
+
+
+Streaming named arguments with Akka:
+
+```scala
+import io.rdbc.sapi._
+import akka.stream.scaladsl.Source
+
+val res: Future[Unit] = conn.withTransaction {
+  val data: Vector[Map[String, Any]] = Vector(
+    Map("name" -> "Robin", "age" -> 10),
+    Map("name" -> "Alex", "age" -> 32),
+    Map("name" -> "Casey", "age" -> 12)
+  )
+  val publisher = Source(data).runWith(Sink.asPublisher(fanout = false))
+  val stmt = conn.statement("insert into users(name, age) values (:name, :age)")
+  stmt.streamArgs(publisher)
+}
+```
+
+Streaming positional arguments with Akka:
+
+```scala
+import io.rdbc.sapi._
+import akka.stream.scaladsl.Source
+
+val res: Future[Unit] = conn.withTransaction {
+  val data: Vector[Vector[Any]] = Vector(
+    Vector("Robin", 10),
+    Vector("Alex", 32),
+    Vector("Casey", 12)
+  )
+  val publisher = Source(data).runWith(Sink.asPublisher(fanout = false))
+  val stmt = conn.statement("insert into users(name, age) values (?, ?)")
+  stmt.streamArgsByIdx(publisher)
+}
+```
