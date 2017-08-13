@@ -88,7 +88,7 @@ row.str(0)
 row.str("first_name")
 
 /* fetches age. If value is NULL, None will be returned */
-row.int(2)
+row.intOpt(2)
 ```
 
 If you want to use types supported by the particular driver but not supported
