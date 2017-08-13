@@ -121,7 +121,7 @@ object HelloRdbc extends App {
   val insertFut: Future[Long] = connFactory.withConnection { conn =>
     conn
       .statement(sql"insert into messages(txt) values ($greeting)")
-      .flatMap(stmt => stmt.executeForRowsAffected())
+      .executeForRowsAffected()
   }.andThen {
     case Success(count) => println(s"inserted $count greeting(s)")
     case Failure(ex) => ex.printStackTrace()
@@ -151,7 +151,7 @@ In this very simple application:
    [string interpolator](http://docs.scala-lang.org/overviews/core/string-interpolation.html)
    which passes a `greeting` string argument to it.
 
-*  When the statement is ready, it is requested to be executed at line `16` and
+*  The statement is requested to be executed at line `16` and
    to return number of affected rows.
   
 *  When the database operation finishes and the connection is released, at line
