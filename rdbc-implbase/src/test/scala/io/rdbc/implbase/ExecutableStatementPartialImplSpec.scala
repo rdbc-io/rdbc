@@ -237,6 +237,8 @@ class ExecutableStatementPartialImplSpec
 
     val metadata: Future[RowMetadata] = Future.successful(mdata)
 
+    def done: Future[Unit] = ???
+
     def subscribe(s: Subscriber[_ >: Row]): Unit = {
       publisher.subscribe(s)
     }

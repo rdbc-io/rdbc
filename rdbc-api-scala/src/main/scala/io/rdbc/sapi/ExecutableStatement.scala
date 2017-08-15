@@ -48,7 +48,9 @@ trait ExecutableStatement {
     * The statement is not executed until the stream is subscribed to.
     *
     * $timeoutInfo
-    * $exceptions
+    *
+    * This method doesn't throw exceptions on failures. Failures are reported
+    * by the returned publisher.
     */
   def stream()(implicit timeout: Timeout): RowPublisher
 
