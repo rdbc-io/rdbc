@@ -25,7 +25,7 @@ import scala.concurrent.Future
   *
   * When this publisher signals that it is complete clients can safely assume
   * that a database is ready to accept new queries. If subscription is
-  * cancelled, however, clients have to wait for [[Connection.watchForIdle]]
+  * cancelled, however, clients have to wait for [[RowPublisher#done]]
   * future to complete before issuing another query.
   *
   * @define futureCompleteNote
@@ -58,4 +58,9 @@ trait RowPublisher extends Publisher[Row] {
     * Resulting `Future` may not be complete until subscription is started.
     */
   def metadata: Future[RowMetadata]
+
+  /** A future that completes with success on publisher completion or
+    * cancellation and fails when the publisher fails.
+    */
+  def done: Future[Unit]
 }

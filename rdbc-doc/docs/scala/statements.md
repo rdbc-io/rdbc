@@ -290,9 +290,11 @@ method. This method returns
 [`RowPublisher`]({{scaladocRoot}}/io/rdbc/sapi/RowPublisher.html)
 instance which implements reactive stream's
 [`Publisher`](http://www.reactive-streams.org/reactive-streams-1.0.1-javadoc/)
-interface. Items published are rows represented by `Row` trait. For the
-documentation on how to work with the resulting rows see [Result Rows](rows.md)
-chapter.
+interface. `stream` method never throws exceptions &mdash; failures are reported by
+the returned publisher.
+
+Items published are rows represented by `Row` trait. For the documentation on how
+to work with the resulting rows see [Result Rows](rows.md) chapter.
 
 Here are a couple of things to know when working with streams:
 
@@ -300,11 +302,14 @@ Here are a couple of things to know when working with streams:
 *    a publisher can be subscribed to only once,
 *    after `stream` method is invoked, connection is considered busy and can be used
      for other queries only after the stream completes or is cancelled,
-*    cancel is an asynchronous operation and reactive streams specification doesn't
+*    cancel is an asynchronous operation and Reactive Streams specification doesn't
      provide a way of notifying a client that cancel operation completed. If clients
      want to use the connection after stream cancellation, they must watch for
-     connection's `watchForIdle` `Future` completion before requesting any
+     publisher's `done` `Future` completion before requesting any
      subsequent operations.
+
+`RowPublisher` instance, through its members, gives access to number
+of affected rows, warnings returned by the database and row metadata.
 
 Processing streams is out of scope of this manual, for details please refer to
 documentation of Reactive Streams compatible libraries that are built to
@@ -312,29 +317,29 @@ facilitate this, like
 [Akka stream](http://doc.akka.io/docs/akka/current/scala/stream/index.html) or
 [Monix](https://monix.io/).
 
-Examples:
+Examples (which release the connection on stream termination):
 
 ```scala
-import akka.stream.scaladsl.Source
+import akka.stream.scaladsl.{Source, Sink}
+import akka.NotUsed
 
-def streamNamesAkka(login: String): Source = {
+val source: Source[Row, NotUsed] = {
   Source.fromPublisher(
-    conn.statement(sql"select name from users where login = $login").stream()
-  )
+    conn.statement(sql"select name from users").stream()
+  ).alsoTo(Sink.onComplete(_ => conn.release()))
 }
 ```
 
 ```scala
 import monix.reactive.Observable
+import monix.eval.Task
 
-def streamNamesMonix(login: String): Observable = {
+val obs: Observable[Row] = {
   Observable.fromReactivePublisher(
-    conn.statement(sql"select name from users where login = $login").stream()
-  )
+    conn.statement(sql"select name from users").stream()
+  ).doOnTerminateEval(_ => Task.fromFuture(conn.release()))
 }
 ```
-
-**TODO describe how to release connection after stream completion**
 
 ### Executing ignoring results
 
