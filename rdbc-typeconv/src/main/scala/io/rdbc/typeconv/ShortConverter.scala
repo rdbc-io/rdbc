@@ -24,6 +24,8 @@ object ShortConverter extends TypeConverter[Short] {
   val cls = classOf[Short]
 
   override def fromAny(any: Any): Short = any match {
+    case f: Float if f.isNaN || f.isInfinite => throw new ConversionException(any, cls)
+    case d: Double if d.isNaN || d.isInfinite => throw new ConversionException(any, cls)
     case jn: java.lang.Number => jn.shortValue()
     case sapi.SqlNumeric.Val(bd) => bd.shortValue()
     case _ => throw new ConversionException(any, classOf[Short])

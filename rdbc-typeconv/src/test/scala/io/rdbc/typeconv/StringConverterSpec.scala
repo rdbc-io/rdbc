@@ -17,17 +17,26 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi
-import io.rdbc.sapi.TypeConverter
 
-object ByteConverter extends TypeConverter[Byte] {
-  val cls = classOf[Byte]
+class StringConverterSpec
+  extends RdbcTypeconvSpec {
 
-  override def fromAny(any: Any): Byte = any match {
-    case f: Float if f.isNaN || f.isInfinite => throw new ConversionException(any, cls)
-    case d: Double if d.isNaN || d.isInfinite => throw new ConversionException(any, cls)
-    case jn: java.lang.Number => jn.byteValue()
-    case sapi.SqlNumeric.Val(bd) => bd.byteValue()
-    case _ => throw new ConversionException(any, classOf[Byte])
+  private val converter = StringConverter
+
+  "StringConverter" should {
+
+    "convert a String" in {
+      val s = "str"
+      converter.fromAny(s) shouldBe s
+    }
+
+    "fail for any" in {
+      val a = new AnyRef
+      val ex = the[ConversionException] thrownBy {
+        converter.fromAny(a)
+      }
+      ex.value shouldBe a
+      ex.targetType shouldBe classOf[String]
+    }
   }
 }

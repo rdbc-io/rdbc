@@ -25,6 +25,8 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
 
   override def fromAny(any: Any): BigDecimal = any match {
     case bd: BigDecimal => bd
+    case f: Float if f.isNaN || f.isInfinite => throw new ConversionException(any, cls)
+    case d: Double if d.isNaN || d.isInfinite => throw new ConversionException(any, cls)
     case d: Double => BigDecimal(d)
     case f: Float => BigDecimal(f.toDouble)
     case l: Long => BigDecimal(l)
@@ -37,9 +39,10 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
       try {
         BigDecimal.exact(str)
       } catch {
-        case _: NumberFormatException => throw new ConversionException(any, classOf[BigDecimal])
+        case nfe: NumberFormatException =>
+          throw new ConversionException(any, cls, nfe)
       }
 
-    case _ => throw new ConversionException(any, classOf[BigDecimal])
+    case _ => throw new ConversionException(any, cls)
   }
 }

@@ -17,32 +17,33 @@
 package io.rdbc.typeconv
 
 import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.{SqlNumeric, TypeConverter}
 
 object BoolConverter extends TypeConverter[Boolean] {
   val cls = classOf[Boolean]
 
   override def fromAny(any: Any): Boolean = any match {
     case bool: Boolean => bool
-
-    case jn: java.lang.Number =>
-      val long = jn.longValue()
-      if (long == 1L) true
-      else if (long == 0L) false
-      else throw new ConversionException(jn, classOf[Boolean])
-
+    case jn: java.lang.Number => num2Bool(jn)
+    case SqlNumeric.Val(bd) => num2Bool(bd)
     case char: Char => char2Bool(char)
-
     case str: String =>
       if (str.length == 1) char2Bool(str.head)
-      else throw new ConversionException(str, classOf[Boolean])
+      else throw new ConversionException(str, cls)
 
-    case _ => throw new ConversionException(any, classOf[Boolean])
+    case _ => throw new ConversionException(any, cls)
+  }
+
+  private def num2Bool(jn: java.lang.Number): Boolean = {
+    val long = jn.longValue()
+    if (long == 1L) true
+    else if (long == 0L) false
+    else throw new ConversionException(jn, cls)
   }
 
   private def char2Bool(char: Char): Boolean = {
     if (char == '1' || char == 'T' || char == 'Y') true
     else if (char == '0' || char == 'F' || char == 'N') false
-    else throw new ConversionException(char, classOf[Boolean])
+    else throw new ConversionException(char, cls)
   }
 }

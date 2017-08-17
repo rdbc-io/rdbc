@@ -26,6 +26,6 @@ object InstantConverter extends TypeConverter[Instant] {
 
   override def fromAny(any: Any): Instant = any match {
     case i: Instant => i
-    case _ => throw new ConversionException(any, classOf[Instant])
+    case _ => throw new ConversionException(any, cls)
   }
 }

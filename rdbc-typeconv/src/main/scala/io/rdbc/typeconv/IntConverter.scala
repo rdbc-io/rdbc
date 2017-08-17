@@ -24,8 +24,10 @@ object IntConverter extends TypeConverter[Int] {
   val cls = classOf[Int]
 
   override def fromAny(any: Any): Int = any match {
+    case f: Float if f.isNaN || f.isInfinite => throw new ConversionException(any, cls)
+    case d: Double if d.isNaN || d.isInfinite => throw new ConversionException(any, cls)
     case jn: java.lang.Number => jn.intValue()
     case sapi.SqlNumeric.Val(bd) => bd.intValue()
-    case _ => throw new ConversionException(any, classOf[Int])
+    case _ => throw new ConversionException(any, cls)
   }
 }
