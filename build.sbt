@@ -83,6 +83,9 @@ lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-typeconv",
+    libraryDependencies ++= Vector(
+      Library.scalatest % Test
+    ),
     buildInfoPackage := "io.rdbc.typeconv"
   ).dependsOn(rdbcApiScala)
 

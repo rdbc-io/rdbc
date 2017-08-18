@@ -16,18 +16,20 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ConversionException
-import io.rdbc.sapi
-import io.rdbc.sapi.TypeConverter
+import org.scalactic.{Equality, TolerantNumerics}
+import org.scalatest.{Matchers, WordSpec}
 
-object ByteConverter extends TypeConverter[Byte] {
-  val cls = classOf[Byte]
+trait RdbcTypeconvSpec
+  extends WordSpec
+    with Matchers {
 
-  override def fromAny(any: Any): Byte = any match {
-    case f: Float if f.isNaN || f.isInfinite => throw new ConversionException(any, cls)
-    case d: Double if d.isNaN || d.isInfinite => throw new ConversionException(any, cls)
-    case jn: java.lang.Number => jn.byteValue()
-    case sapi.SqlNumeric.Val(bd) => bd.byteValue()
-    case _ => throw new ConversionException(any, classOf[Byte])
+  private val epsilon = 1e-4f
+
+  implicit protected val doubleEq: Equality[Double] = {
+    TolerantNumerics.tolerantDoubleEquality(epsilon.toDouble)
+  }
+
+  implicit protected val floatEq: Equality[Float] = {
+    TolerantNumerics.tolerantFloatEquality(epsilon)
   }
 }

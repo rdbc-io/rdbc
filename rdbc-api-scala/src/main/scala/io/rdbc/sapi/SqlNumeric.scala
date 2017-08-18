@@ -30,5 +30,7 @@ object SqlNumeric {
   case object NegInfinity extends SqlNumeric
 
   /** Decimal value representable with a [[scala.math.BigDecimal BigDecimal]] */
-  case class Val(bigDecimal: BigDecimal) extends SqlNumeric
+  case class Val(bigDecimal: BigDecimal) extends SqlNumeric {
+    override def toString: String = bigDecimal.toString()
+  }
 }
