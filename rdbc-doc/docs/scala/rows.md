@@ -64,7 +64,7 @@ statement.
 row.col[String](0) 
 
 /* fetches last_name. If value is NULL ConversionException will be thrown */
-row.col[String]("first_name")
+row.col[String]("last_name")
 
 /* fetches age. If value is NULL, None will be returned */
 row.colOpt[Int](2)
@@ -85,7 +85,7 @@ Previous example could be rewritten as follows:
 row.str(0) 
 
 /* fetches last_name. If value is NULL ConversionException will be thrown */
-row.str("first_name")
+row.str("last_name")
 
 /* fetches age. If value is NULL, None will be returned */
 row.intOpt(2)
