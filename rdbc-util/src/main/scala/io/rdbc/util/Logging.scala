@@ -29,9 +29,12 @@ object Logging {
   private val reqCounter = new AtomicInteger(0)
   @volatile private lazy val tracingEc = {
     ExecutionContext.fromExecutorService(Executors.newCachedThreadPool(new ThreadFactory {
+      private val threadCounter = new AtomicInteger(0)
+
       def newThread(r: Runnable): Thread = {
         val thread = Executors.defaultThreadFactory().newThread(r)
         thread.setDaemon(true)
+        thread.setName(s"rdbc-util-tracing-${threadCounter.incrementAndGet()}")
         thread
       }
     }))
@@ -44,7 +47,7 @@ trait Logging extends StrictLogging {
 
   protected def traced[A](body: => Future[A])(
     implicit enclosing: sourcecode.Enclosing, args: sourcecode.Args): Future[A] = {
-    if (logger.underlying.isTraceEnabled) {
+    if (traceEnabled) {
       val reqId = newReqId()
       val resultFuture = doTrace(reqId, body)
       resultFuture.andThen { case futureValue =>
@@ -56,7 +59,7 @@ trait Logging extends StrictLogging {
   }
 
   protected def traced[A](body: => A)(implicit enclosing: sourcecode.Enclosing, args: sourcecode.Args): A = {
-    if (logger.underlying.isTraceEnabled) {
+    if (traceEnabled) {
       doTrace(newReqId(), body)
     } else {
       body
@@ -75,6 +78,10 @@ trait Logging extends StrictLogging {
           logger.trace(s"[$reqId] Exiting ${enclosing.value} with exception '$ex'")
           throw ex
       }
+  }
+
+  protected def traceEnabled: Boolean = {
+    logger.underlying.isTraceEnabled
   }
 
   private def newReqId(): String = {
