@@ -41,7 +41,7 @@ object TemplateReplace extends AutoPlugin {
 
   override def projectSettings = Seq(
     mkdocs := {
-      Process(Seq("mkdocs", "build", "--clean", "-q"), baseDirectory.value).!!
+      sys.process.Process(Seq("mkdocs", "build", "--clean", "-q"), baseDirectory.value).!!
       processDir(baseDirectory.value / "target", mkdocsVariables.value)
     }
   )
