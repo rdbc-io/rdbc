@@ -1,7 +1,7 @@
 import sbt._
 
 object Library {
-  private val scalatestVersion = "3.0.3"
+  private val scalatestVersion = "3.0.4"
 
   val reactiveStreams = "org.reactivestreams" % "reactive-streams" % "1.0.1"
   val sourcecode = "com.lihaoyi" %% "sourcecode" % "0.1.4"
@@ -10,5 +10,5 @@ object Library {
   val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0"
   val scalatest = "org.scalatest" %% "scalatest" % scalatestVersion
   val reactiveStreamsTck = "org.reactivestreams" % "reactive-streams-tck" % "1.0.1"
-  val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.3"
+  val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.4"
 }
