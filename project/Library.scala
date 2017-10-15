@@ -10,5 +10,5 @@ object Library {
   val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0"
   val scalatest = "org.scalatest" %% "scalatest" % scalatestVersion
   val reactiveStreamsTck = "org.reactivestreams" % "reactive-streams-tck" % "1.0.1"
-  val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.4"
+  val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.6"
 }
