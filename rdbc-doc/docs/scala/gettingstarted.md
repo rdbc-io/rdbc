@@ -30,7 +30,7 @@ drivers grouped by a database engine they support.
 rdbc JARs are published to
 [Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.rdbc%22%20api)
 repository. The API is currently available for Scala 2.11 and 2.12 and requires
-Java 8 runtime.
+Java 8 runtime or newer.
 
 ### SBT
 For sbt projects, add the following to `build.sbt`:

@@ -3,21 +3,24 @@ dist: trusty
 sudo: false
 jdk:
 - openjdk8
+- oraclejdk9
 scala:
 - 2.11.11
-- 2.12.3
+- 2.12.4
 sudo: false
 script: sbt ++$TRAVIS_SCALA_VERSION scalastyle test:scalastyle coverage test coverageReport
 after_success: bash <(curl -s https://codecov.io/bash)
 cache:
   directories:
   - "$HOME/.ivy2/cache"
-  - "$HOME/.coursier/cache"
   - "$HOME/.sbt/boot/"
 before_cache:
 - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
 - find $HOME/.sbt -name "*.lock" -delete
 env:
   global:
-    - CI=true #to decrease coursier verbosity
     - DEFAULT_TIMEOUT_MILLIS=300 #Reactive Streams testkit timeout for async ops
+matrix:
+  exclude:
+  - jdk: oraclejdk9
+    scala: 2.11.11
