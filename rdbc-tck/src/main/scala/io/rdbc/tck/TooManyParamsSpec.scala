@@ -19,7 +19,7 @@ package io.rdbc.tck
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Source}
-import io.rdbc.api.exceptions.TooManyParamsException
+import io.rdbc.sapi.exceptions.TooManyParamsException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
 trait TooManyParamsSpec

@@ -35,9 +35,9 @@ import scala.concurrent.Future
   * @groupprio fut 10
   *
   * @define bindExceptions
-  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+  *  - [[io.rdbc.sapi.exceptions.MissingParamValException MissingParamValException]]
   *  when some parameter value was not provided
-  *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+  *  - [[io.rdbc.sapi.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
   *  when some parameter value's type is not convertible to a database type
   */
 trait Statement {
@@ -97,9 +97,9 @@ trait Statement {
     * containing all arguments required by this statement.
     *
     * Resulting future can fail with:
-    *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+    *  - [[io.rdbc.sapi.exceptions.MissingParamValException MissingParamValException]]
     * when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+    *  - [[io.rdbc.sapi.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
     * when some parameter value's type is not convertible to a database type
     */
   def streamArgs(argsPublisher: Publisher[_ <: Map[String, Any]]): Future[Unit]
@@ -112,9 +112,9 @@ trait Statement {
     * sequence containing all arguments required by this statement.
     *
     * Resulting future can fail with:
-    *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+    *  - [[io.rdbc.sapi.exceptions.MissingParamValException MissingParamValException]]
     * when some parameter value was not provided
-    *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+    *  - [[io.rdbc.sapi.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
     * when some parameter value's type is not convertible to a database type
     */
   def streamArgsByIdx(argsPublisher: Publisher[_ <: ImmutIndexedSeq[Any]]): Future[Unit]

@@ -19,7 +19,7 @@ package io.rdbc.implbase
 import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import java.util.UUID
 
-import io.rdbc.api.exceptions.{ColumnIndexOutOfBoundsException, ConversionException, MissingColumnException}
+import io.rdbc.sapi.exceptions.{ColumnIndexOutOfBoundsException, ConversionException, MissingColumnException}
 import io.rdbc.sapi.{SqlNumeric, TypeConverter, TypeConverterRegistry}
 import org.scalamock.scalatest.MockFactory
 

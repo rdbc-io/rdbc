@@ -16,8 +16,8 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.SqlNumeric
+import io.rdbc.sapi.exceptions.ConversionException
 import org.scalatest.Inside
 
 class ShortConverterSpec

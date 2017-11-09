@@ -68,17 +68,17 @@ import scala.concurrent.Future
   *  immediately.
   * @define statementExceptions
   * Throws:
-  *  - [[io.rdbc.api.exceptions.MixedParamTypesException MixedParamTypesException]]
+  *  - [[io.rdbc.sapi.exceptions.MixedParamTypesException MixedParamTypesException]]
   *  when statement uses both positional and named parameters
-  *  - [[io.rdbc.api.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
+  *  - [[io.rdbc.sapi.exceptions.UncategorizedRdbcException UncategorizedRdbcException]]
   *  when general error occurs
   * @define timeoutException
-  *  - [[io.rdbc.api.exceptions.TimeoutException TimeoutException]]
+  *  - [[io.rdbc.sapi.exceptions.TimeoutException TimeoutException]]
   *  when maximum operation time has been exceeded
   * @define bindExceptions
-  *  - [[io.rdbc.api.exceptions.MissingParamValException MissingParamValException]]
+  *  - [[io.rdbc.sapi.exceptions.MissingParamValException MissingParamValException]]
   *  when some parameter value was not provided
-  *  - [[io.rdbc.api.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
+  *  - [[io.rdbc.sapi.exceptions.NoSuitableConverterFoundException NoSuitableConverterFoundException]]
   *  when some parameter value's type is not convertible to a database type
   * @define statementParametrization
   *  For syntax of statement parametrization see a [[Connection]] documentation.
@@ -111,7 +111,7 @@ trait Connection {
     * $timeoutInfo
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.BeginTxException BeginTxException]]
+    *  - [[io.rdbc.sapi.exceptions.BeginTxException BeginTxException]]
     * when general error occurs
     * $timeoutException
     *
@@ -127,7 +127,7 @@ trait Connection {
     * $timeoutInfo
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.BeginTxException CommmitTxException]]
+    *  - [[io.rdbc.sapi.exceptions.BeginTxException CommmitTxException]]
     * when general error occurs
     * $timeoutException
     *
@@ -143,7 +143,7 @@ trait Connection {
     * $timeoutInfo
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.BeginTxException RollbackTxException]]
+    *  - [[io.rdbc.sapi.exceptions.BeginTxException RollbackTxException]]
     * when general error occurs
     * $timeoutException
     *
@@ -166,7 +166,7 @@ trait Connection {
     * After calling this method no future operations on the instance are allowed.
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]]
+    *  - [[io.rdbc.sapi.exceptions.ConnectionReleaseException ConnectionReleaseException]]
     * when general error occurs
     */
   def release(): Future[Unit]
@@ -177,7 +177,7 @@ trait Connection {
     * After calling this method no future operations on the instance are allowed.
     *
     * Returned future can fail with:
-    *  - [[io.rdbc.api.exceptions.ConnectionReleaseException ConnectionReleaseException]]
+    *  - [[io.rdbc.sapi.exceptions.ConnectionReleaseException ConnectionReleaseException]]
     * when general error occurs
     */
   def forceRelease(): Future[Unit]

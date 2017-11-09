@@ -16,9 +16,9 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.exceptions.ConversionException
 
 //TODO should these converters be between Scala types or SQL -> Scala types?
 //like, should there be a converted from java.lang.Number to Float

@@ -19,7 +19,7 @@ package io.rdbc.tck
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Source}
-import io.rdbc.api.exceptions.NoSuchParamException
+import io.rdbc.sapi.exceptions.NoSuchParamException
 import io.rdbc.sapi.{Connection, Statement, StatementOptions}
 
 import scala.collection.immutable.ListMap

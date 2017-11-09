@@ -29,7 +29,7 @@ trait TypeConverter[T] {
   /** Attempts to convert any value to the target type
     *
     * Throws:
-    *  - [[io.rdbc.api.exceptions.ConversionException ConversionException]]
+    *  - [[io.rdbc.sapi.exceptions.ConversionException ConversionException]]
     * when conversion to desired type is not possible
     */
   def fromAny(any: Any): T

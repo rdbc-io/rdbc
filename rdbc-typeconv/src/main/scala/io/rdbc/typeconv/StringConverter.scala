@@ -16,8 +16,8 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.exceptions.ConversionException
 
 object StringConverter extends TypeConverter[String] {
   val cls = classOf[String]

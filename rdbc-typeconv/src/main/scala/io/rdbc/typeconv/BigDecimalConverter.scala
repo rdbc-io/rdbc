@@ -16,9 +16,9 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi
 import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.exceptions.ConversionException
 
 object BigDecimalConverter extends TypeConverter[BigDecimal] {
   val cls = classOf[BigDecimal]

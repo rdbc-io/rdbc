@@ -18,8 +18,8 @@ package io.rdbc.typeconv
 
 import java.util.UUID
 
-import io.rdbc.api.exceptions.ConversionException
 import io.rdbc.sapi.TypeConverter
+import io.rdbc.sapi.exceptions.ConversionException
 
 object UuidConverter extends TypeConverter[UUID] {
   val cls = classOf[UUID]
