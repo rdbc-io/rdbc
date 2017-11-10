@@ -21,10 +21,14 @@ public class ColumnIndexOutOfBoundsException extends RdbcException {
     private final int idx;
     private final int columnCount;
 
-    public ColumnIndexOutOfBoundsException(int idx, int columnCount) {
-        super(String.format("Requested index %d is out of range, column count is %d", idx, columnCount));
+    public ColumnIndexOutOfBoundsException(int idx, int columnCount, Throwable cause) {
+        super(String.format("Requested index %d is out of range, column count is %d", idx, columnCount), cause);
         this.idx = idx;
         this.columnCount = columnCount;
+    }
+
+    public ColumnIndexOutOfBoundsException(int idx, int columnCount) {
+        this(idx, columnCount, null);
     }
 
     public int getIdx() {

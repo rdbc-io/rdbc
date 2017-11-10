@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package io.rdbc.sapi.exceptions
+package io.rdbc
 
-class BeginTxException(msg: String, maybeCause: Option[Throwable] = None)
-  extends RdbcException(msg, maybeCause)
+import io.rdbc.sapi.exceptions.{RdbcException => SRdbcException}
+import io.rdbc.japi.exceptions.{RdbcException => JRdbcException}
+
+package object jadapter {
+  type ExceptionConverter = PartialFunction[SRdbcException, JRdbcException]
+}

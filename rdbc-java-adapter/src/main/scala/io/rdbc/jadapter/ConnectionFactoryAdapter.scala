@@ -21,18 +21,22 @@ import java.util.concurrent.CompletionStage
 
 import io.rdbc.japi.util.ThrowingFunction
 import io.rdbc.jadapter.internal.Conversions._
-import io.rdbc.jadapter.internal.ExceptionConverter._
-import io.rdbc.jadapter.internal.InfiniteDuration
+import io.rdbc.jadapter.internal.{ExceptionConversion, InfiniteDuration}
 import io.rdbc.{japi, sapi}
 
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
 
-class ConnectionFactoryAdapter(underlying: sapi.ConnectionFactory)
+class ConnectionFactoryAdapter(underlying: sapi.ConnectionFactory,
+                               exceptionConverter: ExceptionConverter)
                               (implicit ec: ExecutionContext)
   extends japi.ConnectionFactory {
 
   private type ConnLoanFun[T] = ThrowingFunction[japi.Connection, CompletionStage[T]]
+
+  private implicit val exConversion: ExceptionConversion = new ExceptionConversion(exceptionConverter)
+
+  import exConversion._
 
   def getConnection(timeout: Duration): CompletionStage[japi.Connection] = convertExceptionsFut {
     underlying.connection()(timeout.asScala).map(_.asJava).toJava

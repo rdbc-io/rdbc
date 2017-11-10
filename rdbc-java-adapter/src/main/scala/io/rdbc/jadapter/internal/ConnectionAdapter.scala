@@ -19,17 +19,19 @@ package io.rdbc.jadapter.internal
 import java.time.Duration
 import java.util.concurrent.CompletionStage
 
+import io.rdbc.jadapter.internal.Conversions._
 import io.rdbc.japi._
-import Conversions._
-import ExceptionConverter._
 import io.rdbc.sapi
 
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
 
 private[jadapter] class ConnectionAdapter(underlying: sapi.Connection)
-                                         (implicit ec: ExecutionContext)
+                                         (implicit ec: ExecutionContext,
+                                          exConversion: ExceptionConversion)
   extends Connection {
+
+  import exConversion._
 
   def beginTx(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
     underlying.beginTx()(timeout.asScala).map[Void](_ => null).toJava

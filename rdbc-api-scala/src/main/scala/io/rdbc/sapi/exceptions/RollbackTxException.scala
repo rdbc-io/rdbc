@@ -16,8 +16,5 @@
 
 package io.rdbc.sapi.exceptions
 
-class RollbackTxException(msg: String, cause: Option[Throwable])
-  extends RdbcException(msg, cause) {
-  def this(msg: String) = this(msg, None)
-  def this(msg: String, cause: Throwable) = this(msg, Some(cause))
-}
+class RollbackTxException(msg: String, maybeCause: Option[Throwable] = None)
+  extends RdbcException(msg, maybeCause)

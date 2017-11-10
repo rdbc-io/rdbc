@@ -73,7 +73,7 @@ import scala.reflect.ClassTag
   *   - [[io.rdbc.sapi.exceptions.ColumnIndexOutOfBoundsException ColumnIndexOutOfBoundsException]]
   *  when requested column index is out of range
   * @define nullSafetyNote
-  *  For SQL `null` values, [[io.rdbc.api.exceptions.ConversionException ConversionException]] is thrown.
+  *  For SQL `null` values, [[io.rdbc.sapi.exceptions.ConversionException ConversionException]] is thrown.
   *  For null-safety consider using corresponding `*Opt` method.
   * @define returningNone
   *  For SQL `null` values [[scala.None None]] is returned.

@@ -16,5 +16,8 @@
 
 package io.rdbc.sapi.exceptions
 
-class MissingColumnException(val column: String)
-  extends RdbcException(s"Requested column '$column' is not present in the row")
+class MissingColumnException(val column: String, maybeCause: Option[Throwable] = None)
+  extends RdbcException(
+    s"Requested column '$column' is not present in the row",
+    maybeCause
+  )

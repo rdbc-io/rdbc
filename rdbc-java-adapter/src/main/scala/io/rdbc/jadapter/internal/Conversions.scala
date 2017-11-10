@@ -75,7 +75,7 @@ private[jadapter] object Conversions {
   }
 
   implicit class ResultSetToJava(val value: sapi.ResultSet) extends AnyVal {
-    def asJava: japi.ResultSet = {
+    def asJava(implicit exConversion: ExceptionConversion): japi.ResultSet = {
       japi.ResultSet.of(
         value.rowsAffected,
         value.warnings.map(_.asJava).asJava,
@@ -86,19 +86,21 @@ private[jadapter] object Conversions {
   }
 
   implicit class RowToJava(val value: sapi.Row) extends AnyVal {
-    def asJava: japi.Row = {
+    def asJava(implicit exConversion: ExceptionConversion): japi.Row = {
       new RowAdapter(value)
     }
   }
 
   implicit class ConnectionToJava(val value: sapi.Connection) extends AnyVal {
-    def asJava(implicit ec: ExecutionContext): japi.Connection = {
+    def asJava(implicit ec: ExecutionContext,
+               exConversion: ExceptionConversion): japi.Connection = {
       new ConnectionAdapter(value)
     }
   }
 
   implicit class StatementToJava(val value: sapi.Statement) extends AnyVal {
-    def asJava(implicit ec: ExecutionContext): japi.Statement = {
+    def asJava(implicit ec: ExecutionContext,
+               exConversion: ExceptionConversion): japi.Statement = {
       new StatementAdapter(value)
     }
   }
@@ -116,13 +118,15 @@ private[jadapter] object Conversions {
   }
 
   implicit class RowPublisherToJava(val value: sapi.RowPublisher) extends AnyVal {
-    def asJava(implicit ec: ExecutionContext): japi.RowPublisher = {
+    def asJava(implicit ec: ExecutionContext,
+               exConversion: ExceptionConversion): japi.RowPublisher = {
       new RowPublisherAdapter(value)
     }
   }
 
   implicit class ExecutableStatementToJava(val value: sapi.ExecutableStatement) extends AnyVal {
-    def asJava(implicit ec: ExecutionContext): japi.ExecutableStatement = {
+    def asJava(implicit ec: ExecutionContext,
+               exConversion: ExceptionConversion): japi.ExecutableStatement = {
       new ExecutableStatementAdapter(value)
     }
   }

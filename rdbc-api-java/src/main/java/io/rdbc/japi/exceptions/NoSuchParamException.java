@@ -20,9 +20,13 @@ public class NoSuchParamException extends RdbcException {
 
     private final String param;
 
-    public NoSuchParamException(String param) {
-        super(String.format("No parameter '%s' was declared for the query", param));
+    public NoSuchParamException(String param, Throwable cause) {
+        super(String.format("No parameter '%s' was declared for the query", param), cause);
         this.param = param;
+    }
+
+    public NoSuchParamException(String param) {
+        this(param, null);
     }
 
     public String getParam() {

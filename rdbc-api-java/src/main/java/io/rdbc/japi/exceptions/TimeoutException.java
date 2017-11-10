@@ -21,10 +21,19 @@ import java.time.Duration;
 public class TimeoutException extends RdbcException {
 
     public TimeoutException(Duration timeout) {
-        this(String.format("Timeout occurred after waiting for configured time of %s", timeout));
+        this(timeout, null);
+    }
+
+    public TimeoutException(Duration timeout, Throwable cause) {
+        this(String.format("Timeout occurred after waiting for configured time of %s", timeout),
+                cause);
+    }
+
+    public TimeoutException(String message, Throwable cause) {
+        super(message, cause);
     }
 
     public TimeoutException(String message) {
-        super(message);
+        super(message, null);
     }
 }

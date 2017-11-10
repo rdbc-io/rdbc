@@ -16,5 +16,9 @@
 
 package io.rdbc.sapi.exceptions
 
-class MissingParamValException(val missingParam: String)
-  extends RdbcException(s"Value is missing for parameter '$missingParam'")
+class MissingParamValException(val missingParam: String,
+                               maybeCause: Option[Throwable] = None)
+  extends RdbcException(
+    s"Value is missing for parameter '$missingParam'",
+    maybeCause
+  )

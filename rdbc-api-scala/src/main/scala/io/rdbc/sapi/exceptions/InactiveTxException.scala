@@ -16,7 +16,6 @@
 
 package io.rdbc.sapi.exceptions
 
-class InactiveTxException(msg: String)
-  extends RdbcException(msg) {
-  def this() = this("Current transaction is not active")
-}
+class InactiveTxException(msg: String = "Current transaction is not active",
+                          maybeCause: Option[Throwable] = None)
+  extends RdbcException(msg, maybeCause)

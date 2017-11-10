@@ -20,9 +20,13 @@ public class MissingParamValException extends RdbcException {
 
     private final String missingParam;
 
-    public MissingParamValException(String missingParam) {
-        super(String.format("Value is missing for parameter '%s'", missingParam));
+    public MissingParamValException(String missingParam, Throwable cause) {
+        super(String.format("Value is missing for parameter '%s'", missingParam), cause);
         this.missingParam = missingParam;
+    }
+
+    public MissingParamValException(String missingParam) {
+        this(missingParam, null);
     }
 
     public String getMissingParam() {

@@ -20,9 +20,13 @@ public class MissingColumnException extends RdbcException {
 
     private final String column;
 
-    public MissingColumnException(String column) {
-        super(String.format("Requested column '%s' is not present in the row", column));
+    public MissingColumnException(String column, Throwable cause) {
+        super(String.format("Requested column '%s' is not present in the row", column), cause);
         this.column = column;
+    }
+
+    public MissingColumnException(String column) {
+        this(column, null);
     }
 
     public String getColumn() {

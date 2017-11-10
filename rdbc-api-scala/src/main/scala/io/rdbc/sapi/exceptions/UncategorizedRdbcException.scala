@@ -16,8 +16,5 @@
 
 package io.rdbc.sapi.exceptions
 
-class UncategorizedRdbcException(msg: String, cause: Option[Throwable])
-  extends RdbcException(msg, cause) {
-  def this(msg: String) = this(msg, None)
-  def this(msg: String, cause: Throwable) = this(msg, Some(cause))
-}
+class UncategorizedRdbcException(msg: String, maybeCause: Option[Throwable])
+  extends RdbcException(msg, maybeCause)

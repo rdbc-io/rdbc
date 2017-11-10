@@ -20,9 +20,14 @@ public class UnsupportedDbTypeException extends RdbcException {
 
     private final String dbTypeDesc;
 
-    public UnsupportedDbTypeException(String dbTypeDesc) {
-        super(String.format("Database native type '%s' is not supported", dbTypeDesc));
+    public UnsupportedDbTypeException(String dbTypeDesc, Throwable cause) {
+        super(String.format("Database native type '%s' is not supported", dbTypeDesc),
+                cause);
         this.dbTypeDesc = dbTypeDesc;
+    }
+
+    public UnsupportedDbTypeException(String dbTypeDesc) {
+        this(dbTypeDesc, null);
     }
 
     public String getDbTypeDesc() {

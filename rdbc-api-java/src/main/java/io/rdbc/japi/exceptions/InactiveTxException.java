@@ -17,11 +17,11 @@
 package io.rdbc.japi.exceptions;
 
 public class InactiveTxException extends RdbcException {
-    public InactiveTxException() {
-        this("Current transaction is not active");
+    public InactiveTxException(Throwable cause) {
+        this("Current transaction is not active", cause);
     }
 
-    public InactiveTxException(String message) {
-        super(message);
+    public InactiveTxException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

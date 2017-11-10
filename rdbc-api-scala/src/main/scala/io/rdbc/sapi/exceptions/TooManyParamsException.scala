@@ -16,5 +16,10 @@
 
 package io.rdbc.sapi.exceptions
 
-class TooManyParamsException(val provided: Int, val expected: Int)
-  extends RdbcException(s"$expected parameters are expected for the query, $provided params were provided")
+class TooManyParamsException(val provided: Int,
+                             val expected: Int,
+                             maybeCause: Option[Throwable] = None)
+  extends RdbcException(
+    s"$expected parameters are expected for the query, $provided params were provided",
+    maybeCause
+  )

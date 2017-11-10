@@ -16,5 +16,10 @@
 
 package io.rdbc.sapi.exceptions
 
-class InvalidQueryException(val msg: String, val errorPosition: Option[Int])
-  extends RdbcException(msg + errorPosition.fold("")(pos => s" at position $pos"))
+class InvalidQueryException(val msg: String,
+                            val errorPosition: Option[Int],
+                            maybeCause: Option[Throwable] = None)
+  extends RdbcException(
+    msg + errorPosition.fold("")(pos => s" at position $pos"),
+    maybeCause
+  )

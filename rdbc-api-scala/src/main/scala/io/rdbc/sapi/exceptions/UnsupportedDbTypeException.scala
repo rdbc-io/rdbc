@@ -16,5 +16,9 @@
 
 package io.rdbc.sapi.exceptions
 
-class UnsupportedDbTypeException(val dbTypeDesc: String)
-  extends RdbcException(s"Database native type '$dbTypeDesc' is not supported")
+class UnsupportedDbTypeException(val dbTypeDesc: String,
+                                 maybeCause: Option[Throwable] = None)
+  extends RdbcException(
+    s"Database native type '$dbTypeDesc' is not supported",
+    maybeCause
+  )

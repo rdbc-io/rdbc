@@ -29,7 +29,6 @@ import java.lang.
 import java.math.{BigDecimal => JBigDec}
 import java.time._
 import java.util._
-import io.rdbc.jadapter.internal.ExceptionConverter._
 
 import io.rdbc.japi.{Row, SqlNumeric}
 import io.rdbc.jadapter.internal.Conversions._
@@ -38,7 +37,11 @@ import io.rdbc.sapi
 import scala.compat.java8.OptionConverters._
 import scala.reflect.ClassTag
 
-private[jadapter] class RowAdapter(underlying: sapi.Row) extends Row {
+private[jadapter] class RowAdapter(underlying: sapi.Row)
+                                  (implicit exConversion: ExceptionConversion)
+  extends Row {
+
+  import exConversion._
 
   def getCol[A](idx: Int, cls: Class[A]): A = convertExceptions {
     underlying.col(idx)(ClassTag(cls)).asInstanceOf[A]

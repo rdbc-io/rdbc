@@ -16,7 +16,9 @@
 
 package io.rdbc.sapi.exceptions
 
-class NoSuitableConverterFoundException(val value: Any)
+class NoSuitableConverterFoundException(val value: Any,
+                                        maybeCause: Option[Throwable] = None)
   extends RdbcException(
-    s"No suitable converter was found for value '$value' of type ${value.getClass}"
+    s"No suitable converter was found for value '$value' of type ${value.getClass}",
+    maybeCause
   )
