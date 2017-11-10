@@ -13,9 +13,6 @@
  ! See the License for the specific language governing permissions and
  ! limitations under the License. 
  -->
-!!! warning
-    rdbc project and this documentation is still a work in progress.
-    It's not ready yet for production use.
     
 ## What is rdbc?
 
@@ -61,6 +58,11 @@ Following list outlines the areas that the API is not meant to cover.
     converters to be registered at runtime. This approach sacrifices some
     type-safety but at the same time makes it possible to implement wider range
     of higher-level APIs on top of rdbc.
+
+## Project status
+
+Both Scala and Java APIs are now complete. More feedback from the community is
+needed before releasing the first 1.0.0 milestone.
 
 ## Getting help
 

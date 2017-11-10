@@ -13,9 +13,6 @@
  ! See the License for the specific language governing permissions and
  ! limitations under the License. 
  -->
-!!! warning
-    rdbc project and this documentation is still a work in progress.
-    It's not ready yet for production use.
 
 Both when passing arguments to statements and when processing resulting rows
 there is a need to convert values between database data types and Scala types.
