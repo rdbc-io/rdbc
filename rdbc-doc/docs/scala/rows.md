@@ -13,9 +13,6 @@
  ! See the License for the specific language governing permissions and
  ! limitations under the License. 
  -->
-!!! warning
-    rdbc project and this documentation is still a work in progress.
-    It's not ready yet for production use.
 
 Statement rows are represented in rdbc as
 [`Row`]({{scaladocRoot}}/io/rdbc/sapi/Row.html) trait. This chapter describes
