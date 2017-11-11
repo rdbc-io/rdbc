@@ -18,7 +18,11 @@ package io.rdbc.japi.exceptions;
 
 public class MixedParamTypesException extends RdbcException {
 
+    public MixedParamTypesException(Throwable cause) {
+        super("Positional and named parameters cannot be mixed", cause);
+    }
+
     public MixedParamTypesException() {
-        super("Positional and named parameters cannot be mixed");
+        this(null);
     }
 }

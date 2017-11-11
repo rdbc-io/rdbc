@@ -25,8 +25,9 @@ public class ConstraintViolationException extends RdbcException {
     public ConstraintViolationException(String schema,
                                         String table,
                                         String constraint,
-                                        String message) {
-        super(message);
+                                        String message,
+                                        Throwable cause) {
+        super(message, cause);
         this.schema = schema;
         this.table = table;
         this.constraint = constraint;
@@ -34,10 +35,11 @@ public class ConstraintViolationException extends RdbcException {
 
     public ConstraintViolationException(String schema,
                                         String table,
-                                        String constraint) {
+                                        String constraint,
+                                        Throwable cause) {
         this(schema, table, constraint,
                 "Constraint " + constraint + " violation on table " +
-                        schema + "." + table);
+                        schema + "." + table, cause);
     }
 
     public String getSchema() {

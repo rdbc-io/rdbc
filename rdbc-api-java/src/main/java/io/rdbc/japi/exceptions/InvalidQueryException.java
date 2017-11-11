@@ -22,8 +22,10 @@ public class InvalidQueryException extends RdbcException {
 
     private final Optional<Integer> errorPosition;
 
-    public InvalidQueryException(String message, Optional<Integer> errorPosition) {
-        super(message + errorPosition.map(pos -> " at position " + pos).orElse(""));
+    public InvalidQueryException(String message,
+                                 Optional<Integer> errorPosition,
+                                 Throwable cause) {
+        super(message + errorPosition.map(pos -> " at position " + pos).orElse(""), cause);
         this.errorPosition = errorPosition;
     }
 

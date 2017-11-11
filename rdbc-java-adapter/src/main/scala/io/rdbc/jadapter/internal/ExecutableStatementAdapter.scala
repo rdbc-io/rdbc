@@ -24,7 +24,6 @@ import java.util.concurrent.CompletionStage
 import io.rdbc.japi._
 import io.rdbc.japi.util.ThrowingFunction
 import io.rdbc.jadapter.internal.Conversions._
-import io.rdbc.jadapter.internal.ExceptionConverter._
 import io.rdbc.sapi
 
 import scala.compat.java8.FutureConverters._
@@ -32,8 +31,11 @@ import scala.compat.java8.OptionConverters._
 import scala.concurrent.ExecutionContext
 
 private[jadapter] class ExecutableStatementAdapter(underlying: sapi.ExecutableStatement)
-                                                  (implicit ec: ExecutionContext)
+                                                  (implicit ec: ExecutionContext,
+                                                   exConversion: ExceptionConversion)
   extends ExecutableStatement {
+
+  import exConversion._
 
   def stream(timeout: Duration): RowPublisher = convertExceptions {
     underlying.stream()(timeout.asScala).asJava

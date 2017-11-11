@@ -16,5 +16,5 @@
 
 package io.rdbc.sapi.exceptions
 
-class NoSuchParamException(val param: String)
-  extends RdbcException(s"No parameter '$param' was declared for the query")
+class NoSuchParamException(val param: String, maybeCause: Option[Throwable] = None)
+  extends RdbcException(s"No parameter '$param' was declared for the query", maybeCause)

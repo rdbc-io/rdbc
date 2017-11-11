@@ -21,12 +21,17 @@ public class TooManyParamsException extends RdbcException {
     private final int provided;
     private final int expected;
 
-    public TooManyParamsException(int provided, int expected) {
+    public TooManyParamsException(int provided, int expected, Throwable cause) {
         super(String.format("%d parameters are expected for the query, %d params were provided",
-                expected, provided)
+                expected, provided),
+                cause
         );
         this.provided = provided;
         this.expected = expected;
+    }
+
+    public TooManyParamsException(int provided, int expected) {
+        this(provided, expected, null);
     }
 
     public int getProvided() {

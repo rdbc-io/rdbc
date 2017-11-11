@@ -16,5 +16,10 @@
 
 package io.rdbc.sapi.exceptions
 
-class ColumnIndexOutOfBoundsException(val idx: Int, val columnCount: Int)
-  extends RdbcException(s"Requested index $idx is out of bounds, column count is $columnCount")
+class ColumnIndexOutOfBoundsException(val idx: Int,
+                                      val columnCount: Int,
+                                      maybeCause: Option[Throwable] = None)
+  extends RdbcException(
+    s"Requested index $idx is out of bounds, column count is $columnCount",
+    maybeCause
+  )

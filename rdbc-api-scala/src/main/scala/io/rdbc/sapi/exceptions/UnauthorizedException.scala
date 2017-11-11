@@ -16,5 +16,5 @@
 
 package io.rdbc.sapi.exceptions
 
-class UnauthorizedException(msg: String)
-  extends RdbcException(msg)
+class UnauthorizedException(msg: String, maybeCause: Option[Throwable] = None)
+  extends RdbcException(msg, maybeCause)

@@ -40,7 +40,7 @@ object BigDecimalConverter extends TypeConverter[BigDecimal] {
         BigDecimal.exact(str)
       } catch {
         case nfe: NumberFormatException =>
-          throw new ConversionException(any, cls, nfe)
+          throw new ConversionException(any, cls, Some(nfe))
       }
 
     case _ => throw new ConversionException(any, cls)

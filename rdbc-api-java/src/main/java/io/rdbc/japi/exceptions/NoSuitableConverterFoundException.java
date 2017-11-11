@@ -20,13 +20,17 @@ public class NoSuitableConverterFoundException extends RdbcException {
 
     private final Object value;
 
-    public NoSuitableConverterFoundException(Object value) {
+    public NoSuitableConverterFoundException(Object value, Throwable cause) {
         super(String.format(
                 "No suitable converter was found for value '%s' of type %s",
                 value,
                 value.getClass()
-        ));
+        ), cause);
         this.value = value;
+    }
+
+    public NoSuitableConverterFoundException(Object value) {
+        this(value, null);
     }
 
     public Object getValue() {

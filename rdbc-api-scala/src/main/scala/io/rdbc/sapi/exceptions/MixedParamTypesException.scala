@@ -16,5 +16,5 @@
 
 package io.rdbc.sapi.exceptions
 
-class MixedParamTypesException
-  extends RdbcException("Positional and named parameters cannot be mixed")
+class MixedParamTypesException(maybeCause: Option[Throwable] = None)
+  extends RdbcException("Positional and named parameters cannot be mixed", maybeCause)

@@ -73,7 +73,7 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
       case None => Future.failed(new NoKeysReturnedException("No rows were returned"))
     }.recoverWith {
       case ex: ColumnIndexOutOfBoundsException =>
-        Future.failed(new NoKeysReturnedException(ex))
+        Future.failed(new NoKeysReturnedException(ex.getMessage, Some(ex)))
     }
   }
 }

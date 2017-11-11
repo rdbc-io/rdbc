@@ -19,12 +19,26 @@ package io.rdbc.sapi.exceptions
 class ConstraintViolationException(val schema: String,
                                    val table: String,
                                    val constraint: String,
-                                   msg: String)
-  extends RdbcException(msg) {
+                                   msg: String,
+                                   maybeCause: Option[Throwable] = None)
+  extends RdbcException(msg, maybeCause) {
+
+  def this(schema: String, table: String, constraint: String, maybeCause: Option[Throwable]) = {
+    this(
+      schema,
+      table,
+      constraint,
+      s"Constraint $constraint violation on table $schema.$table",
+      maybeCause
+    )
+  }
 
   def this(schema: String, table: String, constraint: String) = {
-    this(schema, table, constraint,
-      s"Constraint $constraint violation on table $schema.$table"
+    this(
+      schema,
+      table,
+      constraint,
+      None
     )
   }
 }

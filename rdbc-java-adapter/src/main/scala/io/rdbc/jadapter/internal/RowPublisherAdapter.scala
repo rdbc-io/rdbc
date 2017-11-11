@@ -20,7 +20,6 @@ import java.util
 import java.util.concurrent.CompletionStage
 
 import io.rdbc.jadapter.internal.Conversions._
-import io.rdbc.jadapter.internal.ExceptionConverter._
 import io.rdbc.{japi, sapi}
 
 import scala.collection.JavaConverters._
@@ -28,9 +27,12 @@ import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
 
 private[jadapter] class RowPublisherAdapter(private[jadapter] val underlying: sapi.RowPublisher)
-                                           (implicit ec: ExecutionContext)
+                                           (implicit ec: ExecutionContext,
+                                            exConversion: ExceptionConversion)
   extends japi.RowPublisher
     with MappingPublisher[sapi.Row, japi.Row] {
+
+  import exConversion._
 
   def getRowsAffected: CompletionStage[java.lang.Long] = convertExceptionsFut {
     underlying.rowsAffected.map(java.lang.Long.valueOf).toJava

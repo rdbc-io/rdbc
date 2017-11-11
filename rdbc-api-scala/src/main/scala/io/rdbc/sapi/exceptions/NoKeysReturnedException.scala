@@ -16,9 +16,5 @@
 
 package io.rdbc.sapi.exceptions
 
-class NoKeysReturnedException(msg: String, cause: Option[Throwable])
-  extends RdbcException(msg, cause) {
-  def this(msg: String) = this(msg, None)
-  def this(msg: String, cause: Throwable) = this(msg, Some(cause))
-  def this(cause: Throwable) = this(cause.getMessage, Some(cause))
-}
+class NoKeysReturnedException(msg: String, maybeCause: Option[Throwable] = None)
+  extends RdbcException(msg, maybeCause)

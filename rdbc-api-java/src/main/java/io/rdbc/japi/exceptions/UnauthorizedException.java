@@ -17,7 +17,11 @@
 package io.rdbc.japi.exceptions;
 
 public class UnauthorizedException extends RdbcException {
+    public UnauthorizedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public UnauthorizedException(String message) {
-        super(message);
+        super(message, null);
     }
 }

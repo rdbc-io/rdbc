@@ -16,10 +16,19 @@
 
 package io.rdbc.sapi.exceptions
 
-import scala.concurrent.duration.FiniteDuration
+import io.rdbc.sapi.Timeout
 
-class TimeoutException(msg: String) extends RdbcException(msg) {
-  def this(timeout: FiniteDuration) = {
-    this(s"Timeout occurred after waiting for configured time of $timeout")
+class TimeoutException(msg: String, maybeCause: Option[Throwable] = None)
+  extends RdbcException(msg) {
+
+  def this(timeout: Timeout, maybeCause: Option[Throwable]) = {
+    this(
+      s"Timeout occurred after waiting for configured time of ${timeout.value}",
+      maybeCause
+    )
+  }
+
+  def this(timeout: Timeout) = {
+    this(timeout, None)
   }
 }

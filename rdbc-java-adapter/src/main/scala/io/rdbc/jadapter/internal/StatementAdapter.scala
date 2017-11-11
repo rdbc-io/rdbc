@@ -21,7 +21,6 @@ import java.util.{List => JList, Map => JMap}
 
 import io.rdbc.japi.{ExecutableStatement, Statement}
 import io.rdbc.jadapter.internal.Conversions._
-import io.rdbc.jadapter.internal.ExceptionConverter._
 import io.rdbc.{ImmutIndexedSeq, sapi}
 import org.reactivestreams.Publisher
 
@@ -51,10 +50,12 @@ object StatementAdapter {
 }
 
 private[jadapter]
-class StatementAdapter(protected val underlying: sapi.Statement)(implicit ec: ExecutionContext)
+class StatementAdapter(protected val underlying: sapi.Statement)(implicit ec: ExecutionContext,
+                                                                 exConversion: ExceptionConversion)
   extends Statement {
 
   import StatementAdapter._
+  import exConversion._
 
   def bind(params: JMap[String, Object]): ExecutableStatement = convertExceptions {
     underlying.bind(params.asScala.toSeq: _*).asJava

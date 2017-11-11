@@ -17,7 +17,7 @@
 package io.rdbc.sapi.exceptions
 
 class ConnectionValidationException(msg: String, val cause: Throwable)
-  extends RdbcException(msg, cause) {
+  extends RdbcException(msg, Some(cause)) {
 
   def this(cause: Throwable) = {
     this(s"Connection is not usable: ${cause.getMessage}", cause)
