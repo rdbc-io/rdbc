@@ -26,7 +26,7 @@ import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
 
-private[jadapter] class RowPublisherAdapter(private[jadapter] val underlying: sapi.RowPublisher)
+private[jadapter] class RowPublisherAdapter(val underlying: sapi.RowPublisher)
                                            (implicit ec: ExecutionContext,
                                             exConversion: ExceptionConversion)
   extends japi.RowPublisher

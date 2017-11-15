@@ -26,7 +26,7 @@ import io.rdbc.sapi
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
 
-private[jadapter] class ConnectionAdapter(underlying: sapi.Connection)
+private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
                                          (implicit ec: ExecutionContext,
                                           exConversion: ExceptionConversion)
   extends Connection {

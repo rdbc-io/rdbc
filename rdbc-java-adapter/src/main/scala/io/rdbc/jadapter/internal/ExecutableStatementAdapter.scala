@@ -30,7 +30,7 @@ import scala.compat.java8.FutureConverters._
 import scala.compat.java8.OptionConverters._
 import scala.concurrent.ExecutionContext
 
-private[jadapter] class ExecutableStatementAdapter(underlying: sapi.ExecutableStatement)
+private[jadapter] class ExecutableStatementAdapter(val underlying: sapi.ExecutableStatement)
                                                   (implicit ec: ExecutionContext,
                                                    exConversion: ExceptionConversion)
   extends ExecutableStatement {
