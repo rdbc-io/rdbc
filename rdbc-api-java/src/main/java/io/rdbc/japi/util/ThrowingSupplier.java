@@ -17,13 +17,13 @@
 package io.rdbc.japi.util;
 
 @FunctionalInterface
-public interface ThrowingFunction<T, R> {
-    R applyThrowing(T t) throws Throwable;
+public interface ThrowingSupplier<R> {
+    R supplyThrowing() throws Throwable;
 
     @SuppressWarnings("unchecked")
-    default <E extends Throwable> R apply(T t) throws E {
+    default <E extends Throwable> R supply() throws E {
         try {
-            return applyThrowing(t);
+            return supplyThrowing();
         } catch (Throwable ex) {
             throw (E) ex;
         }

@@ -21,12 +21,13 @@ import java.util.concurrent.CompletionStage
 
 import io.rdbc.jadapter.internal.Conversions._
 import io.rdbc.japi._
+import io.rdbc.japi.util.{ThrowingFunction, ThrowingSupplier}
 import io.rdbc.sapi
 
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
 
-private[jadapter] class ConnectionAdapter(underlying: sapi.Connection)
+private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
                                          (implicit ec: ExecutionContext,
                                           exConversion: ExceptionConversion)
   extends Connection {
@@ -37,7 +38,7 @@ private[jadapter] class ConnectionAdapter(underlying: sapi.Connection)
     underlying.beginTx()(timeout.asScala).map[Void](_ => null).toJava
   }
 
-  def beginTx(): CompletionStage[Void] = convertExceptionsFut {
+  def beginTx(): CompletionStage[Void] = {
     beginTx(InfiniteDuration)
   }
 
@@ -45,7 +46,7 @@ private[jadapter] class ConnectionAdapter(underlying: sapi.Connection)
     underlying.commitTx()(timeout.asScala).map[Void](_ => null).toJava
   }
 
-  def commitTx(): CompletionStage[Void] = convertExceptionsFut {
+  def commitTx(): CompletionStage[Void] = {
     commitTx(InfiniteDuration)
   }
 
@@ -53,8 +54,21 @@ private[jadapter] class ConnectionAdapter(underlying: sapi.Connection)
     underlying.rollbackTx()(timeout.asScala).map[Void](_ => null).toJava
   }
 
-  def rollbackTx(): CompletionStage[Void] = convertExceptionsFut {
+  def rollbackTx(): CompletionStage[Void] = {
     rollbackTx(InfiniteDuration)
+  }
+
+  def withTransaction[T](body: ThrowingSupplier[CompletionStage[T]]): CompletionStage[T] = {
+    withTransaction(InfiniteDuration, body)
+  }
+
+  def withTransaction[T](timeout: Duration,
+                         body: ThrowingSupplier[CompletionStage[T]]): CompletionStage[T]  = {
+    convertExceptionsFut {
+      underlying.withTransaction {
+        body.supply().toScala
+      }(timeout.asScala).toJava
+    }
   }
 
   def release(): CompletionStage[Void] = convertExceptionsFut {

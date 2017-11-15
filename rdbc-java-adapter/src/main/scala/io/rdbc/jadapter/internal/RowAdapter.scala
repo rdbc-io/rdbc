@@ -37,7 +37,7 @@ import io.rdbc.sapi
 import scala.compat.java8.OptionConverters._
 import scala.reflect.ClassTag
 
-private[jadapter] class RowAdapter(underlying: sapi.Row)
+private[jadapter] class RowAdapter(val underlying: sapi.Row)
                                   (implicit exConversion: ExceptionConversion)
   extends Row {
 

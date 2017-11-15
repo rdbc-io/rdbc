@@ -50,8 +50,8 @@ object StatementAdapter {
 }
 
 private[jadapter]
-class StatementAdapter(protected val underlying: sapi.Statement)(implicit ec: ExecutionContext,
-                                                                 exConversion: ExceptionConversion)
+class StatementAdapter(val underlying: sapi.Statement)(implicit ec: ExecutionContext,
+                                                       exConversion: ExceptionConversion)
   extends Statement {
 
   import StatementAdapter._
