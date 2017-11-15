@@ -16,6 +16,8 @@
 
 package io.rdbc.japi;
 
+import io.rdbc.japi.util.ThrowingSupplier;
+
 import java.time.Duration;
 import java.util.concurrent.CompletionStage;
 
@@ -128,6 +130,26 @@ public interface Connection {
      * </ul>
      */
     CompletionStage<Void> rollbackTx();
+
+    /**
+     * Executes a function in a context of a transaction.
+     * <p>
+     * Executes a function in a context of a freshly started transaction.
+     * After the function finishes, transaction is committed in case of a success
+     * and rolled back in case of a failure.
+     */
+    <T> CompletionStage<T> withTransaction(ThrowingSupplier<CompletionStage<T>> body);
+
+    /**
+     * Executes a function in a context of a transaction.
+     * <p>
+     * Executes a function in a context of a freshly started transaction.
+     * After the function finishes, transaction is committed in case of a success
+     * and rolled back in case of a failure.
+     *
+     * @param txManageTimeout Timeout for operations managing transaction state.
+     */
+    <T> CompletionStage<T> withTransaction(Duration txManageTimeout, ThrowingSupplier<CompletionStage<T>> body);
 
     /**
      * Releases the connection and underlying resources.
