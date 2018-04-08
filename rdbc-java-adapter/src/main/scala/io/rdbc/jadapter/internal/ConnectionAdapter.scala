@@ -39,7 +39,7 @@ private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
   }
 
   def beginTx(): CompletionStage[Void] = {
-    beginTx(InfiniteDuration)
+    beginTx(InfiniteTimeout)
   }
 
   def commitTx(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
@@ -47,7 +47,7 @@ private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
   }
 
   def commitTx(): CompletionStage[Void] = {
-    commitTx(InfiniteDuration)
+    commitTx(InfiniteTimeout)
   }
 
   def rollbackTx(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
@@ -55,11 +55,11 @@ private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
   }
 
   def rollbackTx(): CompletionStage[Void] = {
-    rollbackTx(InfiniteDuration)
+    rollbackTx(InfiniteTimeout)
   }
 
   def withTransaction[T](body: ThrowingSupplier[CompletionStage[T]]): CompletionStage[T] = {
-    withTransaction(InfiniteDuration, body)
+    withTransaction(InfiniteTimeout, body)
   }
 
   def withTransaction[T](timeout: Duration,

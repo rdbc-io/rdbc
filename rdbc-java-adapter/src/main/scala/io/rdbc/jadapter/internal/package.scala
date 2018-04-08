@@ -16,10 +16,12 @@
 
 package io.rdbc.jadapter
 
+import java.time.Duration
+
 import scala.util.Try
 
 package object internal {
-  private[jadapter] val InfiniteDuration = java.time.Duration.ofNanos(Long.MaxValue)
+  private[jadapter] val InfiniteTimeout = Duration.ofSeconds(Long.MaxValue)
 
   @inline
   private[jadapter] def throwOnFailure[A](block: => Try[A]): A = {

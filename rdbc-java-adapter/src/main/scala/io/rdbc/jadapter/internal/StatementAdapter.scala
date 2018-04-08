@@ -62,7 +62,7 @@ class StatementAdapter(val underlying: sapi.Statement)(implicit ec: ExecutionCon
   }
 
   def bindByIdx(params: Object*): ExecutableStatement = convertExceptions {
-    underlying.bindByIdx(params).asJava
+    underlying.bindByIdx(params: _*).asJava
   }
 
   def noArgs(): ExecutableStatement = convertExceptions {

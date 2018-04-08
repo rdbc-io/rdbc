@@ -21,7 +21,7 @@ import java.util.concurrent.CompletionStage
 
 import io.rdbc.japi.util.ThrowingFunction
 import io.rdbc.jadapter.internal.Conversions._
-import io.rdbc.jadapter.internal.{ExceptionConversion, InfiniteDuration}
+import io.rdbc.jadapter.internal.{ExceptionConversion, InfiniteTimeout}
 import io.rdbc.{japi, sapi}
 
 import scala.compat.java8.FutureConverters._
@@ -43,11 +43,11 @@ class ConnectionFactoryAdapter(val underlying: sapi.ConnectionFactory,
   }
 
   def getConnection: CompletionStage[japi.Connection] = convertExceptionsFut {
-    getConnection(InfiniteDuration)
+    getConnection(InfiniteTimeout)
   }
 
   def withConnection[T](body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
-    withConnection(InfiniteDuration, body)
+    withConnection(InfiniteTimeout, body)
   }
 
   def withConnection[T](timeout: Duration, body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
@@ -57,7 +57,7 @@ class ConnectionFactoryAdapter(val underlying: sapi.ConnectionFactory,
   }
 
   def withTransaction[T](body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
-    withConnection(InfiniteDuration, body)
+    withConnection(InfiniteTimeout, body)
   }
 
   def withTransaction[T](timeout: Duration, body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
