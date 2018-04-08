@@ -34,11 +34,31 @@ class TypeConverterRegistry(converters: Map[Class[_], TypeConverter[_]]) {
 /** Factory of TypeConverterRegistry */
 object TypeConverterRegistry {
 
+  private val primitiveMap = Map[Class[_], Class[_]](
+    classOf[Boolean] -> classOf[java.lang.Boolean],
+    classOf[Byte] -> classOf[java.lang.Byte],
+    classOf[Char] -> classOf[java.lang.Character],
+    classOf[Double] -> classOf[java.lang.Double],
+    classOf[Float] -> classOf[java.lang.Float],
+    classOf[Int] -> classOf[java.lang.Integer],
+    classOf[Long] -> classOf[java.lang.Long],
+    classOf[Short] -> classOf[java.lang.Short],
+    Void.TYPE -> classOf[java.lang.Void]
+  )
+
   /** Returns a type converter registry from converters given. */
   def apply(converters: TypeConverter[_]*): TypeConverterRegistry = {
-    val registry: Map[Class[_], TypeConverter[_]] = Map(
-      converters.map(conv => conv.cls -> conv): _*
-    )
+    val registry: Map[Class[_], TypeConverter[_]] =
+      converters.flatMap { conv =>
+        val primitiveClassOrEmpty: Seq[Class[_]] = {
+          primitiveMap.get(conv.cls)
+            .map(cls => Vector(cls))
+            .getOrElse(Vector.empty)
+        }
+        val classes = primitiveClassOrEmpty :+ conv.cls
+        classes.map(_ -> conv)
+      }.toMap
+
     new TypeConverterRegistry(registry)
   }
 

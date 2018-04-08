@@ -18,6 +18,7 @@ package io.rdbc.sapi
 
 import scala.annotation.implicitNotFound
 import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 
 /** Represents a timeout */
 @implicitNotFound(
@@ -36,4 +37,6 @@ object Timeout {
   }
 
   val Inf = Timeout(Duration.Inf)
+
+  val MaxFiniteTimeout = Timeout(1.day)
 }

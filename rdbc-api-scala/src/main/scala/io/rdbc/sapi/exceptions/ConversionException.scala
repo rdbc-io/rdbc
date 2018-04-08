@@ -20,6 +20,7 @@ class ConversionException(val value: Any,
                           val targetType: Class[_],
                           maybeCause: Option[Throwable] = None)
   extends RdbcException(
-    s"Value '$value' could not be converted to '${targetType.getCanonicalName}'",
+    s"Value '$value' of type '${value.getClass.getCanonicalName}' " +
+      "could not be converted to '${targetType.getCanonicalName}'",
     maybeCause
   )

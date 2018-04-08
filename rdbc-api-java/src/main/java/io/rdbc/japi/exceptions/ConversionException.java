@@ -21,8 +21,8 @@ public class ConversionException extends RdbcException {
     private final Class<?> targetType;
 
     public ConversionException(Object value, Class<?> targetType, Throwable cause) {
-        super(String.format("Value '%s' could not be converted to '%s'",
-                value, targetType.getCanonicalName()),
+        super(String.format("Value '%s' of type '%s' could not be converted to '%s'",
+                value, value.getClass().getCanonicalName(), targetType.getCanonicalName()),
                 cause);
         this.value = value;
         this.targetType = targetType;

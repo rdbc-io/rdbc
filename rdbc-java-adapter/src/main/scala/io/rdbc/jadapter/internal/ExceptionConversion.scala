@@ -17,7 +17,6 @@
 package io.rdbc.jadapter.internal
 
 import java.util.concurrent.{CompletionException, CompletionStage}
-import java.util.function.BiFunction
 
 import io.rdbc.jadapter.ExceptionConverter
 import io.rdbc.japi.{exceptions => japi}
@@ -37,15 +36,11 @@ private[jadapter] class ExceptionConversion(converter: ExceptionConverter) {
 
   def convertExceptionsFut[A](block: => CompletionStage[A]): CompletionStage[A] = {
     convertExceptions {
-      block.handle(new BiFunction[A, Throwable, A] {
-        def apply(value: A, failure: Throwable): A = {
-          if (value != null) {
-            value
-          } else {
-            unwrapFutureFailure(failure) match {
-              case ex: sapi.RdbcException => throw convertException(ex)
-              case ex => throw ex
-            }
+      block.exceptionally(new java.util.function.Function[Throwable, A] {
+        def apply(ex: Throwable): Nothing = {
+          unwrapFutureFailure(ex) match {
+            case ex: sapi.RdbcException => throw convertException(ex)
+            case ex => throw ex
           }
         }
       })
@@ -53,7 +48,7 @@ private[jadapter] class ExceptionConversion(converter: ExceptionConverter) {
   }
 
   private def unwrapFutureFailure(failure: Throwable): Throwable = {
-    if (failure.isInstanceOf[CompletionException]) {
+    if (failure.isInstanceOf[CompletionException] && failure.getCause != null) {
       failure.getCause
     } else {
       failure

@@ -232,4 +232,34 @@ public interface ExecutableStatement {
      * @param valExtractor function used to extract value from the returned row
      */
     <T> CompletionStage<Optional<T>> executeForValue(ThrowingFunction<Row, T> valExtractor);
+
+    /**
+     * Executes this statement and returns a single generated key.
+     * <p>
+     * Returned {@link CompletionStage} can fail with:
+     * <ul>
+     * <li>{@link io.rdbc.japi.exceptions.NoKeysReturnedException} when no keys were returned by the database engine</li>
+     * <li>{@link io.rdbc.japi.exceptions.NoSuitableConverterFoundException} when no suitable converter was found to transform key value to desired class instance</li>
+     * <li>{@link io.rdbc.japi.exceptions.UnauthorizedException} when client is not authorized to perform the action</li>
+     * <li>{@link io.rdbc.japi.exceptions.InvalidQueryException} when query is rejected by a database engine as invalid</li>
+     * <li>{@link io.rdbc.japi.exceptions.InactiveTxException} when transaction is in progress but is in inactive state</li>
+     * <li>{@link io.rdbc.japi.exceptions.ConstraintViolationException} when operation results in an integrity constraint violation</li>
+     * </ul>
+     */
+    <T> CompletionStage<T> executeForKey(Class<T> keyType, Duration timeout);
+
+    /**
+     * Executes this statement and returns a single generated key.
+     * <p>
+     * Returned {@link CompletionStage} can fail with:
+     * <ul>
+     * <li>{@link io.rdbc.japi.exceptions.NoKeysReturnedException} when no keys were returned by the database engine</li>
+     * <li>{@link io.rdbc.japi.exceptions.NoSuitableConverterFoundException} when no suitable converter was found to transform key value to desired class instance</li>
+     * <li>{@link io.rdbc.japi.exceptions.UnauthorizedException} when client is not authorized to perform the action</li>
+     * <li>{@link io.rdbc.japi.exceptions.InvalidQueryException} when query is rejected by a database engine as invalid</li>
+     * <li>{@link io.rdbc.japi.exceptions.InactiveTxException} when transaction is in progress but is in inactive state</li>
+     * <li>{@link io.rdbc.japi.exceptions.ConstraintViolationException} when operation results in an integrity constraint violation</li>
+     * </ul>
+     */
+    <T> CompletionStage<T> executeForKey(Class<T> keyType);
 }
