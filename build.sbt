@@ -4,6 +4,9 @@ import scala.Console._
 
 shellPrompt.in(ThisBuild) := (state => s"${CYAN}project:$GREEN${Project.extract(state).currentRef.project}$RESET> ")
 
+lazy val displayJavaVersion = taskKey[Unit]("Displays Java version")
+displayJavaVersion := { println(s"Running sbt with Java ${System.getProperty("java.version")}") }
+
 lazy val commonSettings = Vector(
   organization := "io.rdbc",
   organizationName := "rdbc contributors",
