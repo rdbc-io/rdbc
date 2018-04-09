@@ -33,6 +33,9 @@ object Settings {
     javacOptions ++= Vector(
       "-source", "1.8",
       "-target", "1.8"
+    ),
+    javacOptions in doc := Vector(
+      "-source", "1.8"
     )
   )
 
