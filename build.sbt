@@ -60,6 +60,8 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
   .settings(commonSettings: _*)
   .settings(
     name := "rdbc-api-java",
+    crossPaths := false,
+    crossScalaVersions := Vector.empty,
     libraryDependencies ++= Vector(
       Library.reactiveStreams
     )
