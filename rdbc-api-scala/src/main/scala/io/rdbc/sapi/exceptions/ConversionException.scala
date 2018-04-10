@@ -21,6 +21,6 @@ class ConversionException(val value: Any,
                           maybeCause: Option[Throwable] = None)
   extends RdbcException(
     s"Value '$value' of type '${value.getClass.getCanonicalName}' " +
-      "could not be converted to '${targetType.getCanonicalName}'",
+    s"could not be converted to '${targetType.getCanonicalName}'",
     maybeCause
   )
