@@ -43,6 +43,15 @@ public interface Statement {
             NoSuitableConverterFoundException;
 
     /**
+     * Binds one named parameter to a value.
+     */
+    default StatementArgBinder arg(String name, Object value) {
+        StatementArgBinder binder = new StatementArgBinder(this);
+        binder.arg(name, value);
+        return binder;
+    }
+
+    /**
      * Binds each parameter by index.
      * <p>
      * Parameters are ordered, each value in {@code params} sequence will be bound
