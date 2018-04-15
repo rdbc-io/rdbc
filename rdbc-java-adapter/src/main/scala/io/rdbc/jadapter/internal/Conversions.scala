@@ -46,7 +46,7 @@ private[jadapter] object Conversions {
     def asScala: Timeout = {
       throwOnFailure {
         Try(value.toNanos).map { nanos =>
-          Timeout(FiniteDuration(nanos, TimeUnit.NANOSECONDS))
+          Timeout(FiniteDuration(nanos, TimeUnit.NANOSECONDS).toCoarsest)
         }.recover {
           case _: ArithmeticException => Timeout.Inf
         }
