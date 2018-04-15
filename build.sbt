@@ -61,10 +61,12 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
   .settings(
     name := "rdbc-api-java",
     crossPaths := false,
+    autoScalaLibrary := false,
     crossScalaVersions := Vector.empty,
     libraryDependencies ++= Vector(
       Library.reactiveStreams
-    )
+    ),
+    coverageEnabled := false
   )
 
 lazy val rdbcJavaAdapter = (project in file("rdbc-java-adapter"))
@@ -76,7 +78,7 @@ lazy val rdbcJavaAdapter = (project in file("rdbc-java-adapter"))
       Library.java8Compat
     ),
     buildInfoPackage := "io.rdbc.jadapter",
-  ).dependsOn(rdbcApiJava, rdbcApiScala)
+  ).dependsOn(rdbcApiJava, rdbcApiScala, rdbcUtil)
 
 lazy val rdbcImplBase = (project in file("rdbc-implbase"))
   .enablePlugins(BuildInfoPlugin)

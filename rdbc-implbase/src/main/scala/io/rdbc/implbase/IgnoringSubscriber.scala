@@ -18,7 +18,7 @@ package io.rdbc.implbase
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import io.rdbc.util.Preconditions.notNull
+import io.rdbc.util.Preconditions.checkNotNull
 import org.reactivestreams.{Subscriber, Subscription}
 
 class IgnoringSubscriber extends Subscriber[Any] {
@@ -26,11 +26,11 @@ class IgnoringSubscriber extends Subscriber[Any] {
   private val subscribed = new AtomicBoolean(false)
 
   override def onError(t: Throwable): Unit = {
-    notNull(t)
+    checkNotNull(t)
   }
 
   override def onSubscribe(s: Subscription): Unit = {
-    notNull(s)
+    checkNotNull(s)
     if (subscribed.compareAndSet(false, true)) {
       s.request(Long.MaxValue)
     } else s.cancel()
@@ -38,7 +38,7 @@ class IgnoringSubscriber extends Subscriber[Any] {
 
   override def onComplete(): Unit = ()
 
-  override def onNext(any: Any): Unit = {
-    notNull(any)
+  override def onNext(elem: Any): Unit = {
+    checkNotNull(elem)
   }
 }

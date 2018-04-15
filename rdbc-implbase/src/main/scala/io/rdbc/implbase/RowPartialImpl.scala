@@ -21,6 +21,7 @@ import java.util.UUID
 
 import io.rdbc.sapi.exceptions.ConversionException
 import io.rdbc.sapi.{Row, SqlNumeric, TypeConverterRegistry}
+import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.reflect.ClassTag
 
@@ -45,10 +46,12 @@ trait RowPartialImpl extends Row {
   }
 
   private[this] def colOpt[A: ClassTag](maybeAny: Option[Any]): Option[A] = {
+    checkNotNull(maybeAny)
     convertType(maybeAny, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
   }
 
   private[this] def col[A: ClassTag](maybeAny: Option[Any]): A = {
+    checkNotNull(maybeAny)
     colOpt(maybeAny).getOrElse {
       throw new ConversionException(None, implicitly[ClassTag[A]].runtimeClass)
     }

@@ -18,18 +18,10 @@ package io.rdbc.util
 
 object Preconditions {
 
-  def notNull(args: sourcecode.Text[_]*): Unit = {
-    val i = args.iterator
-    while (i.hasNext) {
-      val arg = i.next()
-      if (arg.value == null) {
-        throw new NullPointerException(s"Parameter '${arg.source}' cannot be null")
-      }
+  def checkNotNull[A](arg: sourcecode.Text[A]): Unit = {
+    if (arg.value == null) {
+      throw new NullPointerException(s"parameter '${arg.source}' cannot be null")
     }
-  }
-
-  def argsNotNull()(implicit args: sourcecode.Args): Unit = {
-    notNull(args.value.flatten: _*) //TODO this has major performance hit
   }
 
   def check[A](arg: sourcecode.Text[A], requirement: Boolean, msg: String): Unit = {

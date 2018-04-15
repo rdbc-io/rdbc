@@ -30,7 +30,7 @@ class JdkScheduler(executorService: ScheduledExecutorService)
 
   def schedule(delay: FiniteDuration)
               (action: () => Unit): ScheduledTask = traced {
-    logger.debug(s"Scheduling a task to run in ${delay.length} ${delay.unit} using $executorService")
+    logger.debug(s"Scheduling a task to run in $delay using $executorService")
     val fut = executorService.schedule(runnable(() => Future(action())), delay.length, delay.unit)
     new JdkScheduledTask(fut)
   }

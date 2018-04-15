@@ -33,6 +33,7 @@ import java.util._
 import io.rdbc.japi.{Row, SqlNumeric}
 import io.rdbc.jadapter.internal.Conversions._
 import io.rdbc.sapi
+import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.compat.java8.OptionConverters._
 import scala.reflect.ClassTag
@@ -43,28 +44,52 @@ private[jadapter] class RowAdapter(val underlying: sapi.Row)
 
   import exConversion._
 
-  def getCol[A](idx: Int, cls: Class[A]): A = convertExceptions {
-    underlying.col(idx)(ClassTag(cls)).asInstanceOf[A]
+  def getCol[A](idx: Int, cls: Class[A]): A = {
+    checkNotNull(idx)
+    checkNotNull(cls)
+    convertExceptions {
+      underlying.col(idx)(ClassTag(cls)).asInstanceOf[A]
+    }
   }
 
-  def getColOpt[A](idx: Int, cls: Class[A]): Optional[A] = convertExceptions {
-    underlying.colOpt(idx)(ClassTag(cls)).asJava
+  def getColOpt[A](idx: Int, cls: Class[A]): Optional[A] = {
+    checkNotNull(idx)
+    checkNotNull(cls)
+    convertExceptions {
+      underlying.colOpt(idx)(ClassTag(cls)).asJava
+    }
   }
 
-  private def getColOptScala[A](idx: Int, cls: Class[A]): Option[A] = convertExceptions {
-    underlying.colOpt(idx)(ClassTag(cls))
+  private def getColOptScala[A](idx: Int, cls: Class[A]): Option[A] = {
+    checkNotNull(idx)
+    checkNotNull(cls)
+    convertExceptions {
+      underlying.colOpt(idx)(ClassTag(cls))
+    }
   }
 
-  def getCol[A](name: String, cls: Class[A]): A = convertExceptions {
-    underlying.col(name)(ClassTag(cls)).asInstanceOf[A]
+  def getCol[A](name: String, cls: Class[A]): A = {
+    checkNotNull(name)
+    checkNotNull(cls)
+    convertExceptions {
+      underlying.col(name)(ClassTag(cls)).asInstanceOf[A]
+    }
   }
 
-  def getColOpt[A](name: String, cls: Class[A]): Optional[A] = convertExceptions {
-    underlying.colOpt(name)(ClassTag(cls)).asJava
+  def getColOpt[A](name: String, cls: Class[A]): Optional[A] = {
+    checkNotNull(name)
+    checkNotNull(cls)
+    convertExceptions {
+      underlying.colOpt(name)(ClassTag(cls)).asJava
+    }
   }
 
-  private def getColOptScala[A](name: String, cls: Class[A]): Option[A] = convertExceptions {
-    underlying.colOpt(name)(ClassTag(cls))
+  private def getColOptScala[A](name: String, cls: Class[A]): Option[A] = {
+    checkNotNull(name)
+    checkNotNull(cls)
+    convertExceptions {
+      underlying.colOpt(name)(ClassTag(cls))
+    }
   }
 
   def getStr(name: String): String = {
