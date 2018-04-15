@@ -2,6 +2,7 @@ package io.rdbc.japi;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class StatementArgBinder {
     private final Statement statement;
@@ -16,6 +17,7 @@ public class StatementArgBinder {
      * Binds one named parameter to a value.
      */
     public StatementArgBinder arg(String name, Object value) {
+        Objects.requireNonNull(name, "name cannot be null");
         args.put(name, value);
         return this;
     }

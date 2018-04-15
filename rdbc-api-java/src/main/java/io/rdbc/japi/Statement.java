@@ -46,9 +46,7 @@ public interface Statement {
      * Binds one named parameter to a value.
      */
     default StatementArgBinder arg(String name, Object value) {
-        StatementArgBinder binder = new StatementArgBinder(this);
-        binder.arg(name, value);
-        return binder;
+        return new StatementArgBinder(this).arg(name, value);
     }
 
     /**

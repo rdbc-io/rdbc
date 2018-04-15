@@ -23,88 +23,24 @@ class PreconditionsSpec
     with Matchers {
 
   "Preconditions not null checking feature" when {
-    "notNull check is used" when {
-      "executed for single argument" should {
-
-        def test(arg: String): Unit = {
-          Preconditions.notNull(arg)
-        }
-
-        "throw NPE for null argument" in {
-          assertThrows[NullPointerException](test(null))
-        }
-
-        "not throw NPE for not-null argument" in {
-          noException should be thrownBy test("notnull")
-        }
+    "notNull check is used" should {
+      def test(arg: String): Unit = {
+        Preconditions.checkNotNull(arg)
       }
 
-      "executed for multiple arguments" should {
-
-        def test(arg1: String, arg2: String): Unit = {
-          Preconditions.notNull(arg1, arg2)
-        }
-
-        "throw NPE for all null arguments" in {
-          assertThrows[NullPointerException](test(null, null))
-        }
-
-        "throw NPE for first null argument" in {
-          assertThrows[NullPointerException](test(null, "notnull"))
-        }
-
-        "throw NPE for second null argument" in {
-          assertThrows[NullPointerException](test("notnull", null))
-        }
-
-        "not throw NPE for not-null arguments" in {
-          noException should be thrownBy test("notnull1", "notnull2")
-        }
-      }
-    }
-    "argsNotNull check is used" when {
-      "executed for single argument" should {
-
-        def test(arg: String): Unit = {
-          Preconditions.argsNotNull()
-        }
-
-        "throw NPE for null argument" in {
-          assertThrows[NullPointerException](test(null))
-        }
-
-        "not throw NPE for not-null argument" in {
-          noException should be thrownBy test("notnull")
-        }
+      "throw NPE for null argument" in {
+        assertThrows[NullPointerException](test(null))
       }
 
-      "executed for multiple arguments" should {
-
-        def test(arg1: String, arg2: String): Unit = {
-          Preconditions.argsNotNull()
-        }
-
-        "throw NPE for all null arguments" in {
-          assertThrows[NullPointerException](test(null, null))
-        }
-
-        "throw NPE for first null argument" in {
-          assertThrows[NullPointerException](test(null, "notnull"))
-        }
-
-        "throw NPE for second null argument" in {
-          assertThrows[NullPointerException](test("notnull", null))
-        }
-
-        "not throw NPE for not-null arguments" in {
-          noException should be thrownBy test("notnull1", "notnull2")
-        }
+      "not throw NPE for not-null argument" in {
+        noException should be thrownBy test("notnull")
       }
     }
   }
 
   "Preconditions generic arg checking feature" should {
     val failMessage = "must be 'a'"
+
     def test(str: String): Unit = {
       Preconditions.check(str, str == "a", failMessage)
     }

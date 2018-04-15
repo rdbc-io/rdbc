@@ -19,6 +19,7 @@ package io.rdbc.implbase
 import io.rdbc.sapi._
 import io.rdbc.util.Logging
 import io.rdbc.implbase.Compat._
+import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -31,7 +32,7 @@ trait ConnectionPartialImpl
 
   override def withTransaction[A](body: => Future[A])
                                  (implicit timeout: Timeout): Future[A] = {
-
+    checkNotNull(timeout)
     beginTx().transformWith {
       case Success(_) =>
         body.transformWith {
@@ -50,10 +51,12 @@ trait ConnectionPartialImpl
   }
 
   override def statement(sql: String): Statement = {
+    checkNotNull(sql)
     statement(sql, StatementOptions.Default)
   }
 
   override def statement(sqlWithParams: SqlWithParams): ExecutableStatement = {
+    checkNotNull(sqlWithParams)
     statement(sqlWithParams, StatementOptions.Default)
   }
 
@@ -61,6 +64,8 @@ trait ConnectionPartialImpl
                           sqlWithParams: SqlWithParams,
                           statementOptions: StatementOptions
                         ): ExecutableStatement = {
+    checkNotNull(sqlWithParams)
+    checkNotNull(statementOptions)
     statement(sqlWithParams.sql, statementOptions).bindByIdx(sqlWithParams.params: _*)
   }
 }

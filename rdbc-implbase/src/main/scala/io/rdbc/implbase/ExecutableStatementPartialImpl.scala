@@ -18,6 +18,7 @@ package io.rdbc.implbase
 
 import io.rdbc.sapi._
 import io.rdbc.sapi.exceptions.{ColumnIndexOutOfBoundsException, NoKeysReturnedException}
+import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
@@ -26,6 +27,7 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
   implicit protected def ec: ExecutionContext
 
   override def executeForSet()(implicit timeout: Timeout): Future[ResultSet] = {
+    checkNotNull(timeout)
     val resultStream = stream()
     val subscriber = new HeadSubscriber(None)
     resultStream.subscribe(subscriber)
@@ -45,10 +47,12 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
   }
 
   override def execute()(implicit timeout: Timeout): Future[Unit] = {
+    checkNotNull(timeout)
     executeForRowsAffected().map(_ => ())
   }
 
   override def executeForRowsAffected()(implicit timeout: Timeout): Future[Long] = {
+    checkNotNull(timeout)
     val resultStream = stream()
     resultStream.subscribe(new IgnoringSubscriber)
     resultStream.rowsAffected
@@ -58,15 +62,19 @@ trait ExecutableStatementPartialImpl extends ExecutableStatement {
     /* The method is optimized for result sets that are small.
        It's faster to fetch all rows instead of fetching
        just one and cancelling the subscription. */
+    checkNotNull(timeout)
     executeForSet().map(_.rows.headOption)
   }
 
   override def executeForValue[A](valExtractor: Row => A)
                                  (implicit timeout: Timeout): Future[Option[A]] = {
+    checkNotNull(valExtractor)
+    checkNotNull(timeout)
     executeForFirstRow().map(maybeRow => maybeRow.map(valExtractor))
   }
 
   override def executeForKey[K: ClassTag]()(implicit timeout: Timeout): Future[K] = {
+    checkNotNull(timeout)
     executeForValue[Option[K]](_.colOpt(0)).flatMap {
       case Some(Some(key)) => Future.successful(key)
       case Some(None) => Future.failed(new NoKeysReturnedException("Row's first column is NULL"))

@@ -19,6 +19,7 @@ package io.rdbc.implbase
 import io.rdbc.sapi.{Connection, ConnectionFactory, Timeout}
 import io.rdbc.util.Futures._
 import io.rdbc.util.Logging
+import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,6 +31,8 @@ trait ConnectionFactoryPartialImpl
 
   override def withConnection[A](body: Connection => Future[A])
                                 (implicit timeout: Timeout): Future[A] = {
+    checkNotNull(body)
+    checkNotNull(timeout)
     connection().flatMap { conn =>
       body(conn).andThenF { case _ =>
         conn.release()
@@ -39,6 +42,8 @@ trait ConnectionFactoryPartialImpl
 
   override def withTransaction[A](body: Connection => Future[A])
                                   (implicit timeout: Timeout): Future[A] = {
+    checkNotNull(body)
+    checkNotNull(timeout)
     withConnection { conn =>
       conn.withTransaction {
         body(conn)

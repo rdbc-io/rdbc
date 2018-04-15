@@ -21,6 +21,7 @@ import java.util.{List => JList, Map => JMap}
 
 import io.rdbc.japi.{ExecutableStatement, Statement}
 import io.rdbc.jadapter.internal.Conversions._
+import io.rdbc.util.Preconditions.checkNotNull
 import io.rdbc.{ImmutIndexedSeq, sapi}
 import org.reactivestreams.Publisher
 
@@ -57,28 +58,40 @@ class StatementAdapter(val underlying: sapi.Statement)(implicit ec: ExecutionCon
   import StatementAdapter._
   import exConversion._
 
-  def bind(params: JMap[String, Object]): ExecutableStatement = convertExceptions {
-    underlying.bind(params.asScala.toSeq: _*).asJava
+  def bind(params: JMap[String, Object]): ExecutableStatement = {
+    checkNotNull(params)
+    convertExceptions {
+      underlying.bind(params.asScala.toSeq: _*).asJava
+    }
   }
 
-  def bindByIdx(params: Object*): ExecutableStatement = convertExceptions {
-    underlying.bindByIdx(params: _*).asJava
+  def bindByIdx(params: Object*): ExecutableStatement = {
+    checkNotNull(params)
+    convertExceptions {
+      underlying.bindByIdx(params: _*).asJava
+    }
   }
 
   def noArgs(): ExecutableStatement = convertExceptions {
     underlying.noArgs.asJava
   }
 
-  def streamArgs(paramsPublisher: Publisher[JMap[String, Object]]): CompletionStage[Void] = convertExceptionsFut {
-    underlying.streamArgs(
-      new Java2ScalaNamedParamPublisher(paramsPublisher)
-    ).map(_ => null: Void).toJava
+  def streamArgs(paramsPublisher: Publisher[JMap[String, Object]]): CompletionStage[Void] = {
+    checkNotNull(paramsPublisher)
+    convertExceptionsFut {
+      underlying.streamArgs(
+        new Java2ScalaNamedParamPublisher(paramsPublisher)
+      ).map(_ => null: Void).toJava
+    }
   }
 
-  def streamArgsByIdx(paramsPublisher: Publisher[JList[Object]]): CompletionStage[Void] = convertExceptionsFut {
-    underlying.streamArgsByIdx(
-      new Java2ScalaPositionalParamPublisher(paramsPublisher)
-    ).map(_ => null: Void).toJava
+  def streamArgsByIdx(paramsPublisher: Publisher[JList[Object]]): CompletionStage[Void] = {
+    checkNotNull(paramsPublisher)
+    convertExceptionsFut {
+      underlying.streamArgsByIdx(
+        new Java2ScalaPositionalParamPublisher(paramsPublisher)
+      ).map(_ => null: Void).toJava
+    }
   }
 
   override def toString: String = underlying.toString

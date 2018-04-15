@@ -77,7 +77,7 @@ lazy val rdbcJavaAdapter = (project in file("rdbc-java-adapter"))
       Library.java8Compat
     ),
     buildInfoPackage := "io.rdbc.jadapter",
-  ).dependsOn(rdbcApiJava, rdbcApiScala)
+  ).dependsOn(rdbcApiJava, rdbcApiScala, rdbcUtil)
 
 lazy val rdbcImplBase = (project in file("rdbc-implbase"))
   .enablePlugins(BuildInfoPlugin)

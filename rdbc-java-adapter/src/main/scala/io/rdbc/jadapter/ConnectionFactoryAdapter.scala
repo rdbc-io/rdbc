@@ -22,6 +22,7 @@ import java.util.concurrent.CompletionStage
 import io.rdbc.japi.util.ThrowingFunction
 import io.rdbc.jadapter.internal.Conversions._
 import io.rdbc.jadapter.internal.{ExceptionConversion, InfiniteTimeout}
+import io.rdbc.util.Preconditions.checkNotNull
 import io.rdbc.{japi, sapi}
 
 import scala.compat.java8.FutureConverters._
@@ -38,32 +39,49 @@ class ConnectionFactoryAdapter(val underlying: sapi.ConnectionFactory,
 
   import exConversion._
 
-  def getConnection(timeout: Duration): CompletionStage[japi.Connection] = convertExceptionsFut {
-    underlying.connection()(timeout.asScala).map(_.asJava).toJava
+  def getConnection(timeout: Duration): CompletionStage[japi.Connection] = {
+    checkNotNull(timeout)
+    convertExceptionsFut {
+      underlying.connection()(timeout.asScala).map(_.asJava).toJava
+    }
   }
 
   def getConnection: CompletionStage[japi.Connection] = convertExceptionsFut {
     getConnection(InfiniteTimeout)
   }
 
-  def withConnection[T](body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
-    withConnection(InfiniteTimeout, body)
+  def withConnection[T](body: ConnLoanFun[T]): CompletionStage[T] = {
+    checkNotNull(body)
+    convertExceptionsFut {
+      withConnection(InfiniteTimeout, body)
+    }
   }
 
-  def withConnection[T](timeout: Duration, body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
-    underlying.withConnection { sapiConn =>
-      body.apply(sapiConn.asJava).toScala
-    }(timeout.asScala).toJava
+  def withConnection[T](timeout: Duration, body: ConnLoanFun[T]): CompletionStage[T] = {
+    checkNotNull(timeout)
+    checkNotNull(body)
+    convertExceptionsFut {
+      underlying.withConnection { sapiConn =>
+        body.apply(sapiConn.asJava).toScala
+      }(timeout.asScala).toJava
+    }
   }
 
-  def withTransaction[T](body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
-    withConnection(InfiniteTimeout, body)
+  def withTransaction[T](body: ConnLoanFun[T]): CompletionStage[T] = {
+    checkNotNull(body)
+    convertExceptionsFut {
+      withConnection(InfiniteTimeout, body)
+    }
   }
 
-  def withTransaction[T](timeout: Duration, body: ConnLoanFun[T]): CompletionStage[T] = convertExceptionsFut {
-    underlying.withTransaction { sapiConn =>
-      body.apply(sapiConn.asJava).toScala
-    }(timeout.asScala).toJava
+  def withTransaction[T](timeout: Duration, body: ConnLoanFun[T]): CompletionStage[T] = {
+    checkNotNull(timeout)
+    checkNotNull(body)
+    convertExceptionsFut {
+      underlying.withTransaction { sapiConn =>
+        body.apply(sapiConn.asJava).toScala
+      }(timeout.asScala).toJava
+    }
   }
 
   def shutdown(): CompletionStage[Void] = convertExceptionsFut {

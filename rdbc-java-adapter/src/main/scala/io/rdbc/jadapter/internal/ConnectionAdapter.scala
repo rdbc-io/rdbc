@@ -21,8 +21,9 @@ import java.util.concurrent.CompletionStage
 
 import io.rdbc.jadapter.internal.Conversions._
 import io.rdbc.japi._
-import io.rdbc.japi.util.{ThrowingFunction, ThrowingSupplier}
+import io.rdbc.japi.util.ThrowingSupplier
 import io.rdbc.sapi
+import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.ExecutionContext
@@ -34,24 +35,33 @@ private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
 
   import exConversion._
 
-  def beginTx(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
-    underlying.beginTx()(timeout.asScala).map[Void](_ => null).toJava
+  def beginTx(timeout: Duration): CompletionStage[Void] = {
+    checkNotNull(timeout)
+    convertExceptionsFut {
+      underlying.beginTx()(timeout.asScala).map[Void](_ => null).toJava
+    }
   }
 
   def beginTx(): CompletionStage[Void] = {
     beginTx(InfiniteTimeout)
   }
 
-  def commitTx(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
-    underlying.commitTx()(timeout.asScala).map[Void](_ => null).toJava
+  def commitTx(timeout: Duration): CompletionStage[Void] = {
+    checkNotNull(timeout)
+    convertExceptionsFut {
+      underlying.commitTx()(timeout.asScala).map[Void](_ => null).toJava
+    }
   }
 
   def commitTx(): CompletionStage[Void] = {
     commitTx(InfiniteTimeout)
   }
 
-  def rollbackTx(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
-    underlying.rollbackTx()(timeout.asScala).map[Void](_ => null).toJava
+  def rollbackTx(timeout: Duration): CompletionStage[Void] = {
+    checkNotNull(timeout)
+    convertExceptionsFut {
+      underlying.rollbackTx()(timeout.asScala).map[Void](_ => null).toJava
+    }
   }
 
   def rollbackTx(): CompletionStage[Void] = {
@@ -59,11 +69,14 @@ private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
   }
 
   def withTransaction[T](body: ThrowingSupplier[CompletionStage[T]]): CompletionStage[T] = {
+    checkNotNull(body)
     withTransaction(InfiniteTimeout, body)
   }
 
   def withTransaction[T](timeout: Duration,
                          body: ThrowingSupplier[CompletionStage[T]]): CompletionStage[T]  = {
+    checkNotNull(timeout)
+    checkNotNull(body)
     convertExceptionsFut {
       underlying.withTransaction {
         body.supply().toScala
@@ -79,17 +92,27 @@ private[jadapter] class ConnectionAdapter(val underlying: sapi.Connection)
     underlying.forceRelease().map[Void](_ => null).toJava
   }
 
-  def validate(timeout: Duration): CompletionStage[Void] = convertExceptionsFut {
-    underlying.validate()(timeout.asScala)
-      .map(_ => null: Void).toJava
+  def validate(timeout: Duration): CompletionStage[Void] = {
+    checkNotNull(timeout)
+    convertExceptionsFut {
+      underlying.validate()(timeout.asScala)
+        .map(_ => null: Void).toJava
+    }
   }
 
-  def statement(sql: String): Statement = convertExceptions {
-    underlying.statement(sql).asJava
+  def statement(sql: String): Statement = {
+    checkNotNull(sql)
+    convertExceptions {
+      underlying.statement(sql).asJava
+    }
   }
 
-  def statement(sql: String, options: StatementOptions): Statement = convertExceptions {
-    underlying.statement(sql, options.asScala).asJava
+  def statement(sql: String, options: StatementOptions): Statement = {
+    checkNotNull(sql)
+    checkNotNull(options)
+    convertExceptions {
+      underlying.statement(sql, options.asScala).asJava
+    }
   }
 
   def watchForIdle: CompletionStage[Connection] = convertExceptionsFut {
