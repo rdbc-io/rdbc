@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.sapi.SqlNumeric
+import io.rdbc.sapi.DecimalNumber
 import io.rdbc.sapi.exceptions.ConversionException
 
 class BoolConverterSpec
@@ -65,12 +65,12 @@ class BoolConverterSpec
       converter.fromAny(1.toByte) shouldBe true
     }
 
-    "convert 0 SqlNumeric as false" in {
-      converter.fromAny(SqlNumeric.Val(BigDecimal(0))) shouldBe false
+    "convert 0 DecimalNumber as false" in {
+      converter.fromAny(DecimalNumber.Val(BigDecimal(0))) shouldBe false
     }
 
-    "convert 1 SqlNumeric as true" in {
-      converter.fromAny(SqlNumeric.Val(BigDecimal(1))) shouldBe true
+    "convert 1 DecimalNumber as true" in {
+      converter.fromAny(DecimalNumber.Val(BigDecimal(1))) shouldBe true
     }
 
     "convert 0 BigDecimal as false" in {

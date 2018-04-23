@@ -20,7 +20,7 @@ import java.time._
 import java.util.UUID
 
 import io.rdbc.sapi.exceptions.ConversionException
-import io.rdbc.sapi.{Row, SqlNumeric, TypeConverterRegistry}
+import io.rdbc.sapi.{DecimalNumber, Row, TypeConverterRegistry}
 import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.reflect.ClassTag
@@ -121,13 +121,13 @@ trait RowPartialImpl extends Row {
 
   override def bigDecimalOpt(idx: Int): Option[BigDecimal] = colOpt[BigDecimal](idx)
 
-  override def numeric(name: String): SqlNumeric = col[SqlNumeric](name)
+  override def decimal(name: String): DecimalNumber = col[DecimalNumber](name)
 
-  override def numericOpt(name: String): Option[SqlNumeric] = colOpt[SqlNumeric](name)
+  override def decimalOpt(name: String): Option[DecimalNumber] = colOpt[DecimalNumber](name)
 
-  override def numeric(idx: Int): SqlNumeric = col[SqlNumeric](idx)
+  override def decimal(idx: Int): DecimalNumber = col[DecimalNumber](idx)
 
-  override def numericOpt(idx: Int): Option[SqlNumeric] = colOpt[SqlNumeric](idx)
+  override def decimalOpt(idx: Int): Option[DecimalNumber] = colOpt[DecimalNumber](idx)
 
   override def double(name: String): Double = col[Double](name)
 
@@ -152,6 +152,22 @@ trait RowPartialImpl extends Row {
   override def instant(idx: Int): Instant = col[Instant](idx)
 
   override def instantOpt(idx: Int): Option[Instant] = colOpt[Instant](idx)
+
+  override def instant(name: String, zoneId: ZoneId): Instant = {
+    localDateTimeToInstant(localDateTime(name), zoneId)
+  }
+
+  override def instantOpt(name: String, zoneId: ZoneId): Option[Instant] = {
+    localDateTimeOpt(name).map(localDateTimeToInstant(_, zoneId))
+  }
+
+  override def instant(idx: Int, zoneId: ZoneId): Instant = {
+    localDateTimeToInstant(localDateTime(idx), zoneId)
+  }
+
+  override def instantOpt(idx: Int, zoneId: ZoneId): Option[Instant] = {
+    localDateTimeOpt(idx).map(localDateTimeToInstant(_, zoneId))
+  }
 
   override def localDateTime(name: String): LocalDateTime = col[LocalDateTime](name)
 
@@ -192,5 +208,17 @@ trait RowPartialImpl extends Row {
   override def uuid(idx: Int): UUID = col[UUID](idx)
 
   override def uuidOpt(idx: Int): Option[UUID] = colOpt[UUID](idx)
+
+  override def zonedDateTime(name: String): ZonedDateTime = col[ZonedDateTime](name)
+
+  override def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = colOpt[ZonedDateTime](name)
+
+  override def zonedDateTime(idx: Int): ZonedDateTime = col[ZonedDateTime](idx)
+
+  override def zonedDateTimeOpt(idx: Int): Option[ZonedDateTime] = colOpt[ZonedDateTime](idx)
+
+  private def localDateTimeToInstant(ldt: LocalDateTime, zoneId: ZoneId): Instant = {
+    ldt.toInstant(zoneId.getRules.getOffset(ldt))
+  }
 
 }

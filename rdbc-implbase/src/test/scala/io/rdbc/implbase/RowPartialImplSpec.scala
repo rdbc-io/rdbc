@@ -16,11 +16,11 @@
 
 package io.rdbc.implbase
 
-import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
+import java.time._
 import java.util.UUID
 
 import io.rdbc.sapi.exceptions.{ColumnIndexOutOfBoundsException, ConversionException, MissingColumnException}
-import io.rdbc.sapi.{SqlNumeric, TypeConverter, TypeConverterRegistry}
+import io.rdbc.sapi.{DecimalNumber, TypeConverter, TypeConverterRegistry}
 import org.scalamock.scalatest.MockFactory
 
 import scala.reflect.ClassTag
@@ -332,7 +332,7 @@ class RowPartialImplSpec
           delegateTest(10, classOf[Int], _.int)
           delegateTest(10L, classOf[Long], _.long)
           delegateTest(BigDecimal(10), classOf[BigDecimal], _.bigDecimal)
-          delegateTest(SqlNumeric.Val(10), classOf[SqlNumeric], _.numeric)
+          delegateTest(DecimalNumber.Val(10), classOf[DecimalNumber], _.decimal)
           delegateTest(10.0d, classOf[Double], _.double)
           delegateTest(10.0f, classOf[Float], _.float)
           delegateTest(Instant.MIN, classOf[Instant], _.instant)
@@ -350,7 +350,7 @@ class RowPartialImplSpec
           delegateTestOpt(10, classOf[Int], _.intOpt)
           delegateTestOpt(10L, classOf[Long], _.longOpt)
           delegateTestOpt(BigDecimal(10), classOf[BigDecimal], _.bigDecimalOpt)
-          delegateTestOpt(SqlNumeric.Val(10), classOf[SqlNumeric], _.numericOpt)
+          delegateTestOpt(DecimalNumber.Val(10), classOf[DecimalNumber], _.decimalOpt)
           delegateTestOpt(10.0d, classOf[Double], _.doubleOpt)
           delegateTestOpt(10.0f, classOf[Float], _.floatOpt)
           delegateTestOpt(Instant.MIN, classOf[Instant], _.instantOpt)
@@ -370,7 +370,7 @@ class RowPartialImplSpec
           delegateTestIdx(10, classOf[Int], _.int)
           delegateTestIdx(10L, classOf[Long], _.long)
           delegateTestIdx(BigDecimal(10), classOf[BigDecimal], _.bigDecimal)
-          delegateTestIdx(SqlNumeric.Val(10), classOf[SqlNumeric], _.numeric)
+          delegateTestIdx(DecimalNumber.Val(10), classOf[DecimalNumber], _.decimal)
           delegateTestIdx(10.0d, classOf[Double], _.double)
           delegateTestIdx(10.0f, classOf[Float], _.float)
           delegateTestIdx(Instant.MIN, classOf[Instant], _.instant)
@@ -388,7 +388,7 @@ class RowPartialImplSpec
           delegateTestIdxOpt(10, classOf[Int], _.intOpt)
           delegateTestIdxOpt(10L, classOf[Long], _.longOpt)
           delegateTestIdxOpt(BigDecimal(10), classOf[BigDecimal], _.bigDecimalOpt)
-          delegateTestIdxOpt(SqlNumeric.Val(10), classOf[SqlNumeric], _.numericOpt)
+          delegateTestIdxOpt(DecimalNumber.Val(10), classOf[DecimalNumber], _.decimalOpt)
           delegateTestIdxOpt(10.0d, classOf[Double], _.doubleOpt)
           delegateTestIdxOpt(10.0f, classOf[Float], _.floatOpt)
           delegateTestIdxOpt(Instant.MIN, classOf[Instant], _.instantOpt)

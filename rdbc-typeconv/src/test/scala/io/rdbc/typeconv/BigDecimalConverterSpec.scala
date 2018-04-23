@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.sapi.SqlNumeric
+import io.rdbc.sapi.DecimalNumber
 import io.rdbc.sapi.exceptions.ConversionException
 import org.scalatest.Inside
 
@@ -62,14 +62,14 @@ class BigDecimalConverterSpec
       converter.fromAny(b) shouldBe BigDecimal(b.toInt)
     }
 
-    "convert finite SqlNumeric" in {
+    "convert finite DecimalNumber" in {
       val bd = BigDecimal("42.2")
-      val s = SqlNumeric.Val(bd)
+      val s = DecimalNumber.Val(bd)
       converter.fromAny(s) shouldBe bd
     }
 
-    "fail for -inf SqlNumeric" in {
-      val s = SqlNumeric.NegInfinity
+    "fail for -inf DecimalNumber" in {
+      val s = DecimalNumber.NegInfinity
       val ex = the[ConversionException] thrownBy {
         converter.fromAny(s)
       }
@@ -77,8 +77,8 @@ class BigDecimalConverterSpec
       ex.targetType shouldBe classOf[BigDecimal]
     }
 
-    "fail for +inf SqlNumeric" in {
-      val s = SqlNumeric.PosInfinity
+    "fail for +inf DecimalNumber" in {
+      val s = DecimalNumber.PosInfinity
       val ex = the[ConversionException] thrownBy {
         converter.fromAny(s)
       }

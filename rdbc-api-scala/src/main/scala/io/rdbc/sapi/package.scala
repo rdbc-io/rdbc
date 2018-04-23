@@ -23,5 +23,4 @@ package io.rdbc
   */
 package object sapi
   extends SqlInterpolatorTrait
-    with SqlParam.ImplicitsTrait
     with Timeout.ImplicitsTrait

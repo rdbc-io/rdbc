@@ -30,7 +30,7 @@ import java.math.{BigDecimal => JBigDec}
 import java.time._
 import java.util._
 
-import io.rdbc.japi.{Row, SqlNumeric}
+import io.rdbc.japi.{Row, DecimalNumber}
 import io.rdbc.jadapter.internal.Conversions._
 import io.rdbc.sapi
 import io.rdbc.util.Preconditions.checkNotNull
@@ -44,7 +44,7 @@ private[jadapter] class RowAdapter(val underlying: sapi.Row)
 
   import exConversion._
 
-  def getCol[A](idx: Int, cls: Class[A]): A = {
+  override def getCol[A](idx: Int, cls: Class[A]): A = {
     checkNotNull(idx)
     checkNotNull(cls)
     convertExceptions {
@@ -204,20 +204,20 @@ private[jadapter] class RowAdapter(val underlying: sapi.Row)
     getColOptScala(idx, classOf[BigDecimal]).map(_.bigDecimal).asJava
   }
 
-  def getNumeric(name: String): SqlNumeric = {
-    getCol(name, classOf[sapi.SqlNumeric]).asJava
+  def getDecimal(name: String): DecimalNumber = {
+    getCol(name, classOf[sapi.DecimalNumber]).asJava
   }
 
-  def getNumericOpt(name: String): Optional[SqlNumeric] = {
-    getColOptScala(name, classOf[sapi.SqlNumeric]).map(_.asJava).asJava
+  def getDecimalOpt(name: String): Optional[DecimalNumber] = {
+    getColOptScala(name, classOf[sapi.DecimalNumber]).map(_.asJava).asJava
   }
 
-  def getNumeric(idx: Int): SqlNumeric = {
-    getCol(idx, classOf[sapi.SqlNumeric]).asJava
+  def getDecimal(idx: Int): DecimalNumber = {
+    getCol(idx, classOf[sapi.DecimalNumber]).asJava
   }
 
-  def getNumericOpt(idx: Int): Optional[SqlNumeric] = {
-    getColOptScala(idx, classOf[sapi.SqlNumeric]).map(_.asJava).asJava
+  def getDecimalOpt(idx: Int): Optional[DecimalNumber] = {
+    getColOptScala(idx, classOf[sapi.DecimalNumber]).map(_.asJava).asJava
   }
 
   def getDouble(name: String): JDouble = {
@@ -262,6 +262,36 @@ private[jadapter] class RowAdapter(val underlying: sapi.Row)
 
   def getInstant(idx: Int): Instant = {
     getCol(idx, classOf[Instant])
+  }
+
+  def getInstant(name: String, zoneId: ZoneId): Instant = {
+    checkNotNull(name)
+    checkNotNull(zoneId)
+    convertExceptions {
+      underlying.instant(name, zoneId)
+    }
+  }
+
+  def getInstantOpt(name: String, zoneId: ZoneId): Optional[Instant] = {
+    checkNotNull(name)
+    checkNotNull(zoneId)
+    convertExceptions {
+      underlying.instantOpt(name, zoneId).asJava
+    }
+  }
+
+  def getInstant(idx: Int, zoneId: ZoneId): Instant = {
+    checkNotNull(zoneId)
+    convertExceptions {
+      underlying.instant(idx, zoneId)
+    }
+  }
+
+  def getInstantOpt(idx: Int, zoneId: ZoneId): Optional[Instant] = {
+    checkNotNull(zoneId)
+    convertExceptions {
+      underlying.instantOpt(idx, zoneId).asJava
+    }
   }
 
   def getInstantOpt(idx: Int): Optional[Instant] = {
@@ -346,6 +376,22 @@ private[jadapter] class RowAdapter(val underlying: sapi.Row)
 
   def getUuidOpt(idx: Int): Optional[UUID] = {
     getColOptScala(idx, classOf[UUID]).asJava
+  }
+
+  def getZonedDateTime(name: String): ZonedDateTime = {
+    getCol(name, classOf[ZonedDateTime])
+  }
+
+  def getZonedDateTimeOpt(name: String): Optional[ZonedDateTime] = {
+    getColOptScala(name, classOf[ZonedDateTime]).asJava
+  }
+
+  def getZonedDateTime(idx: Int): ZonedDateTime = {
+    getCol(idx, classOf[ZonedDateTime])
+  }
+
+  def getZonedDateTimeOpt(idx: Int): Optional[ZonedDateTime] = {
+    getColOptScala(idx, classOf[ZonedDateTime]).asJava
   }
 
   override def toString: String = underlying.toString

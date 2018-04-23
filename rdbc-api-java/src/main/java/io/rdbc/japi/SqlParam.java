@@ -16,59 +16,36 @@
 
 package io.rdbc.japi;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
+/**
+ * Represents an SQL-typed statement parameter.
+ * <p>
+ * This wrapper can be used to force a given SQL type for a passed statement
+ * parameter. For example, `new SqlParam("example", StandardSqlTypes.CLOB)` will
+ * result in a parameter being passed as a CLOB.
+ */
+public final class SqlParam {
 
-public final class SqlParam<T> {
+    private final Object value;
+    private final SqlType sqlType;
 
-    private final Class<T> type;
-    private final Optional<T> value;
-
-    public static <T> SqlParam<T> sqlNull(Class<T> type) {
-        return new SqlParam<>(type, Optional.empty());
-    }
-
-    public static <T> SqlParam<T> of(Class<T> type, T value) {
-        return new SqlParam<>(type, Optional.of(value));
-    }
-
-    private SqlParam(Class<T> type, Optional<T> value) {
-        this.type = type;
+    public SqlParam(Object value, SqlType sqlType) {
         this.value = value;
+        this.sqlType = sqlType;
     }
 
-    public Class<T> getType() {
-        return type;
+    public Object getValue() {
+        return value;
     }
 
-    public T getValue() {
-        return value.orElseThrow(() ->
-                new NoSuchElementException("SqlParam value is null")
-        );
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SqlParam<?> sqlParam = (SqlParam<?>) o;
-
-        return type.equals(sqlParam.type) && value.equals(sqlParam.value);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
+    public SqlType getSqlType() {
+        return sqlType;
     }
 
     @Override
     public String toString() {
         return "SqlParam{" +
-                "type=" + type +
-                ", value=" + value.map(Object::toString).orElse("NULL") +
+                "type=" + sqlType +
+                ", value=" + value +
                 '}';
     }
 }

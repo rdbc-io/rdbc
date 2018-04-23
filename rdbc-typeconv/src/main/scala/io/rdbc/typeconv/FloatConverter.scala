@@ -29,10 +29,10 @@ object FloatConverter extends TypeConverter[Float] {
 
   override def fromAny(any: Any): Float = any match {
     case jn: java.lang.Number => jn.floatValue()
-    case sapi.SqlNumeric.Val(bd) => bd.floatValue()
-    case sapi.SqlNumeric.NaN => Float.NaN
-    case sapi.SqlNumeric.PosInfinity => Float.PositiveInfinity
-    case sapi.SqlNumeric.NegInfinity => Float.NegativeInfinity
+    case sapi.DecimalNumber.Val(bd) => bd.floatValue()
+    case sapi.DecimalNumber.NaN => Float.NaN
+    case sapi.DecimalNumber.PosInfinity => Float.PositiveInfinity
+    case sapi.DecimalNumber.NegInfinity => Float.NegativeInfinity
     case _ => throw new ConversionException(any, classOf[Float])
   }
 }

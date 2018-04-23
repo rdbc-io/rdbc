@@ -34,8 +34,8 @@ Following table lists mapping between Scala and SQL types.
 | VARBINARY                 | `Array[Byte]`|
 | BLOB                      | `Array[Byte]`|
 | BOOLEAN                   | `Boolean`|
-| NUMERIC                   | [`io.rdbc.sapi.SqlNumeric`]({{scaladocRoot}}/io/rdbc/sapi/SqlNumeric$.html)|
-| DECIMAL                   | [`io.rdbc.sapi.SqlNumeric`]({{scaladocRoot}}/io/rdbc/sapi/SqlNumeric$.html)|
+| NUMERIC                   | [`io.rdbc.sapi.SqlDecimal`]({{scaladocRoot}}/io/rdbc/sapi/SqlDecimal$.html)|
+| DECIMAL                   | [`io.rdbc.sapi.SqlDecimal`]({{scaladocRoot}}/io/rdbc/sapi/SqlDecimal$.html)|
 | REAL                      | `Float`|
 | DOUBLE                    | `Double`|
 | SMALLINT                  | `Short`|
@@ -44,7 +44,7 @@ Following table lists mapping between Scala and SQL types.
 | DATE                      | `java.time.LocalDate`|
 | TIME                      | `java.time.LocalTime`|
 | TIMESTAMP                 | `java.time.LocalDateTime` |
-| TIMESTAMP WITH TIME ZONE  | `java.time.Instant`|
+| TIMESTAMP WITH TIME ZONE  | `java.time.ZonedDateTime`|
 
 Following table lists mapping between Scala and database types not defined
 by the SQL standard.
@@ -79,12 +79,14 @@ If client requests to convert between inconvertible types,
 [`ConversionException`]({{scaladocRoot}}/io/rdbc/api/exceptions/ConversionException.html)
 is thrown.
 
-## Statement argument type conversions
+## Explicitly setting database type in statements
 
 When setting statement arguments, in case when a given Scala type maps to more
-than one database type there is no way for the API client to enforce conversion
-to a specific database type. This is the case only for two Scala types: `String`
-which always maps to NVARCHAR and `Array[Byte]` which always maps to VARBINARY.
+than one database type and you want to enforce this argument to be represented
+as a specific database type, a `SqlParam` class can be used. For example, if
+you want to pass `:::scala "my text"` as a `CLOB`, instead of passing bare `"my text"`, 
+pass `:::scala SqlParam("my text", SqlClob)`. Any `SqlType` instance can be used to specify
+an SQL type.
 
 ## Vendor specific types
 

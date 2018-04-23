@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.sapi.SqlNumeric
+import io.rdbc.sapi.DecimalNumber
 import io.rdbc.sapi.exceptions.ConversionException
 import org.scalatest.Inside
 
@@ -62,24 +62,24 @@ class FloatConverterSpec
       converter.fromAny(b) shouldEqual 42.0f
     }
 
-    "convert finite SqlNumeric" in {
+    "convert finite DecimalNumber" in {
       val bd = BigDecimal("42.2")
-      val s = SqlNumeric.Val(bd)
+      val s = DecimalNumber.Val(bd)
       converter.fromAny(s) shouldEqual 42.2f
     }
 
-    "convert -inf SqlNumeric" in {
-      val s = SqlNumeric.NegInfinity
+    "convert -inf DecimalNumber" in {
+      val s = DecimalNumber.NegInfinity
       converter.fromAny(s) shouldBe Float.NegativeInfinity
     }
 
-    "convert +inf SqlNumeric" in {
-      val s = SqlNumeric.PosInfinity
+    "convert +inf DecimalNumber" in {
+      val s = DecimalNumber.PosInfinity
       converter.fromAny(s) shouldBe Float.PositiveInfinity
     }
 
-    "convert NaN SqlNumeric" in {
-      val s = SqlNumeric.NaN
+    "convert NaN DecimalNumber" in {
+      val s = DecimalNumber.NaN
       inside(converter.fromAny(s)) { case f: Float =>
         f.isNaN === true
       }

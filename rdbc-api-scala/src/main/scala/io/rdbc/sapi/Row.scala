@@ -82,6 +82,11 @@ import scala.reflect.ClassTag
   *  considered `true`.
   *  - A single 'F', 'N' or '0' character values or `0` numeric value are
   *  considered `false`.
+  * @define instantZoneNote
+  * The `zoneId` parameter is ignored in case the driver can create an instant
+  * from the stored value without an user-provided time zone. This can happen
+  * if the database stores TIMESTAMP values as instants or for columns with
+  * TIMESTAMP WITH TIME ZONE types.
   */
 trait Row {
 
@@ -429,7 +434,7 @@ trait Row {
     *
     * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
     * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
-    * to be NaN use `numeric` method instead.
+    * to be NaN use `decimal` method instead.
     *
     * $nullSafetyNote
     *
@@ -443,7 +448,7 @@ trait Row {
     *
     * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
     * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
-    * to be NaN use `numeric` method instead.
+    * to be NaN use `decimal` method instead.
     *
     * $returningNone
     *
@@ -457,7 +462,7 @@ trait Row {
     *
     * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
     * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
-    * to be NaN use `numeric` method instead.
+    * to be NaN use `decimal` method instead.
     *
     * $nullSafetyNote
     *
@@ -471,7 +476,7 @@ trait Row {
     *
     * All numeric types can be converted to [[scala.math.BigDecimal BigDecimal]], note however that
     * NaN value is not representable by a [[scala.math.BigDecimal BigDecimal]]. If you expect values
-    * to be NaN use `numeric` method instead.
+    * to be NaN use `decimal` method instead.
     *
     * $returningNone
     *
@@ -481,9 +486,7 @@ trait Row {
     */
   def bigDecimalOpt(idx: Int): Option[BigDecimal]
 
-  /** Returns a [[SqlNumeric]] from column with a given name.
-    *
-    * All numeric types can be converted to [[SqlNumeric]].
+  /** Returns a [[DecimalNumber]] from column with a given name.
     *
     * $nullSafetyNote
     *
@@ -491,11 +494,9 @@ trait Row {
     *
     * @group unb
     */
-  def numeric(name: String): SqlNumeric
+  def decimal(name: String): DecimalNumber
 
-  /** Returns a [[SqlNumeric]] from column with a given name.
-    *
-    * All numeric types can be converted to [[SqlNumeric]].
+  /** Returns a [[DecimalNumber]] from column with a given name.
     *
     * $returningNone
     *
@@ -503,11 +504,9 @@ trait Row {
     *
     * @group unb
     */
-  def numericOpt(name: String): Option[SqlNumeric]
+  def decimalOpt(name: String): Option[DecimalNumber]
 
-  /** Returns a [[SqlNumeric]] from column with a given index.
-    *
-    * All numeric types can be converted to [[SqlNumeric]].
+  /** Returns a [[DecimalNumber]] from column with a given index.
     *
     * $nullSafetyNote
     *
@@ -515,11 +514,9 @@ trait Row {
     *
     * @group unb
     */
-  def numeric(idx: Int): SqlNumeric
+  def decimal(idx: Int): DecimalNumber
 
-  /** Returns a [[SqlNumeric]] from column with a given index.
-    *
-    * All numeric types can be converted to [[SqlNumeric]].
+  /** Returns a [[DecimalNumber]] from column with a given index.
     *
     * $returningNone
     *
@@ -527,7 +524,7 @@ trait Row {
     *
     * @group unb
     */
-  def numericOpt(idx: Int): Option[SqlNumeric]
+  def decimalOpt(idx: Int): Option[DecimalNumber]
 
   /** Returns a `Double` from column with a given name.
     *
@@ -648,8 +645,8 @@ trait Row {
 
   /** Returns an `Instant` from column with a given name.
     *
-    * Note that regular timestamp values are not convertible to an `Instant`
-    * because timestamp values do not hold a time zone information.
+    * Note that standard SQL TIMESTAMP values are not convertible to an `Instant`
+    * because they do not hold a time zone information.
     *
     * $returningNone
     *
@@ -661,8 +658,8 @@ trait Row {
 
   /** Returns an `Instant` from column with a given index.
     *
-    * Note that regular timestamp values are not convertible to an `Instant`
-    * because timestamp values do not hold a time zone information.
+    * Note that standard SQL TIMESTAMP values are not convertible to an `Instant`
+    * because they do not hold a time zone information.
     *
     * $nullSafetyNote
     *
@@ -684,6 +681,102 @@ trait Row {
     * @group date
     */
   def instantOpt(idx: Int): Option[Instant]
+
+  /** Returns an `Instant` from column with a given name, assuming
+    * that the TIMESTAMP value stored in the database is in the provided time
+    * zone.
+    *
+    * $instantZoneNote
+    *
+    * $nullSafetyNote
+    *
+    * $exceptionsNamed
+    *
+    * @group date
+    */
+  def instant(name: String, zoneId: ZoneId): Instant
+
+  /** Returns an `Instant` from column with a given name, assuming
+    * that the TIMESTAMP value stored in the database is in the provided time
+    * zone.
+    *
+    * $instantZoneNote
+    *
+    * $returningNone
+    *
+    * $exceptionsNamed
+    *
+    * @group date
+    */
+  def instantOpt(name: String, zoneId: ZoneId): Option[Instant]
+
+  /** Returns an `Instant` from column with a given index, assuming
+    * that the TIMESTAMP value stored in the database is in the provided time
+    * zone.
+    *
+    * $instantZoneNote
+    *
+    * $nullSafetyNote
+    *
+    * $exceptionsIdx
+    *
+    * @group date
+    */
+  def instant(idx: Int, zoneId: ZoneId): Instant
+
+  /** Returns an `Instant` from column with a given index, assuming
+    * that the TIMESTAMP value stored in the database is in the provided time
+    * zone.
+    *
+    * $instantZoneNote
+    *
+    * $returningNone
+    *
+    * $exceptionsIdx
+    *
+    * @group date
+    */
+  def instantOpt(idx: Int, zoneId: ZoneId): Option[Instant]
+
+  /** Returns a `ZonedDateTime` from column with a given name.
+    *
+    * $nullSafetyNote
+    *
+    * $exceptionsNamed
+    *
+    * @group date
+    */
+  def zonedDateTime(name: String): ZonedDateTime
+
+  /** Returns a `ZonedDateTime` from column with a given name.
+    *
+    * $returningNone
+    *
+    * $exceptionsNamed
+    *
+    * @group date
+    */
+  def zonedDateTimeOpt(name: String): Option[ZonedDateTime]
+
+  /** Returns a `ZonedDateTime` from column with a given index.
+    *
+    * $nullSafetyNote
+    *
+    * $exceptionsIdx
+    *
+    * @group date
+    */
+  def zonedDateTime(idx: Int): ZonedDateTime
+
+  /** Returns a `ZonedDateTime` from column with a given index.
+    *
+    * $returningNone
+    *
+    * $exceptionsIdx
+    *
+    * @group date
+    */
+  def zonedDateTimeOpt(idx: Int): Option[ZonedDateTime]
 
   /** Returns a `LocalDateTime` from column with a given name.
     *

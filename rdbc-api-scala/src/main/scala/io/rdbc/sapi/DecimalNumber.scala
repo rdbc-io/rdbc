@@ -16,21 +16,25 @@
 
 package io.rdbc.sapi
 
-/** General unbounded numeric type that extends [[scala.math.BigDecimal BigDecimal]] to be able to
-  * represent NaN, positive infitnity and negative infinity. */
-sealed trait SqlNumeric
-object SqlNumeric {
+/** Unbounded decimal numeric type that extends [[scala.math.BigDecimal BigDecimal]]
+  * to be able to represent NaN, positive infitnity and negative infinity. */
+sealed trait DecimalNumber
+
+object DecimalNumber {
+
   /** Not-a-number */
-  case object NaN extends SqlNumeric
+  case object NaN extends DecimalNumber
 
   /** Positive infinity */
-  case object PosInfinity extends SqlNumeric
+  case object PosInfinity extends DecimalNumber
 
   /** Negative infinity */
-  case object NegInfinity extends SqlNumeric
+  case object NegInfinity extends DecimalNumber
 
   /** Decimal value representable with a [[scala.math.BigDecimal BigDecimal]] */
-  case class Val(bigDecimal: BigDecimal) extends SqlNumeric {
+  case class Val(bigDecimal: BigDecimal) extends DecimalNumber {
     override def toString: String = bigDecimal.toString()
   }
+
+  def apply(bigDecimal: BigDecimal): DecimalNumber = Val(bigDecimal)
 }
