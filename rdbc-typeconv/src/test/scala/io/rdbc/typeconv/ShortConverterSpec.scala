@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.sapi.SqlNumeric
+import io.rdbc.sapi.DecimalNumber
 import io.rdbc.sapi.exceptions.ConversionException
 import org.scalatest.Inside
 
@@ -62,14 +62,14 @@ class ShortConverterSpec
       converter.fromAny(b) shouldBe 42.toShort
     }
 
-    "convert finite SqlNumeric" in {
+    "convert finite DecimalNumber" in {
       val bd = BigDecimal("42.2")
-      val s = SqlNumeric.Val(bd)
+      val s = DecimalNumber.Val(bd)
       converter.fromAny(s) shouldBe 42.toShort
     }
 
-    "fail for -inf SqlNumeric" in {
-      val s = SqlNumeric.NegInfinity
+    "fail for -inf DecimalNumber" in {
+      val s = DecimalNumber.NegInfinity
       val ex = the[ConversionException] thrownBy {
         converter.fromAny(s)
       }
@@ -77,8 +77,8 @@ class ShortConverterSpec
       ex.targetType shouldBe classOf[Short]
     }
 
-    "fail for +inf SqlNumeric" in {
-      val s = SqlNumeric.PosInfinity
+    "fail for +inf DecimalNumber" in {
+      val s = DecimalNumber.PosInfinity
       val ex = the[ConversionException] thrownBy {
         converter.fromAny(s)
       }
@@ -86,8 +86,8 @@ class ShortConverterSpec
       ex.targetType shouldBe classOf[Short]
     }
 
-    "fail for NaN SqlNumeric" in {
-      val s = SqlNumeric.NaN
+    "fail for NaN DecimalNumber" in {
+      val s = DecimalNumber.NaN
       val ex = the[ConversionException] thrownBy {
         converter.fromAny(s)
       }

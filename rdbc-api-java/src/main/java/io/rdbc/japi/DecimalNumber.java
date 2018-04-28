@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public final class SqlNumeric {
+public final class DecimalNumber {
 
     private enum Type {
         NAN, POS_INF, NEG_INF, FINITE
@@ -29,17 +29,17 @@ public final class SqlNumeric {
     private final Type type;
     private final Optional<BigDecimal> value;
 
-    public static final SqlNumeric NAN = new SqlNumeric(Type.NAN, Optional.empty());
-    public static final SqlNumeric NEG_INFINITY = new SqlNumeric(Type.NEG_INF, Optional.empty());
-    public static final SqlNumeric POS_INFINITY = new SqlNumeric(Type.POS_INF, Optional.empty());
+    public static final DecimalNumber NAN = new DecimalNumber(Type.NAN, Optional.empty());
+    public static final DecimalNumber NEG_INFINITY = new DecimalNumber(Type.NEG_INF, Optional.empty());
+    public static final DecimalNumber POS_INFINITY = new DecimalNumber(Type.POS_INF, Optional.empty());
 
-    private SqlNumeric(Type type, Optional<BigDecimal> value) {
+    private DecimalNumber(Type type, Optional<BigDecimal> value) {
         this.type = type;
         this.value = value;
     }
 
-    public static SqlNumeric of(BigDecimal value) {
-        return new SqlNumeric(Type.FINITE, Optional.of(value));
+    public static DecimalNumber of(BigDecimal value) {
+        return new DecimalNumber(Type.FINITE, Optional.of(value));
     }
 
     public boolean isNaN() {
@@ -60,7 +60,7 @@ public final class SqlNumeric {
 
     public BigDecimal getValue() {
         return value.orElseThrow(() ->
-                new NoSuchElementException("SqlNumeric value is " + type.name())
+                new NoSuchElementException("DecimalNumber value is " + type.name())
         );
     }
 
@@ -69,7 +69,7 @@ public final class SqlNumeric {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SqlNumeric that = (SqlNumeric) o;
+        DecimalNumber that = (DecimalNumber) o;
 
         return type == that.type && value.equals(that.value);
     }
@@ -84,9 +84,9 @@ public final class SqlNumeric {
     @Override
     public String toString() {
         if (isFinite()) {
-            return "SqlNumeric(" + getValue() + ")";
+            return "DecimalNumber(" + getValue() + ")";
         } else {
-            return "SqlNumeric(" + type + ")";
+            return "DecimalNumber(" + type + ")";
         }
     }
 }

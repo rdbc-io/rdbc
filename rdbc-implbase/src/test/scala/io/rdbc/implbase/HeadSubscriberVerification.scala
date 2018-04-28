@@ -16,10 +16,10 @@
 
 package io.rdbc.implbase
 
-import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
+import java.time._
 import java.util.UUID
 
-import io.rdbc.sapi.{Row, SqlNumeric}
+import io.rdbc.sapi.{DecimalNumber, Row}
 import org.reactivestreams.Subscription
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
 import org.reactivestreams.tck.{SubscriberWhiteboxVerification, TestEnvironment}
@@ -70,8 +70,8 @@ class HeadSubscriberVerification
     def shortOpt(idx: Int): Option[Short] = ???
     def bool(name: String): Boolean = ???
     def bool(idx: Int): Boolean = ???
-    def numeric(name: String): SqlNumeric = ???
-    def numeric(idx: Int): SqlNumeric = ???
+    def decimal(name: String): DecimalNumber = ???
+    def decimal(idx: Int): DecimalNumber = ???
     def float(name: String): Float = ???
     def float(idx: Int): Float = ???
     def uuid(name: String): UUID = ???
@@ -106,8 +106,8 @@ class HeadSubscriberVerification
     def uuidOpt(idx: Int): Option[UUID] = ???
     def int(name: String): Int = ???
     def int(idx: Int): Int = ???
-    def numericOpt(name: String): Option[SqlNumeric] = ???
-    def numericOpt(idx: Int): Option[SqlNumeric] = ???
+    def decimalOpt(name: String): Option[DecimalNumber] = ???
+    def decimalOpt(idx: Int): Option[DecimalNumber] = ???
     def str(name: String): String = ???
     def str(idx: Int): String = ???
     def localTime(name: String): LocalTime = ???
@@ -130,5 +130,13 @@ class HeadSubscriberVerification
     def floatOpt(idx: Int): Option[Float] = ???
     def short(name: String): Short = ???
     def short(idx: Int): Short = ???
+    def instant(name: String, zoneId: ZoneId): Instant = ???
+    def instantOpt(name: String, zoneId: ZoneId): Option[Instant] = ???
+    def instant(idx: Int, zoneId: ZoneId): Instant = ???
+    def instantOpt(idx: Int, zoneId: ZoneId): Option[Instant] = ???
+    def zonedDateTime(name: String): ZonedDateTime = ???
+    def zonedDateTimeOpt(name: String): Option[ZonedDateTime] = ???
+    def zonedDateTime(idx: Int): ZonedDateTime = ???
+    def zonedDateTimeOpt(idx: Int): Option[ZonedDateTime] = ???
   }
 }

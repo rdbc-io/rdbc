@@ -17,7 +17,7 @@
 package io.rdbc.typeconv
 
 import io.rdbc.sapi.exceptions.ConversionException
-import io.rdbc.sapi.{SqlNumeric, TypeConverter}
+import io.rdbc.sapi.{DecimalNumber, TypeConverter}
 
 object BoolConverter extends TypeConverter[Boolean] {
   val cls = classOf[Boolean]
@@ -25,7 +25,7 @@ object BoolConverter extends TypeConverter[Boolean] {
   override def fromAny(any: Any): Boolean = any match {
     case bool: Boolean => bool
     case jn: java.lang.Number => num2Bool(jn)
-    case SqlNumeric.Val(bd) => num2Bool(bd)
+    case DecimalNumber.Val(bd) => num2Bool(bd)
     case char: Char => char2Bool(char)
     case str: String =>
       if (str.length == 1) char2Bool(str.head)

@@ -19,10 +19,7 @@ package io.rdbc.japi;
 import io.rdbc.japi.exceptions.ConversionException;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -364,42 +361,34 @@ public interface Row {
     Optional<BigDecimal> getBigDecimalOpt(int idx) throws ConversionException;
 
     /**
-     * Returns a {@link SqlNumeric} from column with a given name.
-     * <p>
-     * All numeric types can be converted to {@link SqlNumeric}.
+     * Returns a {@link DecimalNumber} from column with a given name.
      * <p>
      * For SQL {@code NULL} values, {@link ConversionException} is thrown. For null-safety consider using
      * corresponding {@code *Opt} method.
      */
-    SqlNumeric getNumeric(String name) throws ConversionException;
+    DecimalNumber getDecimal(String name) throws ConversionException;
 
     /**
-     * Returns a {@link SqlNumeric} from column with a given name.
-     * <p>
-     * All numeric types can be converted to {@link SqlNumeric}.
+     * Returns a {@link DecimalNumber} from column with a given name.
      * <p>
      * For SQL {@code NULL} values an empty {@link Optional} is returned.
      */
-    Optional<SqlNumeric> getNumericOpt(String name) throws ConversionException;
+    Optional<DecimalNumber> getDecimalOpt(String name) throws ConversionException;
 
     /**
-     * Returns a {@link SqlNumeric} from column with a given index.
-     * <p>
-     * All numeric types can be converted to {@link SqlNumeric}.
+     * Returns a {@link DecimalNumber} from column with a given index.
      * <p>
      * For SQL {@code NULL} values, {@link ConversionException} is thrown. For null-safety consider using
      * corresponding {@code *Opt} method.
      */
-    SqlNumeric getNumeric(int idx) throws ConversionException;
+    DecimalNumber getDecimal(int idx) throws ConversionException;
 
     /**
-     * Returns a {@link SqlNumeric} from column with a given index.
-     * <p>
-     * All numeric types can be converted to {@link SqlNumeric}.
+     * Returns a {@link DecimalNumber} from column with a given index.
      * <p>
      * For SQL {@code NULL} values an empty {@link Optional} is returned.
      */
-    Optional<SqlNumeric> getNumericOpt(int idx) throws ConversionException;
+    Optional<DecimalNumber> getDecimalOpt(int idx) throws ConversionException;
 
     /**
      * Returns a {@code Double} from column with a given name.
@@ -526,6 +515,66 @@ public interface Row {
      * For SQL {@code NULL} values an empty {@link Optional} is returned.
      */
     Optional<Instant> getInstantOpt(int idx) throws ConversionException;
+
+    /**
+     * Returns an {@code Instant} from column with a given name, assuming
+     * that the TIMESTAMP value stored in the database is in the provided time
+     * zone.
+     * <p>
+     * The `zoneId` parameter is ignored in case the driver can create an instant
+     * from the stored value without an user-provided time zone. This can happen
+     * if the database stores TIMESTAMP values as instants or for columns with
+     * TIMESTAMP WITH TIME ZONE types.
+     * <p>
+     * For SQL {@code NULL} values, {@link ConversionException} is thrown. For null-safety consider using
+     * corresponding {@code *Opt} method.
+     */
+    Instant getInstant(String name, ZoneId zoneId) throws ConversionException;
+
+    /**
+     * Returns an {@code Instant} from column with a given name, assuming
+     * that the TIMESTAMP value stored in the database is in the provided time
+     * zone.
+     * <p>
+     * The `zoneId` parameter is ignored in case the driver can create an instant
+     * from the stored value without an user-provided time zone. This can happen
+     * if the database stores TIMESTAMP values as instants or for columns with
+     * TIMESTAMP WITH TIME ZONE types.
+     * Note that regular timestamp values are not convertible to an {@code Instant}
+     * because timestamp values do not hold a time zone information.
+     * <p>
+     * For SQL {@code NULL} values an empty {@link Optional} is returned.
+     */
+    Optional<Instant> getInstantOpt(String name, ZoneId zoneId) throws ConversionException;
+
+    /**
+     * Returns an {@code Instant} from column with a given index, assuming
+     * that the TIMESTAMP value stored in the database is in the provided time
+     * zone.
+     * <p>
+     * The `zoneId` parameter is ignored in case the driver can create an instant
+     * from the stored value without an user-provided time zone. This can happen
+     * if the database stores TIMESTAMP values as instants or for columns with
+     * TIMESTAMP WITH TIME ZONE types.
+     * <p>
+     * For SQL {@code NULL} values, {@link ConversionException} is thrown. For null-safety consider using
+     * corresponding {@code *Opt} method.
+     */
+    Instant getInstant(int idx, ZoneId zoneId) throws ConversionException;
+
+    /**
+     * Returns an {@code Instant} from column with a given index, assuming
+     * that the TIMESTAMP value stored in the database is in the provided time
+     * zone.
+     * <p>
+     * The `zoneId` parameter is ignored in case the driver can create an instant
+     * from the stored value without an user-provided time zone. This can happen
+     * if the database stores TIMESTAMP values as instants or for columns with
+     * TIMESTAMP WITH TIME ZONE types.
+     * <p>
+     * For SQL {@code NULL} values an empty {@link Optional} is returned.
+     */
+    Optional<Instant> getInstantOpt(int idx, ZoneId zoneId) throws ConversionException;
 
     /**
      * Returns a {@code LocalDateTime} from column with a given name.
@@ -738,4 +787,34 @@ public interface Row {
      * For SQL {@code NULL} values an empty {@link Optional} is returned.
      */
     Optional<UUID> getUuidOpt(int idx) throws ConversionException;
+
+    /**
+     * Returns a {@code ZonedDateTime} from column with a given name.
+     * <p>
+     * For SQL {@code NULL} values, {@link ConversionException} is thrown. For null-safety consider using
+     * corresponding {@code *Opt} method.
+     */
+    ZonedDateTime getZonedDateTime(String name) throws ConversionException;
+
+    /**
+     * Returns a {@code ZonedDateTime} from column with a given name.
+     * <p>
+     * For SQL {@code NULL} values an empty {@link Optional} is returned.
+     */
+    Optional<ZonedDateTime> getZonedDateTimeOpt(String name) throws ConversionException;
+
+    /**
+     * Returns a {@code ZonedDateTime} from column with a given index.
+     * <p>
+     * For SQL {@code NULL} values, {@link ConversionException} is thrown. For null-safety consider using
+     * corresponding {@code *Opt} method.
+     */
+    ZonedDateTime getZonedDateTime(int idx) throws ConversionException;
+
+    /**
+     * Returns a {@code ZonedDateTime} from column with a given index.
+     * <p>
+     * For SQL {@code NULL} values an empty {@link Optional} is returned.
+     */
+    Optional<ZonedDateTime> getZonedDateTimeOpt(int idx) throws ConversionException;
 }

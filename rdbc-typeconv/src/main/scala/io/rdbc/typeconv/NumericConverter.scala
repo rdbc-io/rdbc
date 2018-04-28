@@ -17,38 +17,38 @@
 package io.rdbc.typeconv
 
 import io.rdbc.sapi.exceptions.ConversionException
-import io.rdbc.sapi.{SqlNumeric, TypeConverter}
+import io.rdbc.sapi.{DecimalNumber, TypeConverter}
 
-object NumericConverter extends TypeConverter[SqlNumeric] {
-  val cls = classOf[SqlNumeric]
+object NumericConverter extends TypeConverter[DecimalNumber] {
+  val cls = classOf[DecimalNumber]
 
-  override def fromAny(any: Any): SqlNumeric = any match {
-    case n: SqlNumeric => n
-    case bd: BigDecimal => SqlNumeric.Val(bd)
+  override def fromAny(any: Any): DecimalNumber = any match {
+    case n: DecimalNumber => n
+    case bd: BigDecimal => DecimalNumber.Val(bd)
     case d: Double =>
-      if (d.isNaN) SqlNumeric.NaN
-      else if (d.isPosInfinity) SqlNumeric.PosInfinity
-      else if (d.isNegInfinity) SqlNumeric.NegInfinity
-      else SqlNumeric.Val(BigDecimal(d))
+      if (d.isNaN) DecimalNumber.NaN
+      else if (d.isPosInfinity) DecimalNumber.PosInfinity
+      else if (d.isNegInfinity) DecimalNumber.NegInfinity
+      else DecimalNumber.Val(BigDecimal(d))
 
     case f: Float =>
-      if (f.isNaN) SqlNumeric.NaN
-      else if (f.isPosInfinity) SqlNumeric.PosInfinity
-      else if (f.isNegInfinity) SqlNumeric.NegInfinity
-      else SqlNumeric.Val(BigDecimal(f.toDouble))
+      if (f.isNaN) DecimalNumber.NaN
+      else if (f.isPosInfinity) DecimalNumber.PosInfinity
+      else if (f.isNegInfinity) DecimalNumber.NegInfinity
+      else DecimalNumber.Val(BigDecimal(f.toDouble))
 
-    case l: Long => SqlNumeric.Val(BigDecimal(l))
-    case i: Int => SqlNumeric.Val(BigDecimal(i))
-    case s: Short => SqlNumeric.Val(BigDecimal(s.toInt))
-    case b: Byte => SqlNumeric.Val(BigDecimal(b.toInt))
+    case l: Long => DecimalNumber.Val(BigDecimal(l))
+    case i: Int => DecimalNumber.Val(BigDecimal(i))
+    case s: Short => DecimalNumber.Val(BigDecimal(s.toInt))
+    case b: Byte => DecimalNumber.Val(BigDecimal(b.toInt))
 
     case str: String =>
       try {
-        SqlNumeric.Val(BigDecimal.exact(str))
+        DecimalNumber.Val(BigDecimal.exact(str))
       } catch {
-        case _: NumberFormatException => throw new ConversionException(any, classOf[SqlNumeric])
+        case _: NumberFormatException => throw new ConversionException(any, classOf[DecimalNumber])
       }
 
-    case _ => throw new ConversionException(any, classOf[SqlNumeric])
+    case _ => throw new ConversionException(any, classOf[DecimalNumber])
   }
 }

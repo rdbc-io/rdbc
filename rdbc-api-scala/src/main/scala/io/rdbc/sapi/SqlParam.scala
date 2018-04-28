@@ -16,42 +16,10 @@
 
 package io.rdbc.sapi
 
-import scala.reflect.ClassTag
-
-object SqlParam {
-
-  private[sapi] trait ImplicitsTrait {
-    implicit class Opt2OptParam[A: ClassTag](opt: Option[A]) {
-
-      /** Converts this option to nullable SQL parameter. */
-      def toSqlParam: SqlParam[A] = opt.map(NotNullParam.apply).getOrElse {
-        val cls = implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]]
-        NullParam(cls)
-      }
-    }
-  }
-
-  object Implicits extends ImplicitsTrait
-
-}
-
-/** A statement parameter that can represent null (empty) values.
+/** Represents an SQL-typed statement parameter.
   *
-  * This trait is analogous to standard [[scala.Option Option]], but keeps type information
-  * for empty values. In some cases database engine cannot infer null parameter
-  * type - instances of this trait can be used then.
-  *
-  * An implicit conversion is provided from [[scala.Option Option]] to instances of this
-  * trait - see [[Opt2OptParam]].
-  *
-  * This trait does not provide any operations. It is recommended to use
-  * [[scala.Option Option]] instances and at the final stage convert them to instances of
-  * this trait when passed as statement parameters.
-  */
-sealed trait SqlParam[A]
-
-/** Not null parameter value. */
-case class NotNullParam[A](v: A) extends SqlParam[A]
-
-/** Null parameter value */
-case class NullParam[A](cls: Class[A]) extends SqlParam[A]
+  * This wrapper can be used to force a given SQL type for a passed statement
+  * parameter. For example, `SqlParam("example", SqlClob)` will result in
+  * a parameter being passed as a CLOB.
+  * */
+case class SqlParam(value: Any, sqlType: SqlType)

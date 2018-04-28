@@ -16,7 +16,7 @@
 
 package io.rdbc.typeconv
 
-import io.rdbc.sapi.SqlNumeric
+import io.rdbc.sapi.DecimalNumber
 import io.rdbc.sapi.exceptions.ConversionException
 
 class NumericConverterSpec
@@ -27,87 +27,87 @@ class NumericConverterSpec
   "NumericConverter" should {
     "convert BigDecimal" in {
       val bd = BigDecimal("42.2")
-      converter.fromAny(bd) shouldBe SqlNumeric.Val(bd)
+      converter.fromAny(bd) shouldBe DecimalNumber.Val(bd)
     }
 
     "convert Double" in {
       val d = 42.2d
-      converter.fromAny(d) shouldBe SqlNumeric.Val(BigDecimal(d))
+      converter.fromAny(d) shouldBe DecimalNumber.Val(BigDecimal(d))
     }
 
     "convert Float" in {
       val f = 42.2f
-      converter.fromAny(f) shouldBe SqlNumeric.Val(BigDecimal(f.toDouble))
+      converter.fromAny(f) shouldBe DecimalNumber.Val(BigDecimal(f.toDouble))
     }
 
     "convert Long" in {
       val l = 42L
-      converter.fromAny(l) shouldBe SqlNumeric.Val(BigDecimal(l))
+      converter.fromAny(l) shouldBe DecimalNumber.Val(BigDecimal(l))
     }
 
     "convert Int" in {
       val i = 42
-      converter.fromAny(i) shouldBe SqlNumeric.Val(BigDecimal(i))
+      converter.fromAny(i) shouldBe DecimalNumber.Val(BigDecimal(i))
     }
 
     "convert Short" in {
       val s = 42.toShort
-      converter.fromAny(s) shouldBe SqlNumeric.Val(BigDecimal(s.toInt))
+      converter.fromAny(s) shouldBe DecimalNumber.Val(BigDecimal(s.toInt))
     }
 
     "convert Byte" in {
       val b = 42.toByte
-      converter.fromAny(b) shouldBe SqlNumeric.Val(BigDecimal(b.toInt))
+      converter.fromAny(b) shouldBe DecimalNumber.Val(BigDecimal(b.toInt))
     }
 
-    "convert finite SqlNumeric" in {
-      val s = SqlNumeric.Val(BigDecimal("42.2"))
+    "convert finite DecimalNumber" in {
+      val s = DecimalNumber.Val(BigDecimal("42.2"))
       converter.fromAny(s) shouldBe s
     }
 
-    "convert -inf SqlNumeric" in {
-      val s = SqlNumeric.NegInfinity
-      converter.fromAny(s) shouldBe SqlNumeric.NegInfinity
+    "convert -inf DecimalNumber" in {
+      val s = DecimalNumber.NegInfinity
+      converter.fromAny(s) shouldBe DecimalNumber.NegInfinity
     }
 
-    "convert +inf SqlNumeric" in {
-      val s = SqlNumeric.PosInfinity
-      converter.fromAny(s) shouldBe SqlNumeric.PosInfinity
+    "convert +inf DecimalNumber" in {
+      val s = DecimalNumber.PosInfinity
+      converter.fromAny(s) shouldBe DecimalNumber.PosInfinity
     }
 
     "convert -inf Double" in {
       val d = Double.NegativeInfinity
-      converter.fromAny(d) shouldBe SqlNumeric.NegInfinity
+      converter.fromAny(d) shouldBe DecimalNumber.NegInfinity
     }
 
     "convert +inf Double" in {
       val d = Double.PositiveInfinity
-      converter.fromAny(d) shouldBe SqlNumeric.PosInfinity
+      converter.fromAny(d) shouldBe DecimalNumber.PosInfinity
     }
 
     "convert NaN Double" in {
       val d = Double.NaN
-      converter.fromAny(d) shouldBe SqlNumeric.NaN
+      converter.fromAny(d) shouldBe DecimalNumber.NaN
     }
 
     "convert -inf Float" in {
       val f = Float.NegativeInfinity
-      converter.fromAny(f) shouldBe SqlNumeric.NegInfinity
+      converter.fromAny(f) shouldBe DecimalNumber.NegInfinity
     }
 
     "convert +inf Float" in {
       val f = Float.PositiveInfinity
-      converter.fromAny(f) shouldBe SqlNumeric.PosInfinity
+      converter.fromAny(f) shouldBe DecimalNumber.PosInfinity
     }
 
     "convert NaN Float" in {
       val f = Float.NaN
-      converter.fromAny(f) shouldBe SqlNumeric.NaN
+      converter.fromAny(f) shouldBe DecimalNumber.NaN
     }
 
     "convert string if it represents a number" in {
       val s = "42.2"
-      converter.fromAny(s) shouldBe SqlNumeric.Val(BigDecimal(s))
+      converter.fromAny(s) shouldBe DecimalNumber.Val(BigDecimal(s))
     }
 
     "fail for string not representing a number" in {
@@ -116,7 +116,7 @@ class NumericConverterSpec
         converter.fromAny(s)
       }
       ex.value shouldBe s
-      ex.targetType shouldBe classOf[SqlNumeric]
+      ex.targetType shouldBe classOf[DecimalNumber]
     }
 
     "fail for any" in {
@@ -125,7 +125,7 @@ class NumericConverterSpec
         converter.fromAny(a)
       }
       ex.value shouldBe a
-      ex.targetType shouldBe classOf[SqlNumeric]
+      ex.targetType shouldBe classOf[DecimalNumber]
     }
   }
 }

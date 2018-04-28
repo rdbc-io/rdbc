@@ -18,8 +18,8 @@ package io.rdbc.jadapter.internal
 
 import java.util.concurrent.TimeUnit
 
-import io.rdbc.japi.Row
-import io.rdbc.sapi.SqlNumeric.{NaN, NegInfinity, PosInfinity, Val}
+import io.rdbc.japi.{DecimalNumber, Row}
+import io.rdbc.sapi.DecimalNumber.{NaN, NegInfinity, PosInfinity, Val}
 import io.rdbc.sapi.Timeout
 import io.rdbc.{japi, sapi}
 
@@ -31,13 +31,13 @@ import scala.util.Try
 
 private[jadapter] object Conversions {
 
-  implicit class SqlNumericToJava(val value: sapi.SqlNumeric) extends AnyVal {
-    def asJava: japi.SqlNumeric = {
+  implicit class SqlNumericToJava(val value: sapi.DecimalNumber) extends AnyVal {
+    def asJava: DecimalNumber = {
       value match {
-        case NaN => japi.SqlNumeric.NAN
-        case NegInfinity => japi.SqlNumeric.NEG_INFINITY
-        case PosInfinity => japi.SqlNumeric.POS_INFINITY
-        case Val(bigDec) => japi.SqlNumeric.of(bigDec.bigDecimal)
+        case NaN => japi.DecimalNumber.NAN
+        case NegInfinity => japi.DecimalNumber.NEG_INFINITY
+        case PosInfinity => japi.DecimalNumber.POS_INFINITY
+        case Val(bigDec) => japi.DecimalNumber.of(bigDec.bigDecimal)
       }
     }
   }

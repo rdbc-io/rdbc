@@ -27,7 +27,7 @@ object LongConverter extends TypeConverter[Long] {
     case f: Float if f.isNaN || f.isInfinite => throw new ConversionException(any, cls)
     case d: Double if d.isNaN || d.isInfinite => throw new ConversionException(any, cls)
     case jn: java.lang.Number => jn.longValue()
-    case sapi.SqlNumeric.Val(bd) => bd.longValue()
+    case sapi.DecimalNumber.Val(bd) => bd.longValue()
     case _ => throw new ConversionException(any, classOf[Long])
   }
 }
