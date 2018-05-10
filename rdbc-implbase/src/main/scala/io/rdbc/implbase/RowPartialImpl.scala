@@ -20,50 +20,35 @@ import java.time._
 import java.util.UUID
 
 import io.rdbc.sapi.exceptions.ConversionException
-import io.rdbc.sapi.{DecimalNumber, Row, TypeConverterRegistry}
+import io.rdbc.sapi.{DecimalNumber, Row}
 import io.rdbc.util.Preconditions.checkNotNull
 
 import scala.reflect.ClassTag
 
 trait RowPartialImpl extends Row {
 
-  protected def typeConverters: TypeConverterRegistry
-
-  protected def any(name: String): Option[Any]
-
-  protected def any(idx: Int): Option[Any]
-
-  private[this] def convertType[A](maybeAny: Option[Any], cls: Class[A]): Option[A] = {
-    maybeAny.map { any =>
-      if (cls.isInstance(any)) {
-        any.asInstanceOf[A]
-      } else {
-        typeConverters.getByClass(cls)
-          .map(converter => converter.fromAny(any))
-          .getOrElse(throw new ConversionException(any, cls))
-      }
+  override def col[A: ClassTag](name: String): A = {
+    checkNotNull(name)
+    colOpt(name).getOrElse {
+      throw nullConversionException(implicitly[ClassTag[A]].runtimeClass)
     }
   }
 
-  private[this] def colOpt[A: ClassTag](maybeAny: Option[Any]): Option[A] = {
-    checkNotNull(maybeAny)
-    convertType(maybeAny, implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
-  }
-
-  private[this] def col[A: ClassTag](maybeAny: Option[Any]): A = {
-    checkNotNull(maybeAny)
-    colOpt(maybeAny).getOrElse {
-      throw new ConversionException(None, implicitly[ClassTag[A]].runtimeClass)
+  override def col[A: ClassTag](idx: Int): A = {
+    checkNotNull(idx)
+    colOpt(idx).getOrElse {
+      throw nullConversionException(implicitly[ClassTag[A]].runtimeClass)
     }
   }
 
-  override def col[A: ClassTag](name: String): A = col(any(name))
-
-  override def col[A: ClassTag](idx: Int): A = col(any(idx))
-
-  override def colOpt[A: ClassTag](idx: Int): Option[A] = colOpt(any(idx))
-
-  override def colOpt[A: ClassTag](name: String): Option[A] = colOpt(any(name))
+  private def nullConversionException(target: Class[_]): ConversionException = {
+    new ConversionException(
+      msg = s"SQL NULL cannot be represented by $target, use *Opt method instead",
+      value = None,
+      targetType = target,
+      maybeCause = None
+    )
+  }
 
   override def str(name: String): String = col[String](name)
 

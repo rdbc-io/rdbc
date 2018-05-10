@@ -72,7 +72,6 @@ trait ResultSetSpec
           val colMetadata = rs.metadata.columns.head
           colMetadata.name shouldBe "col"
           colMetadata.dbTypeId shouldBe intDataTypeId
-          colMetadata.cls should contain(classOf[Int])
         }
       }
     }

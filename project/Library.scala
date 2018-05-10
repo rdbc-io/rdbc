@@ -13,4 +13,5 @@ object Library {
   val reactiveStreamsTck = "org.reactivestreams" % "reactive-streams-tck" % reactiveStreamsVersion
   val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.11"
   val java8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0"
+  val immutables = "org.immutables" % "value" % "2.5.5"
 }

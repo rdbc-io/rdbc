@@ -105,7 +105,6 @@ trait StreamingResultsSpec
           val colMetadata = rs.metadata.get.columns.head
           colMetadata.name shouldBe "col"
           colMetadata.dbTypeId shouldBe intDataTypeId
-          colMetadata.cls should contain(classOf[Int])
 
           subscriber.rows.get
         }

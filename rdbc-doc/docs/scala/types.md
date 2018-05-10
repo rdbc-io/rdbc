@@ -34,11 +34,11 @@ Following table lists mapping between Scala and SQL types.
 | VARBINARY                 | `Array[Byte]`|
 | BLOB                      | `Array[Byte]`|
 | BOOLEAN                   | `Boolean`|
-| NUMERIC                   | [`io.rdbc.sapi.SqlDecimal`]({{scaladocRoot}}/io/rdbc/sapi/SqlDecimal$.html)|
-| DECIMAL                   | [`io.rdbc.sapi.SqlDecimal`]({{scaladocRoot}}/io/rdbc/sapi/SqlDecimal$.html)|
+| NUMERIC                   | [`io.rdbc.sapi.DecimalNumber`]({{scaladocRoot}}/io/rdbc/sapi/DecimalNumber$.html)|
+| DECIMAL                   | [`io.rdbc.sapi.DecimalNumber`]({{scaladocRoot}}/io/rdbc/sapi/DecimalNumber$.html)|
 | REAL                      | `Float`|
 | DOUBLE                    | `Double`|
-| SMALLINT                  | `Short`|
+| SMALLINT                  | `Int`|
 | INTEGER                   | `Int`|
 | BIGINT                    | `Long`|
 | DATE                      | `java.time.LocalDate`|
@@ -66,27 +66,39 @@ conversions.
 |-----------------|-------------------|-------|
 | CHAR, NCHAR | `Boolean` | `'1'`, `'T'`, `'Y'` converts to `true`.<br>`'0'`, `'F'`, `'N'` converts to `false`.
 | DECIMAL, NUMERIC, REAL, DOUBLE, INTEGER, SMALLINT, BIGINT | `Boolean` | 1 converts to `true`.<br>0 converts to `false`.
-| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `BigDecimal`, `SqlNumeric` | Textual value is converted by rules defined [here](https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html#BigDecimal-java.lang.String-).
+| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `BigDecimal`, `DecimalNumber` | Textual value is converted by rules defined [here](https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html#BigDecimal-java.lang.String-).
 | VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `java.util.UUID` | Textual value is converted by rules defined [here](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-).
 | DECIMAL, NUMERIC, REAL, DOUBLE, INTEGER, SMALLINT, BIGINT | `Float`, `Double`, `Byte`, `Short`, `Int`, `Long` | Value may be rounded and/or truncated.
 | INTEGER, SMALLINT, BIGINT  | `BigDecimal` |
 | DECIMAL, NUMERIC, REAL, DOUBLE  | `BigDecimal` | Infinity and NaN are not convertible.
-| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | CHAR | Values containing single character are convertible.
+| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `Char` | Values containing single character are convertible.
 | TIMESTAMP | `java.time.LocalDate` | Time part is truncated.
 | TIMESTAMP | `java.time.LocalTime` | Date part is truncated.
 
 If client requests to convert between inconvertible types,
-[`ConversionException`]({{scaladocRoot}}/io/rdbc/api/exceptions/ConversionException.html)
+[`ConversionException`]({{scaladocRoot}}/io/rdbc/sapi/exceptions/ConversionException.html)
 is thrown.
 
 ## Explicitly setting database type in statements
 
-When setting statement arguments, in case when a given Scala type maps to more
-than one database type and you want to enforce this argument to be represented
-as a specific database type, a `SqlParam` class can be used. For example, if
-you want to pass `:::scala "my text"` as a `CLOB`, instead of passing bare `"my text"`, 
-pass `:::scala SqlParam("my text", SqlClob)`. Any `SqlType` instance can be used to specify
-an SQL type.
+rdbc defines a set of case classes that directly represent SQL types. When setting
+statement arguments, in case when a given bare Scala type maps to more
+than one database type (such as `String` maps to both `CLOB` and `VARCHAR`) and
+you want to enforce this argument to be represented as a specific database type,
+a case class representing SQL type can be used. 
+
+For example, if you want to pass `:::scala "my text"` as a `CLOB`, instead of passing bare `"my text"`, 
+pass `:::scala io.rdbc.sapi.SqlClob("my text")`.
+
+## Setting typed SQL NULL values
+
+Normally, to set a statement argument as `NULL` you can Scala's `None`. `None`
+value doesn't carry any information that would allow the rdbc driver to tell
+what is a SQL type of the `NULL` value. For most cases the type of the `NULL`
+value doesn't matter but in cases it does you can use rdbc's `SqlNull` that
+contains the type information.
+
+For example, to pass a `NULL` value typed as `NVARCHAR`, use `:::scala SqlNull.of[SqlNVarchar]`.
 
 ## Vendor specific types
 
