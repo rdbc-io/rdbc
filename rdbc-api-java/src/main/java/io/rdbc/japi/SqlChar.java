@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package io.rdbc.sapi
+package io.rdbc.japi;
 
-/** Represents metadata of a database column.
-  *
-  * @param name     column name
-  * @param dbTypeId database vendor identifier of a datatype declared for the column
-  */
-case class ColumnMetadata(name: String, dbTypeId: String)
+import org.immutables.value.Value;
+
+@Value.Immutable
+@SqlValStyle
+public interface SqlChar {
+
+    @Value.Parameter
+    String getValue();
+
+    static SqlChar of(String value) {
+        return ImmutableSqlChar.of(value);
+    }
+}

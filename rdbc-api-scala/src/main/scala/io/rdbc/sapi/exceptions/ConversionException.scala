@@ -16,11 +16,21 @@
 
 package io.rdbc.sapi.exceptions
 
-class ConversionException(val value: Any,
+class ConversionException(msg: String,
+                          val value: Any,
                           val targetType: Class[_],
-                          maybeCause: Option[Throwable] = None)
-  extends RdbcException(
-    s"Value '$value' of type '${value.getClass.getCanonicalName}' " +
-    s"could not be converted to '${targetType.getCanonicalName}'",
-    maybeCause
-  )
+                          maybeCause: Option[Throwable])
+  extends RdbcException(msg, maybeCause) {
+
+  def this(value: Any,
+           targetType: Class[_],
+           maybeCause: Option[Throwable] = None) = {
+    this(
+      msg = s"Value '$value' of type '${value.getClass.getCanonicalName}' " +
+        s"could not be converted to '${targetType.getCanonicalName}'",
+      value = value,
+      targetType = targetType,
+      maybeCause = maybeCause)
+  }
+
+}

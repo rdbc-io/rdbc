@@ -17,6 +17,7 @@
 package io.rdbc.japi;
 
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,12 +27,10 @@ public final class ColumnMetadata {
 
     private final String name;
     private final String dbTypeId;
-    private final Optional<Class<?>> valueClass;
 
-    private ColumnMetadata(String name, String dbTypeId, Optional<Class<?>> valueClass) {
+    private ColumnMetadata(String name, String dbTypeId) {
         this.name = name;
         this.dbTypeId = dbTypeId;
-        this.valueClass = valueClass;
     }
 
     /**
@@ -41,18 +40,7 @@ public final class ColumnMetadata {
      * @param dbTypeId database vendor identifier of a datatype declared for the column
      */
     public static ColumnMetadata of(String name, String dbTypeId) {
-        return new ColumnMetadata(name, dbTypeId, Optional.empty());
-    }
-
-    /**
-     * Creates new ColumnMetadata instance.
-     *
-     * @param name     column name
-     * @param dbTypeId database vendor identifier of a datatype declared for the column
-     * @param cls      JVM class that a database driver uses to represent values of the column
-     */
-    public static ColumnMetadata of(String name, String dbTypeId, Class<?> cls) {
-        return new ColumnMetadata(name, dbTypeId, Optional.of(cls));
+        return new ColumnMetadata(name, dbTypeId);
     }
 
     public String getName() {
@@ -63,36 +51,25 @@ public final class ColumnMetadata {
         return dbTypeId;
     }
 
-    public Optional<Class<?>> getValueClass() {
-        return valueClass;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ColumnMetadata that = (ColumnMetadata) o;
-
-        if (!name.equals(that.name)) return false;
-        if (!dbTypeId.equals(that.dbTypeId)) return false;
-        return valueClass.equals(that.valueClass);
+        return Objects.equals(name, that.name) &&
+                Objects.equals(dbTypeId, that.dbTypeId);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + dbTypeId.hashCode();
-        result = 31 * result + valueClass.hashCode();
-        return result;
+        return Objects.hash(name, dbTypeId);
     }
 
     @Override
     public String toString() {
-        return "ColumnMetadata(" +
+        return "ColumnMetadata{" +
                 "name='" + name + '\'' +
                 ", dbTypeId='" + dbTypeId + '\'' +
-                ", valueClass=" + valueClass +
-                ')';
+                '}';
     }
 }

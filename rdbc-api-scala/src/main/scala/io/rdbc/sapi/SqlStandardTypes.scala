@@ -16,83 +16,85 @@
 
 package io.rdbc.sapi
 
-/** A SQL type */
-trait SqlType
+import java.time._
 
-/** SQL ARRAY type */
-case object SqlArray extends SqlType
+import io.rdbc.ImmutSeq
 
-/** SQL MULTISET type */
-case object SqlMultiset extends SqlType
+import scala.reflect.ClassTag
 
 /** SQL CHARACTER */
-case object SqlChar extends SqlType
+final case class SqlChar(value: String)
 
 /** SQL CHARACTER VARYING */
-case object SqlVarchar extends SqlType
+final case class SqlVarchar(value: String)
 
 /** SQL CHARACTER LARGE OBJECT */
-case object SqlClob extends SqlType
+final case class SqlClob(value: String)
 
 /** SQL NATIONAL CHARACTER */
-case object SqlNChar extends SqlType
+final case class SqlNChar(value: String)
 
 /** SQL NATIONAL CHARACTER VARYING */
-case object SqlNVarchar extends SqlType
+final case class SqlNVarchar(value: String)
 
 /** SQL NATIONAL CHARACTER LARGE OBJECT */
-case object SqlNClob extends SqlType
+final case class SqlNClob(value: String)
 
 /** SQL BINARY */
-case object SqlBinary extends SqlType
+final case class SqlBinary(value: ImmutSeq[Byte])
 
 /** SQL BINARY VARYING */
-case object SqlVarbinary extends SqlType
+final case class SqlVarbinary(value: ImmutSeq[Byte])
 
 /** SQL BINARY LARGE OBJECT */
-case object SqlBlob extends SqlType
+final case class SqlBlob(value: ImmutSeq[Byte])
 
 /** SQL NUMERIC type */
-case object SqlNumeric extends SqlType
+final case class SqlNumeric(value: DecimalNumber)
 
 /** SQL DECIMAL type */
-case object SqlDecimal extends SqlType
+final case class SqlDecimal(value: DecimalNumber)
 
 /** SQL SMALLINT type */
-case object SqlSmallInt extends SqlType
+final case class SqlSmallInt(value: Short)
 
 /** SQL INTEGER type */
-case object SqlInteger extends SqlType
+final case class SqlInteger(value: Int)
 
 /** SQL BIGINT type */
-case object SqlBigInt extends SqlType
+final case class SqlBigInt(value: Long)
 
 /** SQL FLOAT type */
-case object SqlFloat extends SqlType
+final case class SqlFloat(value: Float)
 
 /** SQL REAL type */
-case object SqlReal extends SqlType
+final case class SqlReal(value: Float)
 
 /** SQL DOUBLE PRECISION type */
-case object SqlDouble extends SqlType
+final case class SqlDouble(value: Double)
 
 /** SQL BOOLEAN type */
-case object SqlBoolean extends SqlType
+final case class SqlBoolean(value: Boolean)
 
 /** SQL DATE type */
-case object SqlDate extends SqlType
+final case class SqlDate(value: LocalDate)
 
 /** SQL TIME WITHOUT TIME ZONE type */
-case object SqlTime extends SqlType
-
-/** SQL TIME WITH TIME ZONE type */
-case object SqlTimeTz extends SqlType
+final case class SqlTime(value: LocalTime)
 
 /** SQL TIMESTAMP type */
-case object SqlTimestamp extends SqlType
+final case class SqlTimestamp(value: LocalDateTime)
 
 /** SQL TIMESTAMP WITH TIME ZONE type */
-case object SqlTimestampTz extends SqlType
+final case class SqlTimestampTz(value: OffsetDateTime)
 
 /** SQL INTERVAL type */
-case object SqlInterval extends SqlType
+final case class SqlInterval(value: Period)
+
+object SqlNull {
+  def of[A: ClassTag]: SqlNull[A] = {
+    SqlNull(implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]])
+  }
+}
+
+final case class SqlNull[T](cls: Class[T])

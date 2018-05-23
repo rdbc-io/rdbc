@@ -20,7 +20,7 @@ import java.time._
 import java.util.UUID
 
 import io.rdbc.sapi.exceptions.{ColumnIndexOutOfBoundsException, ConversionException, MissingColumnException}
-import io.rdbc.sapi.{DecimalNumber, TypeConverter, TypeConverterRegistry}
+import io.rdbc.sapi.DecimalNumber
 import org.scalamock.scalatest.MockFactory
 
 import scala.reflect.ClassTag
@@ -33,61 +33,12 @@ class RowPartialImplSpec
     "null-unsafe getters are used" when {
       "named values are used" should {
 
-        "get values without conversion if no conversion is necessary" in {
+        "get values" in {
           val colName = "col"
           val colVal: Any = "0"
           val row = new TstRow(named = Map(colName -> Some(colVal)))
 
           row.col[String](colName) shouldBe colVal
-        }
-
-        "get and convert values when there is a converter available" in {
-          val colName = "col"
-          val colVal: Any = 0
-          val row = new TstRow(named = Map(colName -> Some(colVal)))
-
-          val convertedColVal = "0"
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).returning(convertedColVal)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          row.col[String](colName) shouldBe convertedColVal
-        }
-
-        "throw conversion exception when there is no converter available" in {
-          val colName = "col"
-          val colVal: Any = 0
-          val row = new TstRow(named = Map(colName -> Some(colVal)))
-
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(None)
-
-          val ex = the[ConversionException] thrownBy row.col[String](colName)
-          ex.targetType shouldBe classOf[String]
-          ex.value shouldBe colVal
-        }
-
-        "propagate conversion errors" in {
-          val colName = "col"
-          val colVal: Any = 0
-          val row = new TstRow(named = Map(colName -> Some(colVal)))
-          val conversionEx = new ConversionException(colVal, classOf[String])
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).throws(conversionEx)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          the[ConversionException] thrownBy (row.col[String](colName))
-            .shouldBe(theSameInstanceAs(conversionEx))
         }
 
         "fail for SQL NULL values" in {
@@ -102,61 +53,12 @@ class RowPartialImplSpec
 
       "positional values are used" should {
 
-        "get values without conversion if no conversion is necessary" in {
+        "get values" in {
           val colIdx = 1
           val colVal: Any = "0"
           val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
 
           row.col[String](colIdx) shouldBe colVal
-        }
-
-        "get and convert values when there is a converter available" in {
-          val colIdx = 1
-          val colVal: Any = 0
-          val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
-
-          val convertedColVal = "0"
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).returning(convertedColVal)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          row.col[String](colIdx) shouldBe convertedColVal
-        }
-
-        "throw conversion exception when there is no converter available" in {
-          val colIdx = 1
-          val colVal: Any = 0
-          val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
-
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(None)
-
-          val ex = the[ConversionException] thrownBy row.col[String](colIdx)
-          ex.targetType shouldBe classOf[String]
-          ex.value shouldBe colVal
-        }
-
-        "propagate conversion errors" in {
-          val colIdx = 1
-          val colVal: Any = 0
-          val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
-          val conversionEx = new ConversionException(colVal, classOf[String])
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).throws(conversionEx)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          the[ConversionException] thrownBy (row.col[String](colIdx))
-            .shouldBe(theSameInstanceAs(conversionEx))
         }
 
         "fail for SQL NULL values" in {
@@ -173,60 +75,12 @@ class RowPartialImplSpec
     "null-safe getters are used" when {
       "named values are used" should {
 
-        "get values without conversion if no conversion is necessary" in {
+        "get values" in {
           val colName = "col"
           val colVal: Any = "0"
           val row = new TstRow(named = Map(colName -> Some(colVal)))
 
           row.colOpt[String](colName) shouldBe Some(colVal)
-        }
-
-        "get and convert values when there is a converter available" in {
-          val colName = "col"
-          val colVal: Any = 0
-          val row = new TstRow(named = Map(colName -> Some(colVal)))
-
-          val convertedColVal = "0"
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).returning(convertedColVal)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          row.colOpt[String](colName) shouldBe Some(convertedColVal)
-        }
-
-        "throw conversion exception when there is no converter available" in {
-          val colName = "col"
-          val colVal: Any = 0
-          val row = new TstRow(named = Map(colName -> Some(colVal)))
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(None)
-
-          val ex = the[ConversionException] thrownBy row.colOpt[String](colName)
-          ex.targetType shouldBe classOf[String]
-          ex.value shouldBe colVal
-        }
-
-        "propagate conversion errors" in {
-          val colName = "col"
-          val colVal: Any = 0
-          val row = new TstRow(named = Map(colName -> Some(colVal)))
-          val conversionEx = new ConversionException(colVal, classOf[String])
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).throws(conversionEx)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          the[ConversionException] thrownBy (row.colOpt[String](colName))
-            .shouldBe(theSameInstanceAs(conversionEx))
         }
 
         "return None for SQL NULL values" in {
@@ -239,61 +93,12 @@ class RowPartialImplSpec
 
       "positional values are used" should {
 
-        "get values without conversion if no conversion is necessary" in {
+        "get values" in {
           val colIdx = 1
           val colVal: Any = "0"
           val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
 
           row.colOpt[String](colIdx) shouldBe Some(colVal)
-        }
-
-        "get and convert values when there is a converter available" in {
-          val colIdx = 1
-          val colVal: Any = 0
-          val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
-
-          val convertedColVal = "0"
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).returning(convertedColVal)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          row.colOpt[String](colIdx) shouldBe Some(convertedColVal)
-        }
-
-        "throw conversion exception when there is no converter available" in {
-          val colIdx = 1
-          val colVal: Any = 0
-          val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
-
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(None)
-
-          val ex = the[ConversionException] thrownBy row.colOpt[String](colIdx)
-          ex.targetType shouldBe classOf[String]
-          ex.value shouldBe colVal
-        }
-
-        "propagate conversion errors" in {
-          val colIdx = 1
-          val colVal: Any = 0
-          val row = new TstRow(positional = Map(colIdx -> Some(colVal)))
-          val conversionEx = new ConversionException(colVal, classOf[String])
-          val converter = mock[TypeConverter[String]]
-
-          (converter.fromAny _).expects(colVal).throws(conversionEx)
-
-          (row.typeConvRegistryMock.getByClass[String] _)
-            .expects(classOf[String])
-            .returning(Some(converter))
-
-          the[ConversionException] thrownBy (row.colOpt[String](colIdx))
-            .shouldBe(theSameInstanceAs(conversionEx))
         }
 
         "return None for SQL NULL values" in {
@@ -309,14 +114,16 @@ class RowPartialImplSpec
                  positional: Map[Int, Option[Any]] = Map.empty)
       extends RowPartialImpl {
 
-      val typeConvRegistryMock = mock[TypeConverterRegistry]
-
-      protected val typeConverters: TypeConverterRegistry = typeConvRegistryMock
-      protected def any(name: String): Option[Any] = {
-        named.getOrElse(name, throw new MissingColumnException(name))
+      override def colOpt[A: ClassTag](idx: Int): Option[A] = {
+        positional
+          .getOrElse(idx, throw new ColumnIndexOutOfBoundsException(idx, 0))
+          .asInstanceOf[Option[A]]
       }
-      protected def any(idx: Int): Option[Any] = {
-        positional.getOrElse(idx, throw new ColumnIndexOutOfBoundsException(idx, 0))
+
+      override def colOpt[A: ClassTag](name: String): Option[A] = {
+        named
+          .getOrElse(name, throw new MissingColumnException(name))
+          .asInstanceOf[Option[A]]
       }
     }
   }
@@ -471,10 +278,6 @@ class RowPartialImplSpec
         val cls = implicitly[ClassTag[A]].runtimeClass.asInstanceOf[Class[A]]
         colOps.col(name, cls)
       }
-
-      protected def typeConverters = ???
-      protected def any(name: String) = ???
-      protected def any(idx: Int) = ???
     }
   }
 }

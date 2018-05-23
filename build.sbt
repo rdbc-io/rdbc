@@ -10,7 +10,7 @@ displayJavaVersion := { println(s"Running sbt with Java ${System.getProperty("ja
 lazy val commonSettings = Vector(
   organization := "io.rdbc",
   organizationName := "rdbc contributors",
-  scalaVersion := "2.12.4",
+  scalaVersion := "2.12.6",
   crossScalaVersions := Vector(scalaVersion.value, "2.11.12"),
 
   licenses := Vector(
@@ -38,7 +38,7 @@ lazy val rdbcRoot = (project in file("."))
   .settings(
     publishArtifact := false
   )
-  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcTypeconv, rdbcUtil, rdbcTck, rdbcJavaAdapter)
+  .aggregate(rdbcApiScala, rdbcApiJava, rdbcImplBase, rdbcUtil, rdbcTck, rdbcJavaAdapter)
 
 lazy val rdbcApiScala = (project in file("rdbc-api-scala"))
   .enablePlugins(BuildInfoPlugin)
@@ -64,7 +64,8 @@ lazy val rdbcApiJava = (project in file("rdbc-api-java"))
     autoScalaLibrary := false,
     crossScalaVersions := Vector.empty,
     libraryDependencies ++= Vector(
-      Library.reactiveStreams
+      Library.reactiveStreams,
+      Library.immutables % Provided
     ),
     coverageEnabled := false,
     publishArtifact := {
@@ -96,18 +97,6 @@ lazy val rdbcImplBase = (project in file("rdbc-implbase"))
     ),
     buildInfoPackage := "io.rdbc.implbase"
   ).dependsOn(rdbcApiScala, rdbcUtil)
-
-lazy val rdbcTypeconv = (project in file("rdbc-typeconv"))
-  .enablePlugins(BuildInfoPlugin)
-  .settings(commonSettings: _*)
-  .settings(
-    name := "rdbc-typeconv",
-    libraryDependencies ++= Vector(
-      Library.scalatest % Test
-    ),
-    buildInfoPackage := "io.rdbc.typeconv"
-  ).dependsOn(rdbcApiScala)
-
 
 lazy val rdbcUtil = (project in file("rdbc-util"))
   .enablePlugins(BuildInfoPlugin)

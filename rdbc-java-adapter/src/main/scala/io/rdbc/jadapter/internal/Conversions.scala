@@ -31,7 +31,7 @@ import scala.util.Try
 
 private[jadapter] object Conversions {
 
-  implicit class SqlNumericToJava(val value: sapi.DecimalNumber) extends AnyVal {
+  implicit class DecimalNumberToJava(val value: sapi.DecimalNumber) extends AnyVal {
     def asJava: DecimalNumber = {
       value match {
         case NaN => japi.DecimalNumber.NAN
@@ -62,9 +62,7 @@ private[jadapter] object Conversions {
 
   implicit class ColumnMetadataToJava(val value: sapi.ColumnMetadata) extends AnyVal {
     def asJava: japi.ColumnMetadata = {
-      value.cls.map { cls =>
-        japi.ColumnMetadata.of(value.name, value.dbTypeId, cls)
-      }.getOrElse(japi.ColumnMetadata.of(value.name, value.dbTypeId))
+      japi.ColumnMetadata.of(value.name, value.dbTypeId)
     }
   }
 
