@@ -59,21 +59,16 @@ by the SQL standard.
 SQL types listed in [Type mapping](#type-mapping) paragraph can be represented 
 not only by their direct Scala counterparts. For example, NUMERIC can also be
 converted to Scala's `Float`. If user requests NUMERIC column value as a `Float`,
-`Float` will be returned, possibly losing precision. The table below lists possible
-conversions.
+`Float` will be returned, but only if the NUMERIC value is representable by
+exact `Float`. The table below lists possible conversions.
 
 | Source SQL type | Target Scala type | Notes |
 |-----------------|-------------------|-------|
 | CHAR, NCHAR | `Boolean` | `'1'`, `'T'`, `'Y'` converts to `true`.<br>`'0'`, `'F'`, `'N'` converts to `false`.
 | DECIMAL, NUMERIC, REAL, DOUBLE, INTEGER, SMALLINT, BIGINT | `Boolean` | 1 converts to `true`.<br>0 converts to `false`.
-| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `BigDecimal`, `DecimalNumber` | Textual value is converted by rules defined [here](https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html#BigDecimal-java.lang.String-).
-| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `java.util.UUID` | Textual value is converted by rules defined [here](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-).
-| DECIMAL, NUMERIC, REAL, DOUBLE, INTEGER, SMALLINT, BIGINT | `Float`, `Double`, `Byte`, `Short`, `Int`, `Long` | Value may be rounded and/or truncated.
+| DECIMAL, NUMERIC, REAL, DOUBLE, INTEGER, SMALLINT, BIGINT | `Float`, `Double`, `Byte`, `Short`, `Int`, `Long` | Only if exact conversion is possible.
 | INTEGER, SMALLINT, BIGINT  | `BigDecimal` |
 | DECIMAL, NUMERIC, REAL, DOUBLE  | `BigDecimal` | Infinity and NaN are not convertible.
-| VARCHAR, NVARCHAR,<br>CLOB, NCLOB | `Char` | Values containing single character are convertible.
-| TIMESTAMP | `java.time.LocalDate` | Time part is truncated.
-| TIMESTAMP | `java.time.LocalTime` | Date part is truncated.
 
 If client requests to convert between inconvertible types,
 [`ConversionException`]({{scaladocRoot}}/io/rdbc/sapi/exceptions/ConversionException.html)
