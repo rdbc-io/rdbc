@@ -16,7 +16,7 @@
     
 ## What is rdbc?
 
-rdbc is a SQL-level relational database connectivity API targeting Scala and 
+rdbc is a SQL-level relational database access API targeting Scala and 
 Java programming languages. The API is fully asynchronous and provides
 a possibility to leverage [Reactive Streams'](http://www.reactive-streams.org/)
 stream processing capabilities.
@@ -45,12 +45,12 @@ Following list outlines the goals of the API:
     and get results back. While it can be used directly it's also meant to 
     provide a foundation for higher-level APIs like functional or object
     relational mapping libraries.
-   
+    
 ## Non-goals
 
 Following list outlines the areas that the API is not meant to cover.
 
-1. **Provide a full type-safety.**
+1. **Will not provide a full type-safety.**
 
     rdbc works on a SQL level, meaning that requests made to the database
     are strings. There is no additional layer that would ensure type-safety

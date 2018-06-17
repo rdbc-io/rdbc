@@ -21,8 +21,8 @@ to a database for execution along with arguments, if any. There are two types
 of statements in rdbc: template statements and executable statements. Template
 statements can't be executed right away. To execute them you first need to bind argument
 for every parameter they declare. When filled with arguments, template statements
-create executable statements. Statements in rdbc are a representation database engine's
-[prepared statements](https://en.wikipedia.org/wiki/Prepared_statement).
+create executable statements. Statements in rdbc are a representation of database 
+engine's [prepared statements](https://en.wikipedia.org/wiki/Prepared_statement).
 
 ## Syntax
 
@@ -169,9 +169,9 @@ def findUsersStmt(name: String): ExecutableStatement = {
 ```
 
 !!! tip "SQL injection safety"
-    Important thing to understand is that when using `sql` interpolator you're still
-    safe from creating SQL injection vulnerability. Even though it may look like
-    that, parameter values are **not** passed in to the database as literals
+    The important thing to understand is that when using `sql` interpolator you're still
+    safe from SQL injection vulnerability. Even though it may look like
+    that, parameter values are **not** passed to the database as literals
     concatenated with the rest of the SQL.
 
 SQL parts created by `sql` interpolator can be concatenated in the same way you
@@ -460,8 +460,8 @@ Creating `Publisher` instances is out of scope of this manual, for details pleas
 refer to documentation of Reactive Streams compatible libraries that are built to
 facilitate this, like
 [Akka stream](http://doc.akka.io/docs/akka/current/scala/stream/index.html) or
-[Monix](https://monix.io/). Examples below use simple streams backed by in
-memory collections.
+[Monix](https://monix.io/). Examples below use simple streams backed by in-memory
+collections.
 
 
 Streaming named arguments with Akka:
