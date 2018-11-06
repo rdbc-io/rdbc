@@ -2,61 +2,16 @@ language: scala
 dist: trusty
 sudo: false
 
-before_install:
-  - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+jdk:
+ - oraclejdk8
+ - openjdk9
+ - openjdk10
+ - openjdk11
+ - openjdk-ea
 
-matrix:
-  include:
-# scala 2.11
-    - env: JDK='Oracle JDK 8'
-      jdk: oraclejdk8
-      scala: 2.11.12
-    - env: JDK='OpenJDK 8'
-      jdk: openjdk8
-      scala: 2.11.12
-    - env: JDK='Oracle JDK 9'
-      jdk: oraclejdk9
-      scala: 2.11.12
-    - env: JDK='OpenJDK 9'
-      install: . ./install-jdk.sh -F 9
-      scala: 2.11.12
-    - env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
-      scala: 2.11.12
-    - env: JDK='OpenJDK 10'
-      install: . ./install-jdk.sh -F 10 -L GPL
-      scala: 2.11.12
-    - env: JDK='Oracle JDK 11'
-      install: . ./install-jdk.sh -F 11 -L BCL
-      scala: 2.11.12
-    - env: JDK='OpenJDK 11'
-      install: . ./install-jdk.sh -F 11 -L GPL
-      scala: 2.11.12
-# scala 2.12
-    - env: JDK='Oracle JDK 8'
-      jdk: oraclejdk8
-      scala: 2.12.4
-    - env: JDK='OpenJDK 8'
-      jdk: openjdk8
-      scala: 2.12.4
-    - env: JDK='Oracle JDK 9'
-      jdk: oraclejdk9
-      scala: 2.12.4
-    - env: JDK='OpenJDK 9'
-      install: . ./install-jdk.sh -F 9
-      scala: 2.12.4
-    - env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
-      scala: 2.12.4
-    - env: JDK='OpenJDK 10'
-      install: . ./install-jdk.sh -F 10 -L GPL
-      scala: 2.12.4
-    - env: JDK='Oracle JDK 11'
-      install: . ./install-jdk.sh -F 11 -L BCL
-      scala: 2.12.4
-    - env: JDK='OpenJDK 11'
-      install: . ./install-jdk.sh -F 11 -L GPL
-      scala: 2.12.4
+scala:
+ - 2.11.12
+ - 2.12.7
 
 script: sbt ++$TRAVIS_SCALA_VERSION displayJavaVersion scalastyle test:scalastyle coverage test coverageReport
 after_success: bash <(curl -s https://codecov.io/bash)
