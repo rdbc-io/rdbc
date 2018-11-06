@@ -10,7 +10,7 @@ displayJavaVersion := { println(s"Running sbt with Java ${System.getProperty("ja
 lazy val commonSettings = Vector(
   organization := "io.rdbc",
   organizationName := "rdbc contributors",
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.7",
   crossScalaVersions := Vector(scalaVersion.value, "2.11.12"),
 
   licenses := Vector(
